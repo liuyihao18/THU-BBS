@@ -1,16 +1,15 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.home;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class TweetsViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public TweetsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
     }
 
     public void setText(String text) {
