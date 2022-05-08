@@ -9,12 +9,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class BaseRequest {
-    public static final String ERR_CODE = "errCode";
-    public static final String ERR_MSG = "errMsg";
-
-    public static final int REQUEST_OK = 0;
-    public static final int REQUEST_ERR = -1;
-
     public static final MediaType JSON_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     public static void post(String url, JSONObject data, Callback callback) {

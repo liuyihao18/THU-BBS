@@ -1,6 +1,11 @@
 <resources>
+    <!-- 标题 -->
     <string name="app_name">校园论坛</string>
     <string name="title_home">广场</string>
     <string name="title_account">用户</string>
     <string name="title_notifications">通知</string>
+
+    <!-- 网络相关 -->
+    <string name="network_error">网络连接失败</string>
+    <string name="server_error">服务器发生错误</string>
 </resources>
