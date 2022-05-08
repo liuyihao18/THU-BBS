@@ -17,7 +17,7 @@ import java.io.InputStream;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.BaseRequest;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.util.Alert;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
