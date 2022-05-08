@@ -63,7 +63,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 ResponseBody body = response.body();
                 Message msg = new Message();
                 if (body == null) {
@@ -75,6 +75,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                 msg.what = APIConstant.REQUEST_OK;
                 msg.obj = bitmap;
                 handler.sendMessage(msg);
+                is.close();
             }
         });
     }
