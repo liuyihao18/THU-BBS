@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/image_group_row1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/image_group_row2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_group_row1">
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/image_group_row3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_group_row2">
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/image_height"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

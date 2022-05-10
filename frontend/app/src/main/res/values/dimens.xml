@@ -10,6 +10,9 @@
     <dimen name="textSize_large">18sp</dimen>
     <dimen name="textSize_title">24sp</dimen>
 
+    <!-- 图片大小 -->
+    <dimen name="image_height">100dp</dimen>
+
     <!-- 位置 -->
     <dimen name="fab_margin">16dp</dimen>
 </resources>

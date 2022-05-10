@@ -3,6 +3,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -41,16 +42,25 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
         return true;
     });
 
+    private Paint mPaint;
+
     public MyImageView(Context context) {
         super(context);
+        init();
     }
 
     public MyImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public MyImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+
     }
 
     public void setImageUrl(String url) {
