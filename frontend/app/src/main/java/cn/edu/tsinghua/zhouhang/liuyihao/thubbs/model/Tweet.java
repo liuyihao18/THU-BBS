@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
+import java.util.ArrayList;
+
 public class Tweet {
     public static final int TYPE_TEXT = 0;
     public static final int TYPE_IMAGE = 1;
@@ -12,19 +14,26 @@ public class Tweet {
     private final String content;
     private final String location;
     private final String lastModified;
-    private final int commentNum;
-    private final int likeNum;
+    private final int commentCount;
+    private final int likeCount;
+    private final ArrayList<String> imageList;
+    private final ArrayList<String> audioList;
+    private final ArrayList<String> videoList;
 
     public Tweet(int tweetID, int userID, int type, String content, String location,
-                 String lastModified, int commentNum, int likeNum) {
+                 String lastModified, int commentNum, int likeNum,
+                 ArrayList<String> imageList, ArrayList<String> audioList, ArrayList<String> videoList) {
         this.tweetID = tweetID;
         this.userID = userID;
         this.type = type;
         this.content = content;
         this.location = location;
         this.lastModified = lastModified;
-        this.commentNum = commentNum;
-        this.likeNum = likeNum;
+        this.commentCount = commentNum;
+        this.likeCount = likeNum;
+        this.imageList = imageList;
+        this.audioList = audioList;
+        this.videoList = videoList;
     }
 
     public int getTweetID() {
@@ -51,11 +60,35 @@ public class Tweet {
         return lastModified;
     }
 
-    public int getCommentNum() {
-        return commentNum;
+    public int getCommentCount() {
+        return commentCount;
     }
 
-    public int getLikeNum() {
-        return likeNum;
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public int getImageCount() {
+        return imageList.size();
+    }
+
+    public String getImageAt(int i) {
+        return imageList.get(i);
+    }
+
+    public int getAudioCount(int i) {
+        return audioList.size();
+    }
+
+    public String getAudioAt(int i) {
+        return audioList.get(i);
+    }
+
+    public int getVideoCount() {
+        return videoList.size();
+    }
+
+    public String getVideoAt(int i) {
+        return videoList.get(i);
     }
 }
