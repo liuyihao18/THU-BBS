@@ -61,7 +61,7 @@ public class TweetsFragment extends Fragment {
         initListener();
     }
 
-    protected void initLauncher() {
+    private void initLauncher() {
         mLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         });
