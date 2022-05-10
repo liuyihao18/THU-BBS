@@ -13,10 +13,13 @@
     <string name="button_ok">确认</string>
     <string name="button_cancel">取消</string>
     <string name="button_login">登录</string>
+    <string name="button_tweet">发布</string>
+    <string name="button_draft">存草稿</string>
 
     <!-- 提示 -->
     <string name="login_required">登录后查看</string>
     <string name="floating_action_button">发布</string>
+    <string name="edit_hint">发布你此刻的看法~</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>
@@ -33,4 +36,11 @@
     <!-- 推文 -->
     <string name="menu_search_description">搜索</string>
     <string name="is_searching">搜索中</string>
+
+    <!-- 编辑 -->
+    <string name="edit_name">编辑</string>
+    <string name="add_location">添加地点</string>
+    <string name="add_audio">音频</string>
+    <string name="add_image">图像</string>
+    <string name="add_video">视频</string>
 </resources>

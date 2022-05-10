@@ -1,6 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,7 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.LoginActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
@@ -34,7 +33,8 @@ public class TweetsFragment extends Fragment {
 
     private FragmentTweetsBinding binding;
     private TweetsViewModel mTweetsViewModel;
-    private ActivityResultLauncher<Intent> mLauncher;
+    private ActivityResultLauncher<Intent> mLoginLauncher;
+    private ActivityResultLauncher<Intent> mEditLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -56,18 +56,21 @@ public class TweetsFragment extends Fragment {
 
     private void init() {
         initLauncher();
-        initModel();
+        initMode();
         initView();
         initListener();
     }
 
     private void initLauncher() {
-        mLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        });
+        mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         });
     }
 
-    private void initModel() {
+    private void initMode() {
         Bundle bundle = getArguments();
         int type;
         if (bundle != null) {
@@ -99,36 +102,44 @@ public class TweetsFragment extends Fragment {
         mTweetsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         if (State.getState().isLogin) {
             binding.textTweets.setVisibility(View.VISIBLE);
+            binding.fab.setVisibility(View.VISIBLE);
             binding.loginRequiredLayout.setVisibility(View.INVISIBLE);
         } else {
             binding.textTweets.setVisibility(View.INVISIBLE);
+            binding.fab.setVisibility(View.INVISIBLE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
-            binding.loginButton.setOnClickListener(view -> {
-                mLauncher.launch(new Intent(getActivity(), LoginActivity.class));
-            });
         }
     }
 
     private void initListener() {
-        binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if (i == EditorInfo.IME_ACTION_SEARCH) {
-                // TODO: 进行搜索
-                Alert.info(getContext(), R.string.is_searching);
-            }
-            Util.HideKeyBoard(getActivity(), textView);
-            return true;
-        });
-        binding.spinner.setSelection(0, true);
-        binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Alert.info(getContext(), getResources().getStringArray(R.array.typeArray)[i]);
-            }
+        if (State.getState().isLogin) {
+            binding.fab.setOnClickListener(view -> {
+                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class));
+            });
+            binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    // TODO: 进行搜索
+                    Alert.info(getContext(), R.string.is_searching);
+                }
+                Util.HideKeyBoard(getActivity(), textView);
+                return true;
+            });
+            binding.spinner.setSelection(0, true);
+            binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    Alert.info(getContext(), getResources().getStringArray(R.array.typeArray)[i]);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
 
-            }
-        });
+                }
+            });
+        } else {
+            binding.loginButton.setOnClickListener(view -> {
+                mLoginLauncher.launch(new Intent(getActivity(), LoginActivity.class));
+            });
+        }
     }
 }

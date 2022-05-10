@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
         <activity
+            android:name=".EditActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:parentActivityName=".LoginActivity" />
