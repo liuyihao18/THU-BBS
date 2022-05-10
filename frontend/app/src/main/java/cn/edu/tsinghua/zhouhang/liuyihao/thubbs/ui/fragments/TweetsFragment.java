@@ -1,7 +1,11 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,7 +17,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.LoginActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentTweetsBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
@@ -27,6 +34,7 @@ public class TweetsFragment extends Fragment {
 
     private FragmentTweetsBinding binding;
     private TweetsViewModel mTweetsViewModel;
+    private ActivityResultLauncher<Intent> mLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -36,7 +44,6 @@ public class TweetsFragment extends Fragment {
 
         binding = FragmentTweetsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         init();
         return root;
     }
@@ -48,9 +55,16 @@ public class TweetsFragment extends Fragment {
     }
 
     private void init() {
+        initLauncher();
         initModel();
         initView();
         initListener();
+    }
+
+    protected void initLauncher() {
+        mLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
+        });
     }
 
     private void initModel() {
@@ -83,6 +97,16 @@ public class TweetsFragment extends Fragment {
     private void initView() {
         final TextView textView = binding.textTweets;
         mTweetsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        if (State.getState().isLogin) {
+            binding.textTweets.setVisibility(View.VISIBLE);
+            binding.loginRequiredLayout.setVisibility(View.INVISIBLE);
+        } else {
+            binding.textTweets.setVisibility(View.INVISIBLE);
+            binding.loginRequiredLayout.setVisibility(View.VISIBLE);
+            binding.loginButton.setOnClickListener(view -> {
+                mLauncher.launch(new Intent(getActivity(), LoginActivity.class));
+            });
+        }
     }
 
     private void initListener() {
