@@ -16,6 +16,7 @@
 
     <!-- 提示 -->
     <string name="login_required">登录后查看</string>
+    <string name="floating_action_button">发布</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>

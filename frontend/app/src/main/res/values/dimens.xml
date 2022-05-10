@@ -9,4 +9,6 @@
     <dimen name="textSize_big">16sp</dimen>
     <dimen name="textSize_title">24sp</dimen>
 
+    <!-- 位置 -->
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
