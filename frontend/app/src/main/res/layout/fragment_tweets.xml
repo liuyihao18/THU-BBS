@@ -22,31 +22,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/menu_search_description"
-            android:src="@android:drawable/ic_menu_search"
-            tools:ignore="ImageContrastCheck" />
-
-        <EditText
-            android:id="@+id/search"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:autofillHints=""
-            android:background="@null"
-            android:ems="10"
-            android:hint="@string/menu_search_description"
-            android:imeOptions="actionSearch"
-            android:inputType="textPersonName"
-            android:paddingStart="4dp"
-            android:paddingEnd="8dp"
-            android:textColorHint="#757575"
-            tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+            android:layout_weight="6">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/image_margin"
+                android:layout_weight="1"
+                android:contentDescription="@string/menu_search_description"
+                android:src="@android:drawable/ic_menu_search"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="ImageContrastCheck" />
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:autofillHints=""
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/menu_search_description"
+                android:imeOptions="actionSearch"
+                android:inputType="textPersonName"
+                android:paddingStart="4dp"
+                android:paddingEnd="8dp"
+                android:textColorHint="#757575"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/icon"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/divider"

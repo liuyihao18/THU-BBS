@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
 
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -80,7 +80,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -100,7 +100,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -111,7 +111,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
@@ -122,7 +122,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:padding="@dimen/image_padding"
             android:scaleType="fitCenter"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_image_add_gray_24dp" />
