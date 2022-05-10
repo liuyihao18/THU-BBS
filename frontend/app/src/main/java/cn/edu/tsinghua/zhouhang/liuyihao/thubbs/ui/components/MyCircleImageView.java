@@ -10,6 +10,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -75,7 +76,9 @@ public class MyCircleImageView extends MyImageView{
         bitmapShader.setLocalMatrix(mMatrix); //将矩阵变化设置到BitmapShader,其实就是作用到Bitmap
         mPaint.setShader(bitmapShader);
 
+        bitmapWidth *= minScale;
+        bitmapHeight *= minScale;
         //绘制圆形
-        canvas.drawCircle(bitmapWidth / 2, bitmapHeight / 2, Math.min(bitmapWidth / 2, bitmapHeight / 2), mPaint);
+        canvas.drawCircle(bitmapWidth/2, bitmapHeight / 2, Math.min(bitmapWidth / 2, bitmapHeight / 2), mPaint);
     }
 }
