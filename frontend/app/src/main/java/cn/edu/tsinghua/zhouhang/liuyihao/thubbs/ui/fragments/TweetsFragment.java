@@ -45,8 +45,15 @@ public class TweetsFragment extends Fragment {
 
         binding = FragmentTweetsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        initLauncher();
         init();
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
     }
 
     @Override
@@ -56,7 +63,6 @@ public class TweetsFragment extends Fragment {
     }
 
     private void init() {
-        initLauncher();
         initMode();
         initView();
         initListener();
@@ -65,9 +71,7 @@ public class TweetsFragment extends Fragment {
     private void initLauncher() {
         mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                initMode();
-                initView();
-                initListener();
+                init();
             }
         });
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
