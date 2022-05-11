@@ -10,15 +10,15 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
-public class MyCircleImageView extends MyImageView{
+public class MyCircleImageView extends MyImageView {
 
     private Paint mPaint;
     private Matrix mMatrix;
+
     public MyCircleImageView(Context context) {
         super(context);
         init();
@@ -79,6 +79,6 @@ public class MyCircleImageView extends MyImageView{
         bitmapWidth *= minScale;
         bitmapHeight *= minScale;
         //绘制圆形
-        canvas.drawCircle(bitmapWidth/2, bitmapHeight / 2, Math.min(bitmapWidth / 2, bitmapHeight / 2), mPaint);
+        canvas.drawCircle((float) bitmapWidth / 2, (float) bitmapHeight / 2, Math.min(bitmapWidth / 2, bitmapHeight / 2), mPaint);
     }
 }
