@@ -1,5 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 
 public class Config {
-    public static final String BASE_URL = "http://10.0.2.2:5000";
+    public static final String BASE_URL = "http://47.93.89.166/user-api/v1";
 }

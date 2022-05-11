@@ -42,8 +42,6 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
         return true;
     });
 
-    private Paint mPaint;
-
     public MyImageView(Context context) {
         super(context);
         init();
@@ -78,6 +76,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                 Message msg = new Message();
                 if (body == null) {
                     msg.what = APIConstant.SERVER_ERROR;
+                    handler.sendMessage(msg);
                     return;
                 }
                 InputStream is = body.byteStream();
@@ -86,6 +85,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                 msg.obj = bitmap;
                 handler.sendMessage(msg);
                 is.close();
+                body.close();
             }
         });
     }

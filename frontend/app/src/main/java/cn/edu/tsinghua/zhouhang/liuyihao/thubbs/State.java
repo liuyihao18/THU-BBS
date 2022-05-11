@@ -7,7 +7,7 @@ public class State {
     public int userID;
 
     private State() {
-        isLogin = true;
+        isLogin = false;
         jwt = null;
         userID = 0;
     }

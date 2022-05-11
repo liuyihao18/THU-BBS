@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -63,7 +64,11 @@ public class TweetsFragment extends Fragment {
 
     private void initLauncher() {
         mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                initMode();
+                initView();
+                initListener();
+            }
         });
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
