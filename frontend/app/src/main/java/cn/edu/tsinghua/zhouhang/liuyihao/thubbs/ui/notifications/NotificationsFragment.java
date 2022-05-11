@@ -42,7 +42,7 @@ public class NotificationsFragment extends Fragment {
         imageList = new LinkedList<String>();
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 10; i++) {
             titleList.add("测试用标题");
             contentList.add(getString(R.string.test_notification_content));
             imageList.add(getString(R.string.default_headshot_url));

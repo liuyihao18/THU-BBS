@@ -34,7 +34,7 @@ public class NotificationListAdapter extends
             super(view);
             notification_title = view.findViewById(R.id.notification_title);
             notification_content = view.findViewById(R.id.notification_content);
-            notification_content.setMovementMethod(ScrollingMovementMethod.getInstance());
+//            notification_content.setMovementMethod(ScrollingMovementMethod.getInstance());
             notification_headshot = view.findViewById(R.id.notification_headshot);
         }
     };
