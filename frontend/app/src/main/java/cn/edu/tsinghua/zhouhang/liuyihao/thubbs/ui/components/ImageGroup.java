@@ -83,7 +83,6 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-
     public void bind(Activity activity, ArrayList<String> imageList) {
         mActivity = activity;
         mImageUrlList = imageList;
