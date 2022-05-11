@@ -7,4 +7,7 @@ public class Constant {
     public static final String USER_ID = "userid";
 
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EXTRA_EMAIL";
+
+    public static final int LOCATION_PERMISSION = 0;
+    public static final int STORAGE_PERMISSION = 1;
 }

@@ -18,8 +18,8 @@
 
     <!-- 提示 -->
     <string name="login_required">登录后查看</string>
-    <string name="floating_action_button">发布</string>
-    <string name="edit_hint">发布你此刻的看法~</string>
+    <string name="floating_action_button_description">发布</string>
+    <string name="dialog_title_info">提示</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>
@@ -48,6 +48,10 @@
     <string name="add_audio">音频</string>
     <string name="add_image">图像</string>
     <string name="add_video">视频</string>
+    <string name="edit_hint">发布你此刻的看法~</string>
+    <string name="question_add_location">是否添加地点</string>
+    <string name="add_location_success">获取位置信息成功</string>
+    <string name="add_location_fail">获取位置信息失败</string>
 
     <!-- 用户 -->
     <string name="user_name">用户名</string>
