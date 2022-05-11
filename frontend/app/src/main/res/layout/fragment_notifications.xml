@@ -4,10 +4,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginVertical="16dp"
     tools:context=".ui.notifications.NotificationsFragment">
+    <LinearLayout
+        android:id="@+id/notification_image_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/notification_like_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_like_24dp"/>
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="@string/like"
+                android:textSize="@dimen/textSize_big" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/notification_follow_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_follow_24dp"/>
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="@string/follow"
+                android:textSize="@dimen/textSize_big" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_comment_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_comment_24dp"/>
+            <TextView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="@string/comment"
+                android:textSize="@dimen/textSize_big" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/notification_divider"
+        app:layout_constraintTop_toBottomOf="@id/notification_image_list"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="?android:attr/listDivider" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notifications"
+        app:layout_constraintTop_toBottomOf="@id/notification_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
