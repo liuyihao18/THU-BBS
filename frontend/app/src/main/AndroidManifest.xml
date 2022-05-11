@@ -13,6 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
         <activity
+            android:name=".ui.notifications.launchedActivities.CommentNotificationActivity"
+            android:exported="false"
+            android:label="@string/comment" />
+        <activity
+            android:name=".ui.notifications.launchedActivities.FollowNotificationActivity"
+            android:exported="false"
+            android:label="@string/follow" />
+        <activity
+            android:name=".ui.notifications.launchedActivities.LikeActivity"
+            android:exported="false"
+            android:label="@string/like" />
+        <activity
             android:name=".EditActivity"
             android:exported="false" />
         <activity

@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 
 public class AccountFragment extends Fragment {
 
@@ -23,6 +25,8 @@ public class AccountFragment extends Fragment {
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
 
+        MyCircleImageView imageView = binding.accountHeadshot;
+        imageView.setImageUrl(getString(R.string.default_headshot_url));
         return binding.getRoot();
     }
 
