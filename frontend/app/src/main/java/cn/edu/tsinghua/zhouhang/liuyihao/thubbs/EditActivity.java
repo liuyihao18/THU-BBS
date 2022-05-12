@@ -22,7 +22,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 public class EditActivity extends AppCompatActivity {
 
     private ActivityEditBinding binding;
-    private ArrayList<String> mImageUrlList;
+    private ArrayList<String> mImageUrlList = new ArrayList<>();
     private String mLocation = null;
 
     @Override
@@ -94,6 +94,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        binding.imageGroup.setEditable(true);
         binding.imageGroup.bind(this, mImageUrlList);
     }
 

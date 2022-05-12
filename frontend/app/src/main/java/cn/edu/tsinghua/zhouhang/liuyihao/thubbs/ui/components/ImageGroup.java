@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -23,6 +25,7 @@ import com.luck.picture.lib.style.TitleBarStyle;
 import java.util.ArrayList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 
@@ -31,8 +34,10 @@ public class ImageGroup extends ConstraintLayout {
     private ComponentImageGroupBinding binding;
     private ArrayList<String> mImageUrlList = null;
     private ArrayList<MyImageView> mImageViewList = new ArrayList<>();
-    private final int totalCount = 9;
-    private int index = 0;
+    private ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
+    private boolean mEditable = false;
+    private final int mTotalCount = 9;
+    private int mIndex = 0;
 
     public ImageGroup(@NonNull Context context) {
         super(context);
@@ -51,12 +56,12 @@ public class ImageGroup extends ConstraintLayout {
 
     private void init(Context context) {
         binding = ComponentImageGroupBinding.inflate(LayoutInflater.from(context), this, true);
-        initImageViewList();
+        initList();
         initView();
         initListener();
     }
 
-    private void initImageViewList() {
+    private void initList() {
         mImageViewList.add(binding.myImageView1);
         mImageViewList.add(binding.myImageView2);
         mImageViewList.add(binding.myImageView3);
@@ -66,26 +71,87 @@ public class ImageGroup extends ConstraintLayout {
         mImageViewList.add(binding.myImageView7);
         mImageViewList.add(binding.myImageView8);
         mImageViewList.add(binding.myImageView9);
+        mCloseButtonList.add(binding.closeButton1);
+        mCloseButtonList.add(binding.closeButton2);
+        mCloseButtonList.add(binding.closeButton3);
+        mCloseButtonList.add(binding.closeButton4);
+        mCloseButtonList.add(binding.closeButton5);
+        mCloseButtonList.add(binding.closeButton6);
+        mCloseButtonList.add(binding.closeButton7);
+        mCloseButtonList.add(binding.closeButton8);
+        mCloseButtonList.add(binding.closeButton9);
     }
 
     private void initView() {
-
+        binding.imageGroupRow1.setVisibility(GONE);
+        binding.imageGroupRow2.setVisibility(GONE);
+        binding.imageGroupRow3.setVisibility(GONE);
+        for (int i = 0; i < mTotalCount; i++) {
+            mImageViewList.get(i).setVisibility(INVISIBLE);
+            mCloseButtonList.get(i).setVisibility(INVISIBLE);
+        }
     }
 
     private void initListener() {
-        if (index < mImageViewList.size()) {
-            mImageViewList.get(index).setOnClickListener(view -> {
-                int i = mImageViewList.indexOf((MyImageView) view);
-                if (i == index) {
+        for (int i = 0; i < mTotalCount; i++) {
+            mImageViewList.get(i).setOnClickListener(view -> {
+                int index = mImageViewList.indexOf((MyImageView) view);
+                if (index == mIndex) {
                     selectImage();
                 }
             });
         }
     }
 
+    public void setEditable(boolean editable) {
+        mEditable = editable;
+    }
+
     public void bind(Activity activity, ArrayList<String> imageList) {
         mActivity = activity;
         mImageUrlList = imageList;
+        refresh();
+    }
+
+    private void refresh() {
+        if (mIndex < 3) {
+            binding.imageGroupRow1.setVisibility(VISIBLE);
+            binding.imageGroupRow2.setVisibility(GONE);
+            binding.imageGroupRow3.setVisibility(GONE);
+        } else if (mIndex < 6) {
+            binding.imageGroupRow1.setVisibility(VISIBLE);
+            binding.imageGroupRow2.setVisibility(VISIBLE);
+            binding.imageGroupRow3.setVisibility(GONE);
+        } else {
+            binding.imageGroupRow1.setVisibility(VISIBLE);
+            binding.imageGroupRow2.setVisibility(VISIBLE);
+            binding.imageGroupRow3.setVisibility(VISIBLE);
+        }
+        for (int i = 0; i < mIndex; i++) {
+            Glide.with(getContext())
+                    .load(mImageUrlList.get(i))
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_loading_spinner_black_24dp)
+                    .into(mImageViewList.get(i));
+            mImageViewList.get(i).setVisibility(VISIBLE);
+            if (mEditable) {
+                mCloseButtonList.get(i).setVisibility(VISIBLE);
+            }
+        }
+        for (int i = mIndex + 1; i < mTotalCount; i++) {
+            mImageViewList.get(i).setVisibility(INVISIBLE);
+            mCloseButtonList.get(i).setVisibility(INVISIBLE);
+        }
+        if (mIndex < mTotalCount && mEditable) {
+            System.out.println(mIndex);
+            Glide.with(getContext())
+                    .load(R.drawable.ic_image_add_gray_24dp)
+                    .fitCenter()
+                    .placeholder(R.drawable.ic_loading_spinner_black_24dp)
+                    .into(mImageViewList.get(mIndex));
+            mImageViewList.get(mIndex).setVisibility(VISIBLE);
+            mCloseButtonList.get(mIndex).setVisibility(INVISIBLE);
+        }
     }
 
     public void selectImage() {
@@ -111,12 +177,16 @@ public class ImageGroup extends ConstraintLayout {
                 .openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setSelectorUIStyle(style)
-                .setMaxSelectNum(totalCount - index)
+                .setMaxSelectNum(mTotalCount - mIndex)
                 .setLanguage(86)
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
-                        System.out.println(result);
+                        for (LocalMedia media : result) {
+                            mImageUrlList.add(media.getPath());
+                            mIndex++;
+                        }
+                        refresh();
                     }
 
                     @Override

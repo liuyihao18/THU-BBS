@@ -14,6 +14,7 @@
     <string name="button_cancel">取消</string>
     <string name="button_login">登录</string>
     <string name="button_tweet">发布</string>
+    <string name="button_close">关闭</string>
     <string name="button_draft">存草稿</string>
 
     <!-- 提示 -->
