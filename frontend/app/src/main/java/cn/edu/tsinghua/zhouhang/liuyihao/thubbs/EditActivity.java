@@ -27,6 +27,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -58,7 +59,7 @@ public class EditActivity extends AppCompatActivity {
                     return;
                 }
             }
-            setLocation();
+            selectLocation();
         } else if (requestCode == Constant.STORAGE_PERMISSION) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
@@ -71,74 +72,41 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.imageGroup.setEditable(true);
-        binding.imageGroup.bind(mImageUrlList, new ImageGroup.ImageGroupListener() {
-            @Override
-            public void onClickImage(MyImageView myImageView, int index) {
+        binding.imageGroup.bindImageUrlList(mImageUrlList)
+                .setEditable(false)
+                .registerImageGroupListener(new ImageGroup.ImageGroupListener() {
+                    @Override
+                    public void onClickImage(MyImageView myImageView, int index) {
 
-            }
+                    }
 
-            @Override
-            public void onClickAddImage(MyImageView myImageView, int index) {
-                selectImage();
-            }
+                    @Override
+                    public void onClickAddImage(MyImageView myImageView, int index) {
+                        if (index == mImageUrlList.size()) {
+                            selectImage();
+                        }
+                    }
 
-            @Override
-            public void onClickCloseButton(View view, int index) {
-                removeImage(index);
-            }
-        });
+                    @Override
+                    public void onClickCloseButton(View view, int index) {
+                        removeImage(index);
+                    }
+                })
+                .refresh();
     }
 
     private void initListener() {
         binding.cancel.setOnClickListener(view -> finish());
         binding.locationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_info)
-                .setMessage(R.string.question_add_location)
+                .setTitle(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> setLocation()).
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
                 create().show()
         );
         binding.imageButton.setOnClickListener(view -> selectImage());
-        binding.audioButton.setOnClickListener(view -> PictureSelector.create(this)
-                .openGallery(SelectMimeType.ofAudio())
-                .setImageEngine(GlideEngine.createGlideEngine())
-                .setLanguage(86)
-                .setMaxSelectNum(Constant.MAX_AUDIO_COUNT)
-                .setRecordAudioInterceptListener((fragment, requestCode) -> {
-                    Alert.info(this, "录制音频");
-                })
-                .forResult(new OnResultCallbackListener<LocalMedia>() {
-                    @Override
-                    public void onResult(ArrayList<LocalMedia> result) {
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                }));
-        binding.videoButton.setOnClickListener(view -> PictureSelector.create(this)
-                .openGallery(SelectMimeType.ofVideo())
-                .setImageEngine(GlideEngine.createGlideEngine())
-                .setLanguage(86)
-                .setMaxSelectNum(Constant.MAX_VIDEO_COUNT)
-                .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
-                    Alert.info(this, "录制视频");
-                })
-                .forResult(new OnResultCallbackListener<LocalMedia>() {
-                    @Override
-                    public void onResult(ArrayList<LocalMedia> result) {
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                }));
+        binding.audioButton.setOnClickListener(view -> selectAudio());
+        binding.videoButton.setOnClickListener(view -> selectVideo());
     }
 
     private void refresh() {
@@ -186,7 +154,7 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    private void setLocation() {
+    private void selectLocation() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this,
@@ -214,7 +182,7 @@ public class EditActivity extends AppCompatActivity {
             Alert.info(this, "获取位置信息失败");
             return;
         }
-        mLocation = "(" + bestLocation.getLongitude() + ", " + bestLocation.getLatitude() + ")";
+        mLocation = Util.FormatLocation(bestLocation);
         binding.addLocation.setText(mLocation);
         Alert.info(this, "获取位置信息成功");
     }
@@ -266,5 +234,49 @@ public class EditActivity extends AppCompatActivity {
         mImageUrlList.remove(i);
         binding.imageGroup.refresh();
         refresh();
+    }
+
+    public void selectAudio() {
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofAudio())
+                .setImageEngine(GlideEngine.createGlideEngine())
+                .setLanguage(86)
+                .setMaxSelectNum(Constant.MAX_AUDIO_COUNT)
+                .setRecordAudioInterceptListener((fragment, requestCode) -> {
+                    Alert.info(this, "录制音频");
+                })
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(ArrayList<LocalMedia> result) {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+    }
+
+    public void selectVideo() {
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofVideo())
+                .setImageEngine(GlideEngine.createGlideEngine())
+                .setLanguage(86)
+                .setMaxSelectNum(Constant.MAX_VIDEO_COUNT)
+                .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
+                    Alert.info(this, "录制视频");
+                })
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(ArrayList<LocalMedia> result) {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
     }
 }

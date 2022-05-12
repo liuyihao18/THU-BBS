@@ -50,7 +50,7 @@
     <string name="add_image">图像</string>
     <string name="add_video">视频</string>
     <string name="edit_hint">发布你此刻的看法~</string>
-    <string name="question_add_location">是否添加地点</string>
+    <string name="question_add_location">是否添加位置信息</string>
     <string name="add_location_success">获取位置信息成功</string>
     <string name="add_location_fail">获取位置信息失败</string>
 

@@ -1,6 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,10 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
 
@@ -28,7 +25,6 @@ public class ImageGroup extends ConstraintLayout {
     private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
     private boolean mEditable = false;
     private final int mTotalCount = Constant.MAX_IMAGE_COUNT;
-    private int mIndex = 0;
 
     public interface ImageGroupListener {
         void onClickImage(MyImageView myImageView, int index);
@@ -90,46 +86,40 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-    private void initListener(ImageGroupListener imageGroupListener) {
+    public ImageGroup bindImageUrlList(ArrayList<String> imageUrlList) {
+        mImageUrlList = imageUrlList;
+        return this;
+    }
+
+    public ImageGroup setEditable(boolean editable) {
+        mEditable = editable;
+        return this;
+    }
+
+    public ImageGroup registerImageGroupListener(ImageGroupListener imageGroupListener) {
         for (int i = 0; i < mTotalCount; i++) {
             mImageViewList.get(i).setOnClickListener(view -> {
                 int index = mImageViewList.indexOf((MyImageView) view);
-                if (index < mIndex) {
-                    imageGroupListener.onClickImage(mImageViewList.get(index), index);
-                } else if (index == mIndex) {
-                    imageGroupListener.onClickAddImage(mImageViewList.get(index), index);
-                }
+                imageGroupListener.onClickImage(mImageViewList.get(index), index);
+                imageGroupListener.onClickAddImage(mImageViewList.get(index), index);
             });
         }
         for (int i = 0; i < mTotalCount; i++) {
             mCloseButtonList.get(i).setOnClickListener(view -> {
-                if (mEditable) {
-                    int index = mCloseButtonList.indexOf((ImageView) view);
-                    if (index < mIndex) {
-                        imageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
-                    }
-                }
+                int index = mCloseButtonList.indexOf((ImageView) view);
+                imageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
             });
         }
-    }
-
-    public void setEditable(boolean editable) {
-        mEditable = editable;
-    }
-
-    public void bind(ArrayList<String> imageList, ImageGroupListener imageGroupListener) {
-        mImageUrlList = imageList;
-        initListener(imageGroupListener);
-        refresh();
+        return this;
     }
 
     public void refresh() {
-        mIndex = mImageUrlList.size();
-        if (mIndex < 3) {
+        int size = mImageUrlList.size();
+        if (size < 3) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
             binding.imageGroupRow3.setVisibility(GONE);
-        } else if (mIndex < 6) {
+        } else if (size < 6) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(GONE);
@@ -138,7 +128,7 @@ public class ImageGroup extends ConstraintLayout {
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(VISIBLE);
         }
-        for (int i = 0; i < mIndex; i++) {
+        for (int i = 0; i < size; i++) {
             Glide.with(getContext())
                     .load(mImageUrlList.get(i))
                     .centerCrop()
@@ -149,14 +139,18 @@ public class ImageGroup extends ConstraintLayout {
                 mCloseButtonList.get(i).setVisibility(VISIBLE);
             }
         }
-        for (int i = mIndex + 1; i < mTotalCount; i++) {
+        for (int i = size + 1; i < mTotalCount; i++) {
             mImageViewList.get(i).setVisibility(INVISIBLE);
             mCloseButtonList.get(i).setVisibility(INVISIBLE);
         }
-        if (mIndex < mTotalCount && mEditable) {
-            mImageViewList.get(mIndex).setImageResource(R.drawable.ic_add_image_gray_24dp);
-            mImageViewList.get(mIndex).setVisibility(VISIBLE);
-            mCloseButtonList.get(mIndex).setVisibility(INVISIBLE);
+        if (size < mTotalCount) {
+            if (mEditable) {
+                mImageViewList.get(size).setImageResource(R.drawable.ic_add_image_gray_24dp);
+                mImageViewList.get(size).setVisibility(VISIBLE);
+            } else {
+                mImageViewList.get(size).setVisibility(INVISIBLE);
+            }
+            mCloseButtonList.get(size).setVisibility(INVISIBLE);
         }
     }
 
