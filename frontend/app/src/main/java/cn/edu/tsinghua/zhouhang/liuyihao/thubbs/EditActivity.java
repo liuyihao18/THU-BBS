@@ -22,7 +22,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 public class EditActivity extends AppCompatActivity {
 
     private ActivityEditBinding binding;
-    private ArrayList<String> mImageUrlList = new ArrayList<>();
+    private final ArrayList<String> mImageUrlList = new ArrayList<>();
     private String mLocation = null;
 
     @Override
@@ -105,10 +105,55 @@ public class EditActivity extends AppCompatActivity {
                 .setMessage(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                    setLocation();
-                }).create().show()
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> setLocation()).
+                create().show()
         );
         binding.imageButton.setOnClickListener(view -> binding.imageGroup.selectImage());
+    }
+
+    private void setAudioButtonEnabled(boolean enabled) {
+        binding.audioButton.setEnabled(enabled);
+        if (enabled) {
+            binding.addAudio.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_enabled_24dp);
+        } else {
+            binding.addAudio.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_disabled_24dp);
+        }
+    }
+
+    private void setImageButtonEnabled(boolean enabled) {
+        binding.imageButton.setEnabled(enabled);
+        if (enabled) {
+            binding.addImage.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.imageIcon.setImageResource(R.drawable.ic_baseline_image_enabled_24dp);
+        } else {
+            binding.addImage.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.imageIcon.setImageResource(R.drawable.ic_baseline_image_disabled_24dp);
+        }
+    }
+
+    private void setVideoButtonEnabled(boolean enabled) {
+        binding.videoButton.setEnabled(enabled);
+        if (enabled) {
+            binding.addVideo.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_enabled_24dp);
+        } else {
+            binding.addVideo.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_disabled_24dp);
+        }
+    }
+
+    public void refresh() {
+        if (mImageUrlList.size() > 0) {
+            setImageButtonEnabled(mImageUrlList.size() != Constant.MAX_IMAGE_COUNT);
+            setAudioButtonEnabled(false);
+            setVideoButtonEnabled(false);
+        } else {
+            setImageButtonEnabled(true);
+            setAudioButtonEnabled(true);
+            setVideoButtonEnabled(true);
+        }
+
     }
 }

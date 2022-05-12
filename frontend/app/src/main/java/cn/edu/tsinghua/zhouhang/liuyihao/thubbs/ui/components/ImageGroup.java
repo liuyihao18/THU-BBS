@@ -25,6 +25,7 @@ import com.luck.picture.lib.style.TitleBarStyle;
 import java.util.ArrayList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
@@ -37,7 +38,7 @@ public class ImageGroup extends ConstraintLayout {
     private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
     ArrayList<LocalMedia> mSelectedData = new ArrayList<>();
     private boolean mEditable = false;
-    private final int mTotalCount = 9;
+    private final int mTotalCount = Constant.MAX_IMAGE_COUNT;
     private int mIndex = 0;
 
     public ImageGroup(@NonNull Context context) {
@@ -164,6 +165,10 @@ public class ImageGroup extends ConstraintLayout {
             mImageViewList.get(mIndex).setImageResource(R.drawable.ic_add_image_gray_24dp);
             mImageViewList.get(mIndex).setVisibility(VISIBLE);
             mCloseButtonList.get(mIndex).setVisibility(INVISIBLE);
+        }
+        if (mActivity instanceof EditActivity) {
+            EditActivity activity = (EditActivity) mActivity;
+            activity.refresh();
         }
     }
 

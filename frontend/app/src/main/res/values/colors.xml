@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 系统默认 -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <!-- 主题色 -->
     <color name="gray">#FFF5F5F5</color>
-    <color name="text_gray">#999999</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pink">#FF679A</color>
     <color name="pink_dark">#FF1493</color>
+    <!-- 文本 -->
+    <color name="text_gray">#999999</color>
     <color name="text_black">#2E3136</color>
+    <!-- 按钮 -->
+    <color name="button_enabled">#2E3136</color>
+    <color name="button_disabled">#999999</color>
 </resources>
