@@ -31,4 +31,5 @@ public class FollowNotificationActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
