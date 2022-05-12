@@ -25,7 +25,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button1"
@@ -55,7 +55,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button2"
@@ -83,7 +83,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button3"
@@ -120,7 +120,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button4"
@@ -149,7 +149,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button5"
@@ -178,7 +178,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button6"
@@ -215,7 +215,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button7"
@@ -244,7 +244,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button8"
@@ -273,7 +273,7 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_image_add_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
 
             <ImageView
                 android:id="@+id/close_button9"

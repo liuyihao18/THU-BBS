@@ -33,8 +33,9 @@ public class ImageGroup extends ConstraintLayout {
     private Activity mActivity = null;
     private ComponentImageGroupBinding binding;
     private ArrayList<String> mImageUrlList = null;
-    private ArrayList<MyImageView> mImageViewList = new ArrayList<>();
-    private ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
+    private final ArrayList<MyImageView> mImageViewList = new ArrayList<>();
+    private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
+    ArrayList<LocalMedia> mSelectedData = new ArrayList<>();
     private boolean mEditable = false;
     private final int mTotalCount = 9;
     private int mIndex = 0;
@@ -101,6 +102,16 @@ public class ImageGroup extends ConstraintLayout {
                 }
             });
         }
+        for (int i = 0; i < mTotalCount; i++) {
+            mCloseButtonList.get(i).setOnClickListener(view -> {
+                int index = mCloseButtonList.indexOf((ImageView) view);
+                if (index < mIndex) {
+                    mSelectedData.remove(index);
+                }
+                mIndex--;
+                refresh();
+            });
+        }
     }
 
     public void setEditable(boolean editable) {
@@ -114,6 +125,12 @@ public class ImageGroup extends ConstraintLayout {
     }
 
     private void refresh() {
+        mImageUrlList.clear();
+        mIndex = 0;
+        for (LocalMedia media : mSelectedData) {
+            mImageUrlList.add(media.getPath());
+            mIndex++;
+        }
         if (mIndex < 3) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
@@ -144,11 +161,7 @@ public class ImageGroup extends ConstraintLayout {
         }
         if (mIndex < mTotalCount && mEditable) {
             System.out.println(mIndex);
-            Glide.with(getContext())
-                    .load(R.drawable.ic_image_add_gray_24dp)
-                    .fitCenter()
-                    .placeholder(R.drawable.ic_loading_spinner_black_24dp)
-                    .into(mImageViewList.get(mIndex));
+            mImageViewList.get(mIndex).setImageResource(R.drawable.ic_add_image_gray_24dp);
             mImageViewList.get(mIndex).setVisibility(VISIBLE);
             mCloseButtonList.get(mIndex).setVisibility(INVISIBLE);
         }
@@ -177,15 +190,13 @@ public class ImageGroup extends ConstraintLayout {
                 .openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setSelectorUIStyle(style)
-                .setMaxSelectNum(mTotalCount - mIndex)
+                .setMaxSelectNum(mTotalCount)
+                .setSelectedData(mSelectedData)
                 .setLanguage(86)
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
-                        for (LocalMedia media : result) {
-                            mImageUrlList.add(media.getPath());
-                            mIndex++;
-                        }
+                        mSelectedData = result;
                         refresh();
                     }
 
