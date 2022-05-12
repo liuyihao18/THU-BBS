@@ -26,15 +26,17 @@
                 android:paddingHorizontal="8dp"
                 android:paddingTop="8dp"
                 android:text="TextView" />
-            <TextView
-                android:id="@+id/notification_content"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:orientation="vertical"
-                android:padding="8dp"
-                android:scrollbars="vertical"
-                android:scrollbarStyle="outsideInset"
-                android:text="TextView" />
+                android:layout_height="64dp">
+                <TextView
+                    android:id="@+id/notification_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:orientation="vertical"
+                    android:padding="8dp"
+                    android:text="TextView" />
+            </ScrollView>
         </LinearLayout>
         <TextView
             android:layout_width="48dp"
