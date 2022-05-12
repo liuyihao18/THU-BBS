@@ -1,45 +1,39 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.luck.picture.lib.style.BottomNavBarStyle;
-import com.luck.picture.lib.style.PictureSelectorStyle;
-import com.luck.picture.lib.style.TitleBarStyle;
 
 import java.util.ArrayList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class ImageGroup extends ConstraintLayout {
-    private Activity mActivity = null;
     private ComponentImageGroupBinding binding;
     private ArrayList<String> mImageUrlList = null;
     private final ArrayList<MyImageView> mImageViewList = new ArrayList<>();
     private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
-    ArrayList<LocalMedia> mSelectedData = new ArrayList<>();
     private boolean mEditable = false;
     private final int mTotalCount = Constant.MAX_IMAGE_COUNT;
-    private int mIndex = 0;
+
+    public interface ImageGroupListener {
+        void onClickImage(MyImageView myImageView, int index);
+
+        void onClickAddImage(MyImageView myImageView, int index);
+
+        void onClickCloseButton(View view, int index);
+    }
 
     public ImageGroup(@NonNull Context context) {
         super(context);
@@ -60,7 +54,6 @@ public class ImageGroup extends ConstraintLayout {
         binding = ComponentImageGroupBinding.inflate(LayoutInflater.from(context), this, true);
         initList();
         initView();
-        initListener();
     }
 
     private void initList() {
@@ -94,49 +87,44 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-    private void initListener() {
+    public ImageGroup bindImageUrlList(ArrayList<String> imageUrlList) {
+        mImageUrlList = imageUrlList;
+        return this;
+    }
+
+    public ImageGroup setEditable(boolean editable) {
+        mEditable = editable;
+        return this;
+    }
+
+    public ImageGroup registerImageGroupListener(ImageGroupListener imageGroupListener) {
         for (int i = 0; i < mTotalCount; i++) {
             mImageViewList.get(i).setOnClickListener(view -> {
                 int index = mImageViewList.indexOf((MyImageView) view);
-                if (index == mIndex) {
-                    selectImage();
-                }
+                imageGroupListener.onClickImage(mImageViewList.get(index), index);
+                imageGroupListener.onClickAddImage(mImageViewList.get(index), index);
             });
         }
         for (int i = 0; i < mTotalCount; i++) {
             mCloseButtonList.get(i).setOnClickListener(view -> {
                 int index = mCloseButtonList.indexOf((ImageView) view);
-                if (index < mIndex) {
-                    mSelectedData.remove(index);
-                }
-                mIndex--;
-                refresh();
+                imageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
             });
         }
+        return this;
     }
 
-    public void setEditable(boolean editable) {
-        mEditable = editable;
-    }
-
-    public void bind(Activity activity, ArrayList<String> imageList) {
-        mActivity = activity;
-        mImageUrlList = imageList;
-        refresh();
-    }
-
-    private void refresh() {
-        mImageUrlList.clear();
-        mIndex = 0;
-        for (LocalMedia media : mSelectedData) {
-            mImageUrlList.add(media.getPath());
-            mIndex++;
+    public void refresh() {
+        if (mImageUrlList == null) {
+            Alert.error(getContext(), R.string.unknown_error);
+            return;
         }
-        if (mIndex < 3) {
+        int size = mImageUrlList.size();
+        if (size < 3) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
             binding.imageGroupRow3.setVisibility(GONE);
-        } else if (mIndex < 6) {
+        } else if (size < 6) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(GONE);
@@ -145,7 +133,7 @@ public class ImageGroup extends ConstraintLayout {
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(VISIBLE);
         }
-        for (int i = 0; i < mIndex; i++) {
+        for (int i = 0; i < size; i++) {
             Glide.with(getContext())
                     .load(mImageUrlList.get(i))
                     .centerCrop()
@@ -156,59 +144,19 @@ public class ImageGroup extends ConstraintLayout {
                 mCloseButtonList.get(i).setVisibility(VISIBLE);
             }
         }
-        for (int i = mIndex + 1; i < mTotalCount; i++) {
+        for (int i = size + 1; i < mTotalCount; i++) {
             mImageViewList.get(i).setVisibility(INVISIBLE);
             mCloseButtonList.get(i).setVisibility(INVISIBLE);
         }
-        if (mIndex < mTotalCount && mEditable) {
-            System.out.println(mIndex);
-            mImageViewList.get(mIndex).setImageResource(R.drawable.ic_add_image_gray_24dp);
-            mImageViewList.get(mIndex).setVisibility(VISIBLE);
-            mCloseButtonList.get(mIndex).setVisibility(INVISIBLE);
-        }
-        if (mActivity instanceof EditActivity) {
-            EditActivity activity = (EditActivity) mActivity;
-            activity.refresh();
+        if (size < mTotalCount) {
+            if (mEditable) {
+                mImageViewList.get(size).setImageResource(R.drawable.ic_add_image_gray_24dp);
+                mImageViewList.get(size).setVisibility(VISIBLE);
+            } else {
+                mImageViewList.get(size).setVisibility(INVISIBLE);
+            }
+            mCloseButtonList.get(size).setVisibility(INVISIBLE);
         }
     }
 
-    public void selectImage() {
-        if (mActivity == null) {
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(mActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mActivity,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constant.STORAGE_PERMISSION);
-            return;
-        }
-        PictureSelectorStyle style = new PictureSelectorStyle();
-        TitleBarStyle titleBarStyle = new TitleBarStyle(); // 标题栏样式
-        BottomNavBarStyle bottomNavBarStyle = new BottomNavBarStyle(); // 底部导航栏样式
-        style.setTitleBarStyle(titleBarStyle);
-        style.setBottomBarStyle(bottomNavBarStyle);
-        PictureSelector
-                .create(getContext())
-                .openGallery(SelectMimeType.ofImage())
-                .setImageEngine(GlideEngine.createGlideEngine())
-                .setSelectorUIStyle(style)
-                .setMaxSelectNum(mTotalCount)
-                .setSelectedData(mSelectedData)
-                .setLanguage(86)
-                .forResult(new OnResultCallbackListener<LocalMedia>() {
-                    @Override
-                    public void onResult(ArrayList<LocalMedia> result) {
-                        mSelectedData = result;
-                        refresh();
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                });
-    }
 }

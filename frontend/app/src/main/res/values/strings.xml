@@ -5,6 +5,9 @@
     <string name="title_account">用户</string>
     <string name="title_notifications">通知</string>
 
+    <!-- 错误 -->
+    <string name="unknown_error">未知错误</string>
+
     <!-- 网络相关 -->
     <string name="network_error">网络连接失败</string>
     <string name="server_error">服务器发生错误</string>
@@ -50,7 +53,7 @@
     <string name="add_image">图像</string>
     <string name="add_video">视频</string>
     <string name="edit_hint">发布你此刻的看法~</string>
-    <string name="question_add_location">是否添加地点</string>
+    <string name="question_add_location">是否添加位置信息</string>
     <string name="add_location_success">获取位置信息成功</string>
     <string name="add_location_fail">获取位置信息失败</string>
 
