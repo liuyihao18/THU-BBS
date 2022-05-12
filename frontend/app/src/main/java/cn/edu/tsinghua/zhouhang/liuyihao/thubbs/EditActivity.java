@@ -13,7 +13,12 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.luck.lib.camerax.CameraImageEngine;
+import com.luck.lib.camerax.SimpleCameraX;
+import com.luck.picture.lib.basic.PictureSelectionModel;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -73,7 +78,7 @@ public class EditActivity extends AppCompatActivity {
 
     private void initView() {
         binding.imageGroup.bindImageUrlList(mImageUrlList)
-                .setEditable(false)
+                .setEditable(true)
                 .registerImageGroupListener(new ImageGroup.ImageGroupListener() {
                     @Override
                     public void onClickImage(MyImageView myImageView, int index) {
@@ -202,7 +207,21 @@ public class EditActivity extends AppCompatActivity {
                 .openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
-                    Alert.info(this, "拍照");
+                    if (cameraMode == SelectMimeType.ofAudio()) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    }
+                    SimpleCameraX camera = SimpleCameraX.of();
+                    camera.setCameraMode(cameraMode);
+                    camera.setOutputPathDir(getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath());
+                    camera.setImageEngine((context, url, imageView) -> {
+                        Glide.with(context).load(url).into(imageView);
+                    });
+                    if (fragment.getActivity() == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    }
+                    camera.start(fragment.getActivity(), fragment, requestCode);
                 })
                 .setMaxSelectNum(Constant.MAX_IMAGE_COUNT)
                 .setSelectedData(mSelectedImageData)
@@ -265,7 +284,21 @@ public class EditActivity extends AppCompatActivity {
                 .setLanguage(86)
                 .setMaxSelectNum(Constant.MAX_VIDEO_COUNT)
                 .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
-                    Alert.info(this, "录制视频");
+                    if (cameraMode == SelectMimeType.ofAudio()) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    }
+                    SimpleCameraX camera = SimpleCameraX.of();
+                    camera.setCameraMode(cameraMode);
+                    camera.setOutputPathDir(getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath());
+                    camera.setImageEngine((context, url, imageView) -> {
+                        Glide.with(context).load(url).into(imageView);
+                    });
+                    if (fragment.getActivity() == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    }
+                    camera.start(fragment.getActivity(), fragment, requestCode);
                 })
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class ImageGroup extends ConstraintLayout {
     private ComponentImageGroupBinding binding;
@@ -114,6 +115,10 @@ public class ImageGroup extends ConstraintLayout {
     }
 
     public void refresh() {
+        if (mImageUrlList == null) {
+            Alert.error(getContext(), R.string.unknown_error);
+            return;
+        }
         int size = mImageUrlList.size();
         if (size < 3) {
             binding.imageGroupRow1.setVisibility(VISIBLE);

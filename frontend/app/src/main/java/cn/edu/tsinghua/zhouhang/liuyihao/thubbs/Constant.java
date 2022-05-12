@@ -8,6 +8,8 @@ public class Constant {
 
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EXTRA_EMAIL";
 
+    public static final String TMP_DIR = "tmp";
+
     public static final int LOCATION_PERMISSION = 0;
     public static final int STORAGE_PERMISSION = 1;
     public static final int CAMERA_PERMISSION = 2;
