@@ -10,6 +10,9 @@ public class Constant {
 
     public static final int LOCATION_PERMISSION = 0;
     public static final int STORAGE_PERMISSION = 1;
+    public static final int CAMERA_PERMISSION = 2;
 
     public static final int MAX_IMAGE_COUNT = 9;
+    public static final int MAX_AUDIO_COUNT = 1;
+    public static final int MAX_VIDEO_COUNT = 1;
 }
