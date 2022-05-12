@@ -14,6 +14,7 @@
     <dimen name="image_height">100dp</dimen>
     <dimen name="image_margin">8dp</dimen>
     <dimen name="image_padding">8dp</dimen>
+    <dimen name="image_close_button_size">24dp</dimen>
 
     <!-- 位置 -->
     <dimen name="fab_margin">16dp</dimen>
