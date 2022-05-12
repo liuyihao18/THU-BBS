@@ -17,16 +17,12 @@ import java.util.LinkedList;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
-/**
- * Shows how to implement a simple Adapter for a RecyclerView.
- * Demonstrates how to add a click handler for each item in the ViewHolder.
- */
 public class NotificationListAdapter extends
         RecyclerView.Adapter<NotificationListAdapter.MomentsViewHolder> {
 
     private final LinkedList<String> mTitleList, mContentList;
     private final LinkedList<String> mImageList;
-    private Context mContext;
+    private final Context mContext;
     static class MomentsViewHolder extends RecyclerView.ViewHolder{
         TextView notification_title, notification_content;
         MyImageView notification_headshot;
@@ -34,7 +30,6 @@ public class NotificationListAdapter extends
             super(view);
             notification_title = view.findViewById(R.id.notification_title);
             notification_content = view.findViewById(R.id.notification_content);
-//            notification_content.setMovementMethod(ScrollingMovementMethod.getInstance());
             notification_headshot = view.findViewById(R.id.notification_headshot);
         }
     };
@@ -43,6 +38,7 @@ public class NotificationListAdapter extends
         mTitleList = titleList;
         mContentList = contentList;
         mImageList = imageList;
+        mContext = context;
     }
 
     @Override
