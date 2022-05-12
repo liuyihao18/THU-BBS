@@ -39,7 +39,7 @@ public class LikeActivity extends AppCompatActivity {
                             "2022-05-07",
                             0));
         }
-        initRecycleView();
+        initRecyclerView();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class LikeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initRecycleView() {
+    private void initRecyclerView() {
         RecyclerView recyclerView = binding.activityLikeList;
         recyclerView.setAdapter(new LikeListAdapter(this, likeItemContents));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -48,7 +48,7 @@ public class LikeListAdapter extends
     public LikeListAdapter.LikeViewHolder onCreateViewHolder(ViewGroup parent,
                                                                         int viewType) {
         View mItemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.like_item, parent, false);
+                R.layout.notification_like_item, parent, false);
         return new LikeViewHolder(mItemView);
     }
 
