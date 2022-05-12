@@ -13,12 +13,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.luck.lib.camerax.CameraImageEngine;
 import com.luck.lib.camerax.SimpleCameraX;
-import com.luck.picture.lib.basic.PictureSelectionModel;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -39,6 +36,8 @@ public class EditActivity extends AppCompatActivity {
     private ActivityEditBinding binding;
     private final ArrayList<String> mImageUrlList = new ArrayList<>();
     private ArrayList<LocalMedia> mSelectedImageData = new ArrayList<>();
+    private String mAudioUrl = null;
+    private String mVideoUrl = null;
     private String mLocation = null;
 
     @Override
@@ -52,6 +51,7 @@ public class EditActivity extends AppCompatActivity {
         }
         initView();
         initListener();
+        refresh();
     }
 
     @Override
@@ -107,38 +107,16 @@ public class EditActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
-                create().show()
-        );
-        binding.imageButton.setOnClickListener(view -> selectImage());
-        binding.audioButton.setOnClickListener(view -> selectAudio());
-        binding.videoButton.setOnClickListener(view -> selectVideo());
+                create().show());
     }
 
     private void refresh() {
-        if (mImageUrlList.size() > 0) {
-            setImageButtonEnabled(mImageUrlList.size() != Constant.MAX_IMAGE_COUNT);
-            setAudioButtonEnabled(false);
-            setVideoButtonEnabled(false);
-        } else {
-            setImageButtonEnabled(true);
-            setAudioButtonEnabled(true);
-            setVideoButtonEnabled(true);
-        }
+        setImageButton();
+        setAudioButton();
+        setVideoButton();
     }
 
-    private void setAudioButtonEnabled(boolean enabled) {
-        binding.audioButton.setEnabled(enabled);
-        if (enabled) {
-            binding.addAudio.setTextColor(getResources().getColor(R.color.button_enabled, null));
-            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_enabled_24dp);
-        } else {
-            binding.addAudio.setTextColor(getResources().getColor(R.color.button_disabled, null));
-            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_disabled_24dp);
-        }
-    }
-
-    private void setImageButtonEnabled(boolean enabled) {
-        binding.imageButton.setEnabled(enabled);
+    private void setImageButtonEnabledStyle(boolean enabled) {
         if (enabled) {
             binding.addImage.setTextColor(getResources().getColor(R.color.button_enabled, null));
             binding.imageIcon.setImageResource(R.drawable.ic_baseline_image_enabled_24dp);
@@ -148,14 +126,71 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    private void setVideoButtonEnabled(boolean enabled) {
-        binding.videoButton.setEnabled(enabled);
+    private void setAudioButtonEnabledStyle(boolean enabled) {
+        if (enabled) {
+            binding.addAudio.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_enabled_24dp);
+        } else {
+            binding.addAudio.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_disabled_24dp);
+        }
+    }
+
+    private void setVideoButtonEnabledStyle(boolean enabled) {
         if (enabled) {
             binding.addVideo.setTextColor(getResources().getColor(R.color.button_enabled, null));
             binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_enabled_24dp);
         } else {
             binding.addVideo.setTextColor(getResources().getColor(R.color.button_disabled, null));
             binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_disabled_24dp);
+        }
+    }
+
+    private void setImageButton() {
+        if (mAudioUrl != null || mVideoUrl != null) {
+            binding.imageButton.setEnabled(false);
+            setImageButtonEnabledStyle(false);
+        } else {
+            binding.imageButton.setEnabled(true);
+            if (mImageUrlList.size() < Constant.MAX_IMAGE_COUNT) {
+                setImageButtonEnabledStyle(true);
+                binding.imageButton.setOnClickListener(view -> selectImage());
+            } else {
+                setImageButtonEnabledStyle(false);
+                binding.imageButton.setOnClickListener(view -> Alert.info(this, R.string.max_image_hint));
+            }
+        }
+    }
+
+    private void setAudioButton() {
+        if (mVideoUrl != null || mImageUrlList.size() > 0) {
+            binding.audioButton.setEnabled(false);
+            setAudioButtonEnabledStyle(false);
+        } else {
+            binding.audioButton.setEnabled(true);
+            if (mAudioUrl == null) {
+                setAudioButtonEnabledStyle(true);
+                binding.audioButton.setOnClickListener(view -> selectAudio());
+            } else {
+                setAudioButtonEnabledStyle(false);
+                binding.audioButton.setOnClickListener(view -> Alert.info(this, R.string.max_audio_hint));
+            }
+        }
+    }
+
+    private void setVideoButton() {
+        if (mAudioUrl != null || mImageUrlList.size() > 0) {
+            binding.videoButton.setEnabled(false);
+            setVideoButtonEnabledStyle(false);
+        } else {
+            binding.videoButton.setEnabled(true);
+            if (mVideoUrl == null) {
+                setVideoButtonEnabledStyle(true);
+                binding.videoButton.setOnClickListener(view -> selectVideo());
+            } else {
+                setVideoButtonEnabledStyle(false);
+                binding.videoButton.setOnClickListener(view -> Alert.info(this, R.string.max_video_hint));
+            }
         }
     }
 
@@ -207,7 +242,7 @@ public class EditActivity extends AppCompatActivity {
                 .openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
-                    if (cameraMode == SelectMimeType.ofAudio()) {
+                    if (cameraMode != SelectMimeType.ofImage()) {
                         Alert.error(this, R.string.unknown_error);
                         return;
                     }
@@ -284,7 +319,7 @@ public class EditActivity extends AppCompatActivity {
                 .setLanguage(86)
                 .setMaxSelectNum(Constant.MAX_VIDEO_COUNT)
                 .setCameraInterceptListener((fragment, cameraMode, requestCode) -> {
-                    if (cameraMode == SelectMimeType.ofAudio()) {
+                    if (cameraMode != SelectMimeType.ofVideo()) {
                         Alert.error(this, R.string.unknown_error);
                         return;
                     }
