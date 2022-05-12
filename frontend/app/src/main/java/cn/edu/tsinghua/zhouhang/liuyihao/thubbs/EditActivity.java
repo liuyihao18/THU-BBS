@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityEditBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
@@ -67,42 +70,24 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    private void setLocation() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    Constant.LOCATION_PERMISSION);
-            return;
-        }
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        Location bestLocation = null;
-        for (String provider : providers) {
-            Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null) {
-                continue;
-            }
-            if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
-                bestLocation = location;
-            }
-        }
-        if (bestLocation == null) {
-            mLocation = "(0°E, 0°N)";
-            binding.addLocation.setText(mLocation);
-            Alert.info(this, "获取位置信息失败");
-            return;
-        }
-        mLocation = "(" + bestLocation.getLongitude() + ", " + bestLocation.getLatitude() + ")";
-        binding.addLocation.setText(mLocation);
-        Alert.info(this, "获取位置信息失败");
-    }
-
     private void initView() {
         binding.imageGroup.setEditable(true);
-        binding.imageGroup.bind(this, mImageUrlList);
+        binding.imageGroup.bind(mImageUrlList, new ImageGroup.ImageGroupListener() {
+            @Override
+            public void onClickImage(MyImageView myImageView, int index) {
+
+            }
+
+            @Override
+            public void onClickAddImage(MyImageView myImageView, int index) {
+                selectImage();
+            }
+
+            @Override
+            public void onClickCloseButton(View view, int index) {
+                removeImage(index);
+            }
+        });
     }
 
     private void initListener() {
@@ -156,6 +141,18 @@ public class EditActivity extends AppCompatActivity {
                 }));
     }
 
+    private void refresh() {
+        if (mImageUrlList.size() > 0) {
+            setImageButtonEnabled(mImageUrlList.size() != Constant.MAX_IMAGE_COUNT);
+            setAudioButtonEnabled(false);
+            setVideoButtonEnabled(false);
+        } else {
+            setImageButtonEnabled(true);
+            setAudioButtonEnabled(true);
+            setVideoButtonEnabled(true);
+        }
+    }
+
     private void setAudioButtonEnabled(boolean enabled) {
         binding.audioButton.setEnabled(enabled);
         if (enabled) {
@@ -189,16 +186,37 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    private void refresh() {
-        if (mImageUrlList.size() > 0) {
-            setImageButtonEnabled(mImageUrlList.size() != Constant.MAX_IMAGE_COUNT);
-            setAudioButtonEnabled(false);
-            setVideoButtonEnabled(false);
-        } else {
-            setImageButtonEnabled(true);
-            setAudioButtonEnabled(true);
-            setVideoButtonEnabled(true);
+    private void setLocation() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    Constant.LOCATION_PERMISSION);
+            return;
         }
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location == null) {
+                continue;
+            }
+            if (bestLocation == null || location.getAccuracy() < bestLocation.getAccuracy()) {
+                bestLocation = location;
+            }
+        }
+        if (bestLocation == null) {
+            mLocation = "(0°E, 0°N)";
+            binding.addLocation.setText(mLocation);
+            Alert.info(this, "获取位置信息失败");
+            return;
+        }
+        mLocation = "(" + bestLocation.getLongitude() + ", " + bestLocation.getLatitude() + ")";
+        binding.addLocation.setText(mLocation);
+        Alert.info(this, "获取位置信息成功");
     }
 
     public void selectImage() {
@@ -241,6 +259,9 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void removeImage(int i) {
+        if (i >= mSelectedImageData.size() || i >= mImageUrlList.size()) {
+            return;
+        }
         mSelectedImageData.remove(i);
         mImageUrlList.remove(i);
         binding.imageGroup.refresh();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
@@ -20,7 +22,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ComponentImageGroupBinding;
 
 public class ImageGroup extends ConstraintLayout {
-    private Activity mActivity = null;
     private ComponentImageGroupBinding binding;
     private ArrayList<String> mImageUrlList = null;
     private final ArrayList<MyImageView> mImageViewList = new ArrayList<>();
@@ -28,6 +29,14 @@ public class ImageGroup extends ConstraintLayout {
     private boolean mEditable = false;
     private final int mTotalCount = Constant.MAX_IMAGE_COUNT;
     private int mIndex = 0;
+
+    public interface ImageGroupListener {
+        void onClickImage(MyImageView myImageView, int index);
+
+        void onClickAddImage(MyImageView myImageView, int index);
+
+        void onClickCloseButton(View view, int index);
+    }
 
     public ImageGroup(@NonNull Context context) {
         super(context);
@@ -48,7 +57,6 @@ public class ImageGroup extends ConstraintLayout {
         binding = ComponentImageGroupBinding.inflate(LayoutInflater.from(context), this, true);
         initList();
         initView();
-        initListener();
     }
 
     private void initList() {
@@ -82,18 +90,14 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-    private void initListener() {
+    private void initListener(ImageGroupListener imageGroupListener) {
         for (int i = 0; i < mTotalCount; i++) {
             mImageViewList.get(i).setOnClickListener(view -> {
-                if (mEditable) {
-                    int index = mImageViewList.indexOf((MyImageView) view);
-                    if (index == mIndex) {
-                        if (mActivity instanceof EditActivity) {
-                            ((EditActivity) mActivity).selectImage();
-                        }
-                    }
-                } else {
-                    // TODO: 图片显示
+                int index = mImageViewList.indexOf((MyImageView) view);
+                if (index < mIndex) {
+                    imageGroupListener.onClickImage(mImageViewList.get(index), index);
+                } else if (index == mIndex) {
+                    imageGroupListener.onClickAddImage(mImageViewList.get(index), index);
                 }
             });
         }
@@ -102,12 +106,9 @@ public class ImageGroup extends ConstraintLayout {
                 if (mEditable) {
                     int index = mCloseButtonList.indexOf((ImageView) view);
                     if (index < mIndex) {
-                        if (mActivity instanceof EditActivity) {
-                            ((EditActivity) mActivity).removeImage(index);
-                        }
+                        imageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
                     }
                 }
-                refresh();
             });
         }
     }
@@ -116,9 +117,9 @@ public class ImageGroup extends ConstraintLayout {
         mEditable = editable;
     }
 
-    public void bind(Activity activity, ArrayList<String> imageList) {
-        mActivity = activity;
+    public void bind(ArrayList<String> imageList, ImageGroupListener imageGroupListener) {
         mImageUrlList = imageList;
+        initListener(imageGroupListener);
         refresh();
     }
 
