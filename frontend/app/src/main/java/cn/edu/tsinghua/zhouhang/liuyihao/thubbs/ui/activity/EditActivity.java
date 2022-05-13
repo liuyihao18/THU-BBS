@@ -1,11 +1,14 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -336,7 +339,12 @@ public class EditActivity extends AppCompatActivity {
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
-
+                        if (result.size() == 0) {
+                            Alert.error(EditActivity.this, R.string.unknown_error);
+                        } else {
+                            mAudioUrl = result.get(0).getPath();
+                        }
+                        refresh();
                     }
 
                     @Override

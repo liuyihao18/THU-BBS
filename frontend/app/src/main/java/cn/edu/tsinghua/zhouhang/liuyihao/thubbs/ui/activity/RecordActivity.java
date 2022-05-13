@@ -55,9 +55,9 @@ public class RecordActivity extends AppCompatActivity {
         }
         getWindow().setStatusBarColor(getColor(R.color.background_dark));
         layoutWidth = DensityUtil.getScreenWidth(this);
+        initPermission();
         initView();
         initListener();
-        initRecorder();
         atBefore();
     }
 
@@ -68,10 +68,29 @@ public class RecordActivity extends AppCompatActivity {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Alert.info(this, "获取录音权限失败");
-                    return;
+                    finish();
                 }
             }
-            initRecorder();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void initPermission() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO},
+                    Constant.RECORD_PERMISSION);
         }
     }
 
@@ -161,23 +180,17 @@ public class RecordActivity extends AppCompatActivity {
             setResult(RESULT_OK, intent);
             finish();
         });
-        binding.backButton.setOnClickListener(view -> finish());
+        binding.backButton.setOnClickListener(view -> {
+            if (mMediaRecorder != null) {
+                mMediaRecorder.stop();
+                mMediaRecorder.release();
+                mMediaRecorder = null;
+            }
+            finish();
+        });
     }
 
     private void initRecorder() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.RECORD_AUDIO},
-                    Constant.RECORD_PERMISSION);
-            return;
-        }
         mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -220,6 +233,11 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void startRecord() {
+        if (mMediaRecorder != null) {
+            Alert.error(this, R.string.unknown_error);
+            return;
+        }
+        initRecorder();
         _mAudioUrl = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath() +
                 "/AUD_" + Calendar.getInstance().getTime().getTime() + ".aac";
         mMediaRecorder.setOutputFile(_mAudioUrl);
@@ -232,7 +250,13 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void stopRecord() {
+        if (mMediaRecorder == null) {
+            Alert.error(this, R.string.unknown_error);
+            return;
+        }
         mMediaRecorder.stop();
+        mMediaRecorder.release();
+        mMediaRecorder = null;
         mAudioUrl = _mAudioUrl;
     }
 }
