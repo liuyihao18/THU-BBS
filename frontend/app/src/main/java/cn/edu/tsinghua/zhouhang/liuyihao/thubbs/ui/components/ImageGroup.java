@@ -21,7 +21,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class ImageGroup extends ConstraintLayout {
     private ComponentImageGroupBinding binding;
-    private ArrayList<String> mImageUrlList = null;
+    private ArrayList<String> mImageUriList = null;
     private final ArrayList<MyImageView> mImageViewList = new ArrayList<>();
     private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
     private boolean mEditable = false;
@@ -87,8 +87,8 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-    public ImageGroup bindImageUrlList(ArrayList<String> imageUrlList) {
-        mImageUrlList = imageUrlList;
+    public ImageGroup bindImageUriList(ArrayList<String> imageUriList) {
+        mImageUriList = imageUriList;
         return this;
     }
 
@@ -115,11 +115,11 @@ public class ImageGroup extends ConstraintLayout {
     }
 
     public void refresh() {
-        if (mImageUrlList == null) {
+        if (mImageUriList == null) {
             Alert.error(getContext(), R.string.unknown_error);
             return;
         }
-        int size = mImageUrlList.size();
+        int size = mImageUriList.size();
         if (size < 3) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
@@ -135,7 +135,7 @@ public class ImageGroup extends ConstraintLayout {
         }
         for (int i = 0; i < size; i++) {
             Glide.with(getContext())
-                    .load(mImageUrlList.get(i))
+                    .load(mImageUriList.get(i))
                     .centerCrop()
                     .placeholder(R.drawable.ic_loading_spinner_black_24dp)
                     .into(mImageViewList.get(i));

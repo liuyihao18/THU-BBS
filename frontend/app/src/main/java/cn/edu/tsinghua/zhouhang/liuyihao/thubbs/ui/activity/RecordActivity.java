@@ -41,8 +41,8 @@ public class RecordActivity extends AppCompatActivity {
     private TypeButton btnConfirm;
     private TypeButton btnCancel;
     private MediaRecorder mMediaRecorder;
-    private String _mAudioUrl = null;
-    private String mAudioUrl = null;
+    private String _mAudioUri = null;
+    private String mAudioUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +176,7 @@ public class RecordActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(view -> atBefore());
         btnConfirm.setOnClickListener(view -> {
             Intent intent = new Intent();
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(mAudioUrl));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(mAudioUri));
             setResult(RESULT_OK, intent);
             finish();
         });
@@ -238,9 +238,9 @@ public class RecordActivity extends AppCompatActivity {
             return;
         }
         initRecorder();
-        _mAudioUrl = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath() +
+        _mAudioUri = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath() +
                 "/AUD_" + Calendar.getInstance().getTime().getTime() + ".aac";
-        mMediaRecorder.setOutputFile(_mAudioUrl);
+        mMediaRecorder.setOutputFile(_mAudioUri);
         try {
             mMediaRecorder.prepare();
             mMediaRecorder.start();
@@ -257,6 +257,6 @@ public class RecordActivity extends AppCompatActivity {
         mMediaRecorder.stop();
         mMediaRecorder.release();
         mMediaRecorder = null;
-        mAudioUrl = _mAudioUrl;
+        mAudioUri = _mAudioUri;
     }
 }

@@ -1,14 +1,11 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,10 +40,10 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 public class EditActivity extends AppCompatActivity {
 
     private ActivityEditBinding binding;
-    private final ArrayList<String> mImageUrlList = new ArrayList<>();
+    private final ArrayList<String> mImageUriList = new ArrayList<>();
     private ArrayList<LocalMedia> mSelectedImageData = new ArrayList<>();
-    private String mAudioUrl = null;
-    private String mVideoUrl = null;
+    private String mAudioUri = null;
+    private String mVideoUri = null;
     private String mLocation = null;
     private MediaController mMediaController = null;
 
@@ -79,7 +76,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.imageGroup.bindImageUrlList(mImageUrlList)
+        binding.imageGroup.bindImageUriList(mImageUriList)
                 .setEditable(true)
                 .registerImageGroupListener(new ImageGroup.ImageGroupListener() {
                     @Override
@@ -89,7 +86,7 @@ public class EditActivity extends AppCompatActivity {
 
                     @Override
                     public void onClickAddImage(MyImageView myImageView, int index) {
-                        if (index == mImageUrlList.size()) {
+                        if (index == mImageUriList.size()) {
                             selectImage();
                         }
                     }
@@ -106,7 +103,7 @@ public class EditActivity extends AppCompatActivity {
 
     private void initListener() {
         binding.cancel.setOnClickListener(view -> finish());
-        binding.locationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
+        binding.addLocationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setTitle(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
@@ -137,15 +134,15 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void refresh() {
-        if (mAudioUrl != null) {
+        if (mAudioUri != null) {
             binding.imageGroup.setVisibility(View.GONE);
             binding.videoGroup.setVisibility(View.GONE);
             binding.videoView.stopPlayback();
             mMediaController.hide();
-        } else if (mVideoUrl != null) {
+        } else if (mVideoUri != null) {
             binding.imageGroup.setVisibility(View.GONE);
             binding.videoGroup.setVisibility(View.VISIBLE);
-            binding.videoView.setVideoPath(mVideoUrl);
+            binding.videoView.setVideoPath(mVideoUri);
         } else {
             binding.imageGroup.setVisibility(View.VISIBLE);
             binding.videoGroup.setVisibility(View.GONE);
@@ -159,78 +156,78 @@ public class EditActivity extends AppCompatActivity {
 
     private void setImageButtonEnabledStyle(boolean enabled) {
         if (enabled) {
-            binding.addImage.setTextColor(getResources().getColor(R.color.button_enabled, null));
-            binding.imageIcon.setImageResource(R.drawable.ic_baseline_image_enabled_24dp);
+            binding.addImageText.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.addImageIcon.setImageResource(R.drawable.ic_baseline_image_enabled_24dp);
         } else {
-            binding.addImage.setTextColor(getResources().getColor(R.color.button_disabled, null));
-            binding.imageIcon.setImageResource(R.drawable.ic_baseline_image_disabled_24dp);
+            binding.addImageText.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.addImageIcon.setImageResource(R.drawable.ic_baseline_image_disabled_24dp);
         }
     }
 
     private void setAudioButtonEnabledStyle(boolean enabled) {
         if (enabled) {
-            binding.addAudio.setTextColor(getResources().getColor(R.color.button_enabled, null));
-            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_enabled_24dp);
+            binding.addAudioText.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.addAudioIcon.setImageResource(R.drawable.ic_baseline_volume_up_enabled_24dp);
         } else {
-            binding.addAudio.setTextColor(getResources().getColor(R.color.button_disabled, null));
-            binding.audioIcon.setImageResource(R.drawable.ic_baseline_volume_up_disabled_24dp);
+            binding.addAudioText.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.addAudioIcon.setImageResource(R.drawable.ic_baseline_volume_up_disabled_24dp);
         }
     }
 
     private void setVideoButtonEnabledStyle(boolean enabled) {
         if (enabled) {
-            binding.addVideo.setTextColor(getResources().getColor(R.color.button_enabled, null));
-            binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_enabled_24dp);
+            binding.addVideoText.setTextColor(getResources().getColor(R.color.button_enabled, null));
+            binding.addVideoIcon.setImageResource(R.drawable.ic_baseline_videocam_enabled_24dp);
         } else {
-            binding.addVideo.setTextColor(getResources().getColor(R.color.button_disabled, null));
-            binding.videoIcon.setImageResource(R.drawable.ic_baseline_videocam_disabled_24dp);
+            binding.addVideoText.setTextColor(getResources().getColor(R.color.button_disabled, null));
+            binding.addVideoIcon.setImageResource(R.drawable.ic_baseline_videocam_disabled_24dp);
         }
     }
 
     private void setImageButton() {
-        if (mAudioUrl != null || mVideoUrl != null) {
-            binding.imageButton.setEnabled(false);
+        if (mAudioUri != null || mVideoUri != null) {
+            binding.addImageButton.setEnabled(false);
             setImageButtonEnabledStyle(false);
         } else {
-            binding.imageButton.setEnabled(true);
-            if (mImageUrlList.size() < Constant.MAX_IMAGE_COUNT) {
+            binding.addImageButton.setEnabled(true);
+            if (mImageUriList.size() < Constant.MAX_IMAGE_COUNT) {
                 setImageButtonEnabledStyle(true);
-                binding.imageButton.setOnClickListener(view -> selectImage());
+                binding.addImageButton.setOnClickListener(view -> selectImage());
             } else {
                 setImageButtonEnabledStyle(false);
-                binding.imageButton.setOnClickListener(view -> Alert.info(this, R.string.max_image_hint));
+                binding.addImageButton.setOnClickListener(view -> Alert.info(this, R.string.max_image_hint));
             }
         }
     }
 
     private void setAudioButton() {
-        if (mVideoUrl != null || mImageUrlList.size() > 0) {
-            binding.audioButton.setEnabled(false);
+        if (mVideoUri != null || mImageUriList.size() > 0) {
+            binding.addAudioButton.setEnabled(false);
             setAudioButtonEnabledStyle(false);
         } else {
-            binding.audioButton.setEnabled(true);
-            if (mAudioUrl == null) {
+            binding.addAudioButton.setEnabled(true);
+            if (mAudioUri == null) {
                 setAudioButtonEnabledStyle(true);
-                binding.audioButton.setOnClickListener(view -> selectAudio());
+                binding.addAudioButton.setOnClickListener(view -> selectAudio());
             } else {
                 setAudioButtonEnabledStyle(false);
-                binding.audioButton.setOnClickListener(view -> Alert.info(this, R.string.max_audio_hint));
+                binding.addAudioButton.setOnClickListener(view -> Alert.info(this, R.string.max_audio_hint));
             }
         }
     }
 
     private void setVideoButton() {
-        if (mAudioUrl != null || mImageUrlList.size() > 0) {
-            binding.videoButton.setEnabled(false);
+        if (mAudioUri != null || mImageUriList.size() > 0) {
+            binding.addVideoButton.setEnabled(false);
             setVideoButtonEnabledStyle(false);
         } else {
-            binding.videoButton.setEnabled(true);
-            if (mVideoUrl == null) {
+            binding.addVideoButton.setEnabled(true);
+            if (mVideoUri == null) {
                 setVideoButtonEnabledStyle(true);
-                binding.videoButton.setOnClickListener(view -> selectVideo());
+                binding.addVideoButton.setOnClickListener(view -> selectVideo());
             } else {
                 setVideoButtonEnabledStyle(false);
-                binding.videoButton.setOnClickListener(view -> Alert.info(this, R.string.max_video_hint));
+                binding.addVideoButton.setOnClickListener(view -> Alert.info(this, R.string.max_video_hint));
             }
         }
     }
@@ -259,12 +256,12 @@ public class EditActivity extends AppCompatActivity {
         }
         if (bestLocation == null) {
             mLocation = "(0°E, 0°N)";
-            binding.addLocation.setText(mLocation);
+            binding.addLocationText.setText(mLocation);
             Alert.info(this, "获取位置信息失败");
             return;
         }
         mLocation = Util.FormatLocation(bestLocation);
-        binding.addLocation.setText(mLocation);
+        binding.addLocationText.setText(mLocation);
         Alert.info(this, "获取位置信息成功");
     }
 
@@ -297,9 +294,9 @@ public class EditActivity extends AppCompatActivity {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
                         mSelectedImageData = result;
-                        mImageUrlList.clear();
+                        mImageUriList.clear();
                         for (LocalMedia media : mSelectedImageData) {
-                            mImageUrlList.add(media.getPath());
+                            mImageUriList.add(media.getPath());
                         }
                         binding.imageGroup.refresh();
                         refresh();
@@ -313,11 +310,11 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void removeImage(int i) {
-        if (i >= mSelectedImageData.size() || i >= mImageUrlList.size()) {
+        if (i >= mSelectedImageData.size() || i >= mImageUriList.size()) {
             return;
         }
         mSelectedImageData.remove(i);
-        mImageUrlList.remove(i);
+        mImageUriList.remove(i);
         binding.imageGroup.refresh();
         refresh();
     }
@@ -342,7 +339,7 @@ public class EditActivity extends AppCompatActivity {
                         if (result.size() == 0) {
                             Alert.error(EditActivity.this, R.string.unknown_error);
                         } else {
-                            mAudioUrl = result.get(0).getPath();
+                            mAudioUri = result.get(0).getPath();
                         }
                         refresh();
                     }
@@ -355,7 +352,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void removeAudio() {
-        mAudioUrl = null;
+        mAudioUri = null;
     }
 
     private void selectVideo() {
@@ -387,7 +384,7 @@ public class EditActivity extends AppCompatActivity {
                         if (result.size() == 0) {
                             Alert.error(EditActivity.this, R.string.unknown_error);
                         } else {
-                            mVideoUrl = result.get(0).getPath();
+                            mVideoUri = result.get(0).getPath();
                         }
                         refresh();
                     }
@@ -400,6 +397,6 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void removeVideo() {
-        mVideoUrl = null;
+        mVideoUri = null;
     }
 }

@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        app:layout_constraintBottom_toTopOf="@+id/location_button"
+        app:layout_constraintBottom_toTopOf="@+id/add_location_button"
         app:layout_constraintTop_toBottomOf="@+id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,6 +102,37 @@
                 app:layout_constraintTop_toBottomOf="@id/content" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/audio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/content">
+
+                <ImageView
+                    android:id="@+id/audio_play_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ps_ic_audio_play" />
+
+                <ImageView
+                    android:id="@+id/audio_close_button"
+                    android:layout_width="@dimen/image_close_button_size"
+                    android:layout_height="@dimen/image_close_button_size"
+                    android:contentDescription="@string/button_close"
+                    app:layout_constraintStart_toEndOf="@id/audio_play_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/video_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,12 +160,11 @@
                     app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/location_button"
+        android:id="@+id/add_location_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -145,6 +175,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/add_location_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -153,7 +184,7 @@
             app:srcCompat="@drawable/ic_baseline_location_black_24dp" />
 
         <TextView
-            android:id="@+id/add_location"
+            android:id="@+id/add_location_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -172,18 +203,18 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/audio_button"
+        android:id="@+id/add_audio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/image_button"
+        app:layout_constraintEnd_toStartOf="@id/add_image_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <ImageView
-            android:id="@+id/audio_icon"
+            android:id="@+id/add_audio_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -192,7 +223,7 @@
             app:srcCompat="@drawable/ic_baseline_volume_up_enabled_24dp" />
 
         <TextView
-            android:id="@+id/add_audio"
+            android:id="@+id/add_audio_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -202,7 +233,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/image_button"
+        android:id="@+id/add_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -214,7 +245,7 @@
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <ImageView
-            android:id="@+id/image_icon"
+            android:id="@+id/add_image_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -223,7 +254,7 @@
             app:srcCompat="@drawable/ic_baseline_image_enabled_24dp" />
 
         <TextView
-            android:id="@+id/add_image"
+            android:id="@+id/add_image_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -233,7 +264,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/video_button"
+        android:id="@+id/add_video_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -241,11 +272,11 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_button"
+        app:layout_constraintStart_toEndOf="@+id/add_image_button"
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <ImageView
-            android:id="@+id/video_icon"
+            android:id="@+id/add_video_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -254,7 +285,7 @@
             app:srcCompat="@drawable/ic_baseline_videocam_enabled_24dp" />
 
         <TextView
-            android:id="@+id/add_video"
+            android:id="@+id/add_video_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
