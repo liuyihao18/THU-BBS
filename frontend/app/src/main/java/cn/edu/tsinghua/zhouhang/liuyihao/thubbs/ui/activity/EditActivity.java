@@ -1,10 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,11 +7,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.luck.lib.camerax.SimpleCameraX;
@@ -25,6 +27,7 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class EditActivity extends AppCompatActivity {
     private String mVideoUri = null;
     private String mLocation = null;
     private MediaController mMediaController = null;
+    private MediaPlayer mMediaPlayer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class EditActivity extends AppCompatActivity {
             actionBar.hide();
         }
         initView();
+        initController();
         initListener();
         refresh();
     }
@@ -97,8 +102,6 @@ public class EditActivity extends AppCompatActivity {
                     }
                 })
                 .refresh();
-        mMediaController = new MediaController(this);
-        binding.videoView.setMediaController(mMediaController);
     }
 
     private void initListener() {
@@ -109,6 +112,30 @@ public class EditActivity extends AppCompatActivity {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
                 create().show());
+        binding.audioPlayButton.setOnClickListener(view -> {
+            if (mMediaPlayer == null) {
+                initPlayer();
+                if (mMediaPlayer != null) {
+                    mMediaPlayer.start();
+                    binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+                }
+            } else {
+                try {
+                    mMediaPlayer.stop();
+                } catch (Exception e) {
+                    Alert.error(this, R.string.unknown_error);
+                }
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+            }
+
+        });
+        binding.audioCloseButton.setOnClickListener(view -> {
+            removeAudio();
+            refresh();
+        });
         binding.videoView.setOnPreparedListener(mediaPlayer -> {
             DisplayMetrics dm = new DisplayMetrics();
             getDisplay().getRealMetrics(dm);
@@ -133,18 +160,71 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
+    private void initPlayer() {
+        if (mAudioUri == null) {
+            Alert.error(this, R.string.unknown_error);
+            return;
+        }
+        mMediaPlayer = new MediaPlayer();
+        try {
+            mMediaPlayer.setDataSource(this, Uri.parse(mAudioUri));
+            mMediaPlayer.setOnCompletionListener(view -> {
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+            });
+            mMediaPlayer.prepare();
+        } catch (IOException ioe) {
+            Alert.error(this, R.string.unknown_error);
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
+    private void initController() {
+        mMediaController = new MediaController(this);
+        binding.videoView.setMediaController(mMediaController);
+    }
+
     private void refresh() {
         if (mAudioUri != null) {
             binding.imageGroup.setVisibility(View.GONE);
+            binding.audioGroup.setVisibility(View.VISIBLE);
             binding.videoGroup.setVisibility(View.GONE);
             binding.videoView.stopPlayback();
             mMediaController.hide();
         } else if (mVideoUri != null) {
             binding.imageGroup.setVisibility(View.GONE);
+            binding.audioGroup.setVisibility(View.GONE);
+            if (mMediaPlayer != null) {
+                try {
+                    mMediaPlayer.stop();
+                } catch (Exception e) {
+                    Alert.error(this, R.string.unknown_error);
+                }
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+            binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             binding.videoGroup.setVisibility(View.VISIBLE);
             binding.videoView.setVideoPath(mVideoUri);
         } else {
             binding.imageGroup.setVisibility(View.VISIBLE);
+            binding.audioGroup.setVisibility(View.GONE);
+            if (mMediaPlayer != null) {
+                try {
+                    mMediaPlayer.stop();
+                } catch (Exception e) {
+                    Alert.error(this, R.string.unknown_error);
+                }
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+            binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             binding.videoGroup.setVisibility(View.GONE);
             binding.videoView.stopPlayback();
             mMediaController.hide();
@@ -278,9 +358,7 @@ public class EditActivity extends AppCompatActivity {
                     SimpleCameraX camera = SimpleCameraX.of();
                     camera.setCameraMode(cameraMode);
                     camera.setOutputPathDir(getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath());
-                    camera.setImageEngine((context, url, imageView) -> {
-                        Glide.with(context).load(url).into(imageView);
-                    });
+                    camera.setImageEngine((context, url, imageView) -> Glide.with(context).load(url).into(imageView));
                     if (fragment.getActivity() == null) {
                         Alert.error(this, R.string.unknown_error);
                         return;
@@ -369,9 +447,7 @@ public class EditActivity extends AppCompatActivity {
                     SimpleCameraX camera = SimpleCameraX.of();
                     camera.setCameraMode(cameraMode);
                     camera.setOutputPathDir(getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath());
-                    camera.setImageEngine((context, url, imageView) -> {
-                        Glide.with(context).load(url).into(imageView);
-                    });
+                    camera.setImageEngine((context, url, imageView) -> Glide.with(context).load(url).into(imageView));
                     if (fragment.getActivity() == null) {
                         Alert.error(this, R.string.unknown_error);
                         return;

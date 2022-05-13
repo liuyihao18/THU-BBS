@@ -182,7 +182,12 @@ public class RecordActivity extends AppCompatActivity {
         });
         binding.backButton.setOnClickListener(view -> {
             if (mMediaRecorder != null) {
-                mMediaRecorder.stop();
+                try {
+                    mMediaRecorder.stop();
+                } catch (Exception e) {
+                    Alert.error(this, R.string.unknown_error);
+                }
+                mMediaRecorder.reset();
                 mMediaRecorder.release();
                 mMediaRecorder = null;
             }
@@ -192,9 +197,20 @@ public class RecordActivity extends AppCompatActivity {
 
     private void initRecorder() {
         mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        try {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            _mAudioUri = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath() +
+                    "/AUD_" + Calendar.getInstance().getTime().getTime() + ".aac";
+            mMediaRecorder.setOutputFile(_mAudioUri);
+            mMediaRecorder.prepare();
+        } catch (IOException ioe) {
+            Alert.error(this, R.string.unknown_error);
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
     }
 
     private void atBefore() {
@@ -238,14 +254,8 @@ public class RecordActivity extends AppCompatActivity {
             return;
         }
         initRecorder();
-        _mAudioUri = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath() +
-                "/AUD_" + Calendar.getInstance().getTime().getTime() + ".aac";
-        mMediaRecorder.setOutputFile(_mAudioUri);
-        try {
-            mMediaRecorder.prepare();
+        if (mMediaRecorder != null) {
             mMediaRecorder.start();
-        } catch (IOException ioe) {
-            Alert.error(this, R.string.unknown_error);
         }
     }
 
@@ -254,7 +264,13 @@ public class RecordActivity extends AppCompatActivity {
             Alert.error(this, R.string.unknown_error);
             return;
         }
-        mMediaRecorder.stop();
+        try {
+            mMediaRecorder.stop();
+        } catch (Exception e) {
+            Alert.error(this, R.string.unknown_error);
+            atBefore();
+        }
+        mMediaRecorder.reset();
         mMediaRecorder.release();
         mMediaRecorder = null;
         mAudioUri = _mAudioUri;
