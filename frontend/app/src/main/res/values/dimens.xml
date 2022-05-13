@@ -3,6 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
 
+    <!-- 常量 -->
+    <dimen name="max_video_height">400dp</dimen>
+
     <!-- 字体大小 -->
     <dimen name="textSize_small">12sp</dimen>
     <dimen name="textSize_medium">14sp</dimen>

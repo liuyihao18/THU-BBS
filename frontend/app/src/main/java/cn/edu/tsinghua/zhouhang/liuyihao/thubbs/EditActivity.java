@@ -11,8 +11,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.MediaController;
 
 import com.bumptech.glide.Glide;
 import com.luck.lib.camerax.SimpleCameraX;
@@ -39,6 +43,7 @@ public class EditActivity extends AppCompatActivity {
     private String mAudioUrl = null;
     private String mVideoUrl = null;
     private String mLocation = null;
+    private MediaController mMediaController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +103,8 @@ public class EditActivity extends AppCompatActivity {
                     }
                 })
                 .refresh();
+        mMediaController = new MediaController(this);
+        binding.videoView.setMediaController(mMediaController);
     }
 
     private void initListener() {
@@ -108,9 +115,46 @@ public class EditActivity extends AppCompatActivity {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
                 create().show());
+        binding.videoView.setOnPreparedListener(mediaPlayer -> {
+            DisplayMetrics dm = new DisplayMetrics();
+            getDisplay().getRealMetrics(dm);
+            int maxWidth = dm.widthPixels - 2 * getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
+            int maxHeight = getResources().getDimensionPixelSize(R.dimen.max_video_height);
+            int videoWith = mediaPlayer.getVideoWidth();
+            int videoHeight = mediaPlayer.getVideoHeight();
+            double ratio = videoHeight * 1.0 / videoWith; // 高宽比
+            ViewGroup.LayoutParams layoutParams = binding.videoView.getLayoutParams();
+            if (maxWidth * ratio < maxHeight) {
+                layoutParams.width = maxWidth;
+                layoutParams.height = (int) (maxWidth * ratio);
+            } else {
+                layoutParams.width = (int) (maxHeight / ratio);
+                layoutParams.height = maxHeight;
+            }
+            binding.videoView.setLayoutParams(layoutParams);
+        });
+        binding.videoCloseButton.setOnClickListener(view -> {
+            mVideoUrl = null;
+            refresh();
+        });
     }
 
     private void refresh() {
+        if (mAudioUrl != null) {
+            binding.imageGroup.setVisibility(View.GONE);
+            binding.videoGroup.setVisibility(View.GONE);
+            binding.videoView.stopPlayback();
+            mMediaController.hide();
+        } else if (mVideoUrl != null) {
+            binding.imageGroup.setVisibility(View.GONE);
+            binding.videoGroup.setVisibility(View.VISIBLE);
+            binding.videoView.setVideoPath(mVideoUrl);
+        } else {
+            binding.imageGroup.setVisibility(View.VISIBLE);
+            binding.videoGroup.setVisibility(View.GONE);
+            binding.videoView.stopPlayback();
+            mMediaController.hide();
+        }
         setImageButton();
         setAudioButton();
         setVideoButton();
@@ -338,7 +382,12 @@ public class EditActivity extends AppCompatActivity {
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
-
+                        if (result.size() == 0) {
+                            Alert.error(EditActivity.this, R.string.unknown_error);
+                        } else {
+                            mVideoUrl = result.get(0).getPath();
+                        }
+                        refresh();
                     }
 
                     @Override
