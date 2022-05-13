@@ -18,9 +18,6 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
 
@@ -37,7 +34,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.Calendar;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -48,7 +44,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 public class RecordActivity extends AppCompatActivity {
     private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     private final static int AUDIO_SAMPLE_RATE = 44100;
-    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO;
+    private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_MONO; // 单声道
     private final static int AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 
     private ActivityRecordBinding binding;
@@ -95,6 +91,7 @@ public class RecordActivity extends AppCompatActivity {
     private void initView() {
         // 参考： https://github.com/LuckSiege/PictureSelector
         int button_size = (int) (layoutWidth / 4.5f);
+
         btnCapture = new CaptureButton(this, button_size);
         ConstraintLayout.LayoutParams btnCaptureParam = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
         btnCaptureParam.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
@@ -114,7 +111,6 @@ public class RecordActivity extends AppCompatActivity {
         btnCancelParam.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
         btnCancelParam.leftMargin = (layoutWidth / 4) - button_size / 2;
         btnCancel.setLayoutParams(btnCancelParam);
-
 
         btnConfirm = new TypeButton(this, TypeButton.TYPE_CONFIRM, button_size);
         final ConstraintLayout.LayoutParams btnConfirmParam = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
@@ -176,7 +172,6 @@ public class RecordActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(mAudioUrl));
             setResult(RESULT_OK, intent);
-            System.out.println(intent);
             finish();
         });
         binding.backButton.setOnClickListener(view -> finish());
@@ -238,6 +233,7 @@ public class RecordActivity extends AppCompatActivity {
     private void startRecord() {
         String dirUrl = getDir(Constant.TMP_DIR, MODE_PRIVATE).getPath();
         String fileUrl = dirUrl + "/" + Constant.RAW_WAV;
+        String outputFileUrl = dirUrl + "/AUD_" + Calendar.getInstance().getTime().getTime() + ".wav";
         new Thread(() -> {
             File file = new File(fileUrl);
             if (file.exists()) {
@@ -258,25 +254,22 @@ public class RecordActivity extends AppCompatActivity {
             try {
                 OutputStream os = new FileOutputStream(file);
                 BufferedOutputStream bos = new BufferedOutputStream(os);
-                DataOutputStream dos = new DataOutputStream(bos);
                 byte[] buffer = new byte[mBufferSize];
                 mAudioRecorder.startRecording();
                 isRecording = true;
                 while (isRecording) {
                     int res = mAudioRecorder.read(buffer, 0, mBufferSize);
                     if (res > 0) {
-                        dos.write(buffer, 0, mBufferSize);
+                        bos.write(buffer, 0, mBufferSize);
                     }
                 }
                 mAudioRecorder.stop();
-                dos.close();
                 bos.close();
                 os.close();
             } catch (IOException ioe) {
                 Alert.error(this, R.string.unknown_error);
                 return;
             }
-            String outputFileUrl = dirUrl + "/AUD_" + Calendar.getInstance().getTime().getTime() + ".wav";
             try {
                 FileInputStream in = new FileInputStream(file);
                 FileOutputStream out = new FileOutputStream(outputFileUrl);
@@ -315,7 +308,7 @@ public class RecordActivity extends AppCompatActivity {
         header[9] = 'A';
         header[10] = 'V';
         header[11] = 'E';
-        header[12] = 'f'; // 'fmt ' chunk
+        header[12] = 'f'; // 'fmt' chunk
         header[13] = 'm';
         header[14] = 't';
         header[15] = ' ';
@@ -325,7 +318,7 @@ public class RecordActivity extends AppCompatActivity {
         header[19] = 0;
         header[20] = 1; // WAV type format = 1
         header[21] = 0;
-        header[22] = (byte) 2; // 指示是单声道还是双声道
+        header[22] = (byte) 1; // 指示是单声道还是双声道
         header[23] = 0;
         header[24] = (byte) (AUDIO_SAMPLE_RATE & 0xff); // 采样频率
         header[25] = (byte) ((AUDIO_SAMPLE_RATE >> 8) & 0xff);
@@ -347,7 +340,7 @@ public class RecordActivity extends AppCompatActivity {
         header[41] = (byte) ((totalFileLen >> 8) & 0xff);
         header[42] = (byte) ((totalFileLen >> 16) & 0xff);
         header[43] = (byte) ((totalFileLen >> 24) & 0xff);
-        // 把header写入wav文件
+        // 把 header 写入 wav 文件
         out.write(header, 0, 44);
     }
 }
