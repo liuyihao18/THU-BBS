@@ -22,6 +22,7 @@
     <!-- 位置 -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="header_height">48dp</dimen>
+    <dimen name="footer_height">48dp</dimen>
     <dimen name="margin_middle">32dp</dimen>
     <dimen name="margin_small">16dp</dimen>
 </resources>

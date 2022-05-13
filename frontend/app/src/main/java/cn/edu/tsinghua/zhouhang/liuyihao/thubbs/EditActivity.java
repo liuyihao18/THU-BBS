@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -134,7 +133,7 @@ public class EditActivity extends AppCompatActivity {
             binding.videoView.setLayoutParams(layoutParams);
         });
         binding.videoCloseButton.setOnClickListener(view -> {
-            mVideoUrl = null;
+            removeVideo();
             refresh();
         });
     }
@@ -271,7 +270,7 @@ public class EditActivity extends AppCompatActivity {
         Alert.info(this, "获取位置信息成功");
     }
 
-    public void selectImage() {
+    private void selectImage() {
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this,
@@ -324,7 +323,7 @@ public class EditActivity extends AppCompatActivity {
                 });
     }
 
-    public void removeImage(int i) {
+    private void removeImage(int i) {
         if (i >= mSelectedImageData.size() || i >= mImageUrlList.size()) {
             return;
         }
@@ -334,14 +333,14 @@ public class EditActivity extends AppCompatActivity {
         refresh();
     }
 
-    public void selectAudio() {
+    private void selectAudio() {
         PictureSelector.create(this)
                 .openGallery(SelectMimeType.ofAudio())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setLanguage(86)
                 .setMaxSelectNum(Constant.MAX_AUDIO_COUNT)
                 .setRecordAudioInterceptListener((fragment, requestCode) -> {
-                    Alert.info(this, "录制音频");
+
                 })
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
@@ -356,7 +355,11 @@ public class EditActivity extends AppCompatActivity {
                 });
     }
 
-    public void selectVideo() {
+    private void removeAudio() {
+        mAudioUrl = null;
+    }
+
+    private void selectVideo() {
         PictureSelector.create(this)
                 .openGallery(SelectMimeType.ofVideo())
                 .setImageEngine(GlideEngine.createGlideEngine())
@@ -395,5 +398,9 @@ public class EditActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void removeVideo() {
+        mVideoUrl = null;
     }
 }
