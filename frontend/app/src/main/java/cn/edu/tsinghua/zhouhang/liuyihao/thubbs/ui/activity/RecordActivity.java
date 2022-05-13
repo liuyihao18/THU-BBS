@@ -128,6 +128,7 @@ public class RecordActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(view -> {
 
         });
+        binding.backButton.setOnClickListener(view -> finish());
     }
 
     private void atBefore() {
