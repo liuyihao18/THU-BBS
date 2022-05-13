@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLoginBinding;

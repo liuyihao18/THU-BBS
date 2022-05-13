@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -27,6 +28,8 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityEditBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
@@ -51,7 +54,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.hide(); //隐藏标题栏
+            actionBar.hide();
         }
         initView();
         initListener();
@@ -340,7 +343,12 @@ public class EditActivity extends AppCompatActivity {
                 .setLanguage(86)
                 .setMaxSelectNum(Constant.MAX_AUDIO_COUNT)
                 .setRecordAudioInterceptListener((fragment, requestCode) -> {
-
+                    if (fragment.getActivity() == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    }
+                    fragment.startActivityForResult(new Intent(fragment.getActivity(), RecordActivity.class),
+                            requestCode);
                 })
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override

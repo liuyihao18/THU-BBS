@@ -17,8 +17,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EditActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.LoginActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.LoginActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentTweetsBinding;

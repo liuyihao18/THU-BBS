@@ -35,14 +35,17 @@
             android:exported="false"
             android:label="@string/like" />
         <activity
-            android:name=".EditActivity"
+            android:name=".ui.activity.EditActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
-            android:exported="false"
-            android:parentActivityName=".LoginActivity" />
+            android:name=".ui.activity.RecordActivity"
+            android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activity.RegisterActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.activity.LoginActivity" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity
