@@ -72,14 +72,6 @@ public class EditActivity extends AppCompatActivity {
                 }
             }
             selectLocation();
-        } else if (requestCode == Constant.STORAGE_PERMISSION) {
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    Alert.info(this, "获取存储权限失败");
-                    return;
-                }
-            }
-            selectImage();
         }
     }
 
@@ -274,15 +266,6 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void selectImage() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    Constant.STORAGE_PERMISSION);
-            return;
-        }
         PictureSelector
                 .create(this)
                 .openGallery(SelectMimeType.ofImage())

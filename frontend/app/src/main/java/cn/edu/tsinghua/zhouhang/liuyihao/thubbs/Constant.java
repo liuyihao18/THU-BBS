@@ -8,10 +8,14 @@ public class Constant {
 
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.EXTRA_EMAIL";
 
+    public static final int MSG_ERROR = -1;
+    public static final int MSG_OK = 0;
+
     public static final String TMP_DIR = "tmp";
+    public static final String RAW_WAV = "raw.wav";
 
     public static final int LOCATION_PERMISSION = 0;
-    public static final int STORAGE_PERMISSION = 1;
+    public static final int RECORD_PERMISSION = 1;
 
     public static final int MAX_IMAGE_COUNT = 9;
     public static final int MAX_AUDIO_COUNT = 1;
