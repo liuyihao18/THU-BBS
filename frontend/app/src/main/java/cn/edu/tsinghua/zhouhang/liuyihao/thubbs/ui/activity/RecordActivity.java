@@ -4,6 +4,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -17,10 +21,12 @@ import com.luck.lib.camerax.widget.TypeButton;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityRecordBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class RecordActivity extends AppCompatActivity {
 
     private ActivityRecordBinding binding;
+    private int layout_width;
     private CaptureButton btn_capture;
     private TypeButton btn_confirm;
     private TypeButton btn_cancel;
@@ -34,6 +40,8 @@ public class RecordActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+        getWindow().setStatusBarColor(getColor(R.color.background_dark));
+        layout_width = DensityUtil.getScreenWidth(this);
         initView();
         initListener();
         atBefore();
@@ -41,11 +49,13 @@ public class RecordActivity extends AppCompatActivity {
 
     private void initView() {
         // 参考： https://github.com/LuckSiege/PictureSelector
-        int layout_width = DensityUtil.getScreenWidth(this);
         int button_size = (int) (layout_width / 4.5f);
         btn_capture = new CaptureButton(this, button_size);
-        FrameLayout.LayoutParams btn_capture_param = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        btn_capture_param.gravity = Gravity.CENTER;
+        ConstraintLayout.LayoutParams btn_capture_param = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        btn_capture_param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        btn_capture_param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        btn_capture_param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        btn_capture_param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
         btn_capture.setLayoutParams(btn_capture_param);
         btn_capture.setProgressColor(getColor(R.color.button_pushed));
         btn_capture.setMinDuration(CustomCameraConfig.DEFAULT_MIN_RECORD_VIDEO);
@@ -83,17 +93,18 @@ public class RecordActivity extends AppCompatActivity {
 
             @Override
             public void recordShort(long time) {
-
+                Alert.info(RecordActivity.this, R.string.audio_recording_time_is_short);
             }
 
             @Override
             public void recordStart() {
-                System.out.println("Start");
+                atBetween();
             }
 
             @Override
             public void recordEnd(long time) {
-
+                Alert.info(RecordActivity.this, R.string.audio_recording_over);
+                atAfter();
             }
 
             @Override
@@ -108,11 +119,11 @@ public class RecordActivity extends AppCompatActivity {
 
             @Override
             public void recordError() {
-
+                Alert.info(RecordActivity.this, R.string.unknown_error);
             }
         });
         btn_cancel.setOnClickListener(view -> {
-
+            atBefore();
         });
         btn_confirm.setOnClickListener(view -> {
 
@@ -123,5 +134,34 @@ public class RecordActivity extends AppCompatActivity {
         btn_capture.setVisibility(View.VISIBLE);
         btn_cancel.setVisibility(View.GONE);
         btn_confirm.setVisibility(View.GONE);
+        binding.tip.setText(R.string.audio_recording);
+    }
+
+    private void atBetween() {
+        binding.tip.setText(null);
+    }
+
+    private void atAfter() {
+        // 参考： https://github.com/LuckSiege/PictureSelector
+        btn_capture.setVisibility(View.GONE);
+        btn_cancel.setVisibility(View.VISIBLE);
+        btn_confirm.setVisibility(View.VISIBLE);
+        btn_cancel.setClickable(false);
+        btn_confirm.setClickable(false);
+        ObjectAnimator animator_cancel = ObjectAnimator.ofFloat(btn_cancel, "translationX", layout_width / 4.0f, 0);
+        ObjectAnimator animator_confirm = ObjectAnimator.ofFloat(btn_confirm, "translationX", -layout_width / 4.0f, 0);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(animator_cancel, animator_confirm);
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                btn_cancel.setClickable(true);
+                btn_confirm.setClickable(true);
+            }
+        });
+        set.setDuration(500);
+        set.start();
     }
 }

@@ -59,6 +59,8 @@
     <string name="max_audio_hint">最多只能添加1段音频</string>
     <string name="max_video_hint">最多只能添加1段视频</string>
     <string name="audio_recording_time_is_short">录音时间过短</string>
+    <string name="audio_recording">长按录音</string>
+    <string name="audio_recording_over">录音结束</string>
 
     <!-- 用户 -->
     <string name="user_name">用户名</string>
