@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (errCode == 0) {
                         setResult(RESULT_OK);
                         State.getState().jwt = data.getString(Constant.JWT);
-                        // State.getState().userID = data.getInt(Constant.USER_ID);
+                        State.getState().userID = data.getInt(Constant.USER_ID);
                         State.getState().isLogin = true;
                         SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
                         preferences.edit().putString(Constant.JWT, State.getState().jwt).apply();

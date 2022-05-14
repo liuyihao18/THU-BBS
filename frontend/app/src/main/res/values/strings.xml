@@ -35,6 +35,7 @@
     <string name="valid_email_required">请使用清华邮箱</string>
     <string name="register_success">注册成功</string>
     <string name="login_success">登录成功</string>
+    <string name="logout_success">退出成功</string>
 
     <!-- 广场 -->
     <string name="home_tab_all">全部动态</string>
@@ -72,6 +73,7 @@
     <string name="blacklist">黑名单</string>
     <string name="edit_password">修改密码</string>
     <string name="quit">退出登录</string>
+    <string name="question_logout">是否退出</string>
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>
@@ -79,6 +81,7 @@
     <string name="comment">评论</string>
     <string name="like_your_tweet">%s赞了你的动态</string>
     <string name="test_like_content">测试用动态内容</string>
+
     <!-- 测试用url -->
     <string name="default_headshot_url">http://47.93.89.166/image/default_headshot.jpg</string>
     <string name="test_notification_content">呐，听他们说，还有十几天就2020年了，die xio? (咬手)。搭噶啦作为贫困户的bokuwa,也意味着要西内了呢。(伊利亚微笑脸)能认识米娜桑这些有钱人，哄都尼五路洗(低头流泪)，哄都! (抬头微笑) 你们不要哭了(眼角泛着泪光),答应bokuwa,要照常生活下去哦呐。。。（伸出的小手又迅速垂下去）嗦嘎（表情有点失落），米娜桑已经不喜欢了呀（紧咬嘴唇），得磨，米娜桑忘了当初吗（握紧小手），莫以得丝（强忍住眼泪），已经大丈夫了呦（挤出笑脸），瓦大喜瓦，滋多滋多，滋多滋多（语气越来越用力了）滋多戴斯给！！！一滋嘛叠磨瓦撕裂嘛赛！！！至死都不会瓦斯裂嘛斯（认真的表情）诶多诶多~「多洗忒」?为什么要「妄.图.抹.杀」这样的「自己」呢?★(笑)呐、「中二病的你」 也好、「二 次元的你」也好…「全部」daisuki二次元民那赛高desuwa!</string>

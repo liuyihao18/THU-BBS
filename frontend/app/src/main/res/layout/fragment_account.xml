@@ -212,21 +212,23 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/margin_small">
+            android:layout_marginTop="@dimen/margin_small"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_quit_24dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_small"
                 android:text="@string/quit"
-                android:textSize="@dimen/textSize_large"/>
+                android:textSize="@dimen/textSize_large" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
