@@ -20,16 +20,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
         if (preferences.contains(Constant.JWT) && preferences.contains(Constant.USER_ID)) {
             State.getState().jwt = preferences.getString(Constant.JWT, "");
             State.getState().userID = preferences.getInt(Constant.USER_ID, 0);
             State.getState().isLogin = true;
         }
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 
     @Override
