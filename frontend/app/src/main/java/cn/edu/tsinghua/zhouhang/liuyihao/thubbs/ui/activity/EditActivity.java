@@ -99,13 +99,18 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        binding.cancel.setOnClickListener(view -> finish());
+        binding.cancel.setOnClickListener(view -> new AlertDialog.Builder(this)
+                .setTitle(R.string.question_cancel_edit)
+                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                }))
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                .create().show());
         binding.addLocationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setTitle(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
-                create().show());
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation())
+                .create().show());
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {

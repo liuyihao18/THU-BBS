@@ -35,7 +35,7 @@
     <string name="valid_email_required">请使用清华邮箱</string>
     <string name="register_success">注册成功</string>
     <string name="login_success">登录成功</string>
-    <string name="logout_success">退出成功</string>
+    <string name="logout_success">退出登录成功</string>
 
     <!-- 广场 -->
     <string name="home_tab_all">全部动态</string>
@@ -55,7 +55,7 @@
     <string name="add_image">图像</string>
     <string name="add_video">视频</string>
     <string name="edit_hint">发布你此刻的看法~</string>
-    <string name="question_add_location">是否添加位置信息</string>
+    <string name="question_add_location">确定添加位置信息？</string>
     <string name="add_location_success">获取位置信息成功</string>
     <string name="add_location_fail">获取位置信息失败</string>
     <string name="max_image_hint">最多只能添加9张图片</string>
@@ -64,6 +64,7 @@
     <string name="audio_recording_time_is_short">录音时间过短</string>
     <string name="audio_recording">长按录音</string>
     <string name="audio_recording_over">录音结束</string>
+    <string name="question_cancel_edit">确定退出编辑？</string>
 
     <!-- 用户 -->
     <string name="user_name">用户名</string>
@@ -75,7 +76,7 @@
     <string name="blacklist">黑名单</string>
     <string name="edit_password">修改密码</string>
     <string name="quit">退出登录</string>
-    <string name="question_logout">是否退出</string>
+    <string name="question_logout">确定退出登录？</string>
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>
