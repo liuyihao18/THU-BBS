@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
@@ -33,7 +34,7 @@ public class AccountFragment extends Fragment {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         MyCircleImageView imageView = binding.accountHeadshot;
-        imageView.setImageUrl(getString(R.string.default_headshot_url));
+        imageView.setImageUrl(Static.HeadShot.getHeadShotUrl("default_headshot.jpg"));
         initListener();
         return root;
     }

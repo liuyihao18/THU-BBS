@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityCommentNotificationBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 
@@ -19,20 +20,21 @@ public class CommentNotificationActivity extends AppCompatActivity {
     private ActivityCommentNotificationBinding binding;
 
     private LinkedList<CommentItemContent> commentItemContents = new LinkedList<CommentItemContent>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCommentNotificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         commentItemContents.add(
                 new CommentItemContent(
-                        getString(R.string.default_headshot_url),
+                        Static.HeadShot.getHeadShotUrl("default_headshot.jpg"),
                         "xxx",
                         "2022=05-12",
                         1,

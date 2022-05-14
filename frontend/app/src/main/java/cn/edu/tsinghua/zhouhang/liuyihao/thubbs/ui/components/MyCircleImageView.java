@@ -49,9 +49,12 @@ public class MyCircleImageView extends MyImageView {
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
-            // 通过BitmapShader的方式实现
-            drawRoundByShaderMode(canvas, bitmap);
-            // super.onDraw(canvas);
+            if (bitmap != null) {
+                // 通过BitmapShader的方式实现
+                drawRoundByShaderMode(canvas, bitmap);
+            } else {
+                super.onDraw(canvas);
+            }
         } else {
             super.onDraw(canvas);
         }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities.CommentNotificationActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities.FollowNotificationActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities.LikeActivity;
@@ -45,7 +46,7 @@ public class NotificationsFragment extends Fragment {
         for(int i = 0; i < 10; i++) {
             titleList.add("测试用标题");
             contentList.add(getString(R.string.test_notification_content));
-            imageList.add(getString(R.string.default_headshot_url));
+            imageList.add(Static.HeadShot.getHeadShotUrl("default_headshot.jpg"));
         }
         initLauncher();
         initRecycleView();

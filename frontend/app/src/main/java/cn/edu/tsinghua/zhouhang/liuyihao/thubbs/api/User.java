@@ -10,7 +10,7 @@ public class User {
     private static final String prefix = "/user";
 
     private static String getUrl(String suffix) {
-        return Config.BASE_URL + prefix + suffix;
+        return Config.BASE_URL + APIConstant.API_PREFIX + prefix + suffix;
     }
 
     public static void register(JSONObject data, Callback callback) {
