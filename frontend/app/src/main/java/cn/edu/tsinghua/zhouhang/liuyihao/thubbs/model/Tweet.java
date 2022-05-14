@@ -1,5 +1,9 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
+import androidx.annotation.NonNull;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Tweet {
@@ -17,12 +21,12 @@ public class Tweet {
     private final int commentCount;
     private final int likeCount;
     private final ArrayList<String> imageList;
-    private final ArrayList<String> audioList;
-    private final ArrayList<String> videoList;
+    private final String audioUrl;
+    private final String videoUrl;
 
     public Tweet(int tweetID, int userID, int type, String content, String location,
                  String lastModified, int commentNum, int likeNum,
-                 ArrayList<String> imageList, ArrayList<String> audioList, ArrayList<String> videoList) {
+                 ArrayList<String> imageList, String audioUrl, String videoUrl) {
         this.tweetID = tweetID;
         this.userID = userID;
         this.type = type;
@@ -32,8 +36,12 @@ public class Tweet {
         this.commentCount = commentNum;
         this.likeCount = likeNum;
         this.imageList = imageList;
-        this.audioList = audioList;
-        this.videoList = videoList;
+        this.audioUrl = audioUrl;
+        this.videoUrl = videoUrl;
+    }
+
+    public static Tweet createFromJSON(@NonNull JSONObject data) {
+        return null;
     }
 
     public int getTweetID() {
@@ -76,19 +84,11 @@ public class Tweet {
         return imageList.get(i);
     }
 
-    public int getAudioCount(int i) {
-        return audioList.size();
+    public String getAudioUrl() {
+        return audioUrl;
     }
 
-    public String getAudioAt(int i) {
-        return audioList.get(i);
-    }
-
-    public int getVideoCount() {
-        return videoList.size();
-    }
-
-    public String getVideoAt(int i) {
-        return videoList.get(i);
+    public String getVideoUrl() {
+        return videoUrl;
     }
 }
