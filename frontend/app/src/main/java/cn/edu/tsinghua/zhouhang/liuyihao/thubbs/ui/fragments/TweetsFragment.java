@@ -107,15 +107,11 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initView() {
-        final TextView textView = binding.textTweets;
-        mTweetsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         if (State.getState().isLogin) {
-            binding.textTweets.setVisibility(View.VISIBLE);
-            binding.fab.setVisibility(View.VISIBLE);
-            binding.loginRequiredLayout.setVisibility(View.INVISIBLE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
+            binding.loginRequiredLayout.setVisibility(View.GONE);
         } else {
-            binding.textTweets.setVisibility(View.INVISIBLE);
-            binding.fab.setVisibility(View.INVISIBLE);
+            binding.recyclerView.setVisibility(View.GONE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
         }
     }
