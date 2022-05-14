@@ -133,11 +133,11 @@ public class TweetsFragment extends Fragment {
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;
             });
-            binding.spinner.setSelection(0, true);
-            binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            binding.typeSpinner.setSelection(0, true);
+            binding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Alert.info(getContext(), getResources().getStringArray(R.array.typeArray)[i]);
+                    Alert.info(getContext(), getResources().getStringArray(R.array.type_array)[i]);
                 }
 
                 @Override

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="typeArray">
+    <string-array name="order_array">
+        <item>按时间排序</item>
+        <item>按点赞数排序</item>
+    </string-array>
+    <string-array name="type_array">
         <item>全部</item>
         <item>文字</item>
         <item>图片</item>
