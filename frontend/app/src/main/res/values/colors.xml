@@ -17,6 +17,7 @@
     <color name="text_black">#2E3136</color>
     <!-- 按钮 -->
     <color name="button_enabled">#2E3136</color>
+    <color name="button_color">#61666C</color>
     <color name="button_disabled">#999999</color>
     <color name="button_pushed">#7D7DFF</color>
     <!-- 背景 -->

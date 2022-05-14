@@ -8,7 +8,7 @@ public class Static {
     }
 
     public static class Image {
-        private static final String subPrefix = "/images";
+        private static final String subPrefix = "/image";
 
         public static String getImageUrl(String name) {
             return getUrl(subPrefix, name);
@@ -27,6 +27,14 @@ public class Static {
         private static final String subPrefix = "/video";
 
         public static String getVideoUrl(String name) {
+            return getUrl(subPrefix, name);
+        }
+    }
+
+    public static class HeadShot {
+        private static final String subPrefix = "/headshot";
+
+        public static String getHeadShotUrl(String name) {
             return getUrl(subPrefix, name);
         }
     }
