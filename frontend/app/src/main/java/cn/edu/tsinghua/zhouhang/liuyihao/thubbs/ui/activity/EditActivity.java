@@ -67,6 +67,18 @@ public class EditActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (mMediaPlayer != null) {
+            resetPlayer();
+        }
+        if (binding.videoView.isPlaying()) {
+            binding.videoView.stopPlayback();
+        }
+        mMediaController.hide();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == Constant.LOCATION_PERMISSION) {
@@ -120,15 +132,7 @@ public class EditActivity extends AppCompatActivity {
                     binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
                 }
             } else {
-                try {
-                    mMediaPlayer.stop();
-                } catch (Exception e) {
-                    Alert.error(this, R.string.unknown_error);
-                }
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer = null;
-                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+                resetPlayer();
             }
 
         });
@@ -183,6 +187,18 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    private void resetPlayer() {
+        try {
+            mMediaPlayer.stop();
+        } catch (Exception e) {
+            Alert.error(this, R.string.unknown_error);
+        }
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
+        mMediaPlayer = null;
+        binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+    }
+
     private void initController() {
         mMediaController = new MediaController(this);
         binding.videoView.setMediaController(mMediaController);
@@ -193,20 +209,15 @@ public class EditActivity extends AppCompatActivity {
             binding.imageGroup.setVisibility(View.GONE);
             binding.audioGroup.setVisibility(View.VISIBLE);
             binding.videoGroup.setVisibility(View.GONE);
-            binding.videoView.stopPlayback();
+            if (binding.videoView.isPlaying()) {
+                binding.videoView.stopPlayback();
+            }
             mMediaController.hide();
         } else if (mVideoUri != null) {
             binding.imageGroup.setVisibility(View.GONE);
             binding.audioGroup.setVisibility(View.GONE);
             if (mMediaPlayer != null) {
-                try {
-                    mMediaPlayer.stop();
-                } catch (Exception e) {
-                    Alert.error(this, R.string.unknown_error);
-                }
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer = null;
+                resetPlayer();
             }
             binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             binding.videoGroup.setVisibility(View.VISIBLE);
@@ -215,18 +226,13 @@ public class EditActivity extends AppCompatActivity {
             binding.imageGroup.setVisibility(View.VISIBLE);
             binding.audioGroup.setVisibility(View.GONE);
             if (mMediaPlayer != null) {
-                try {
-                    mMediaPlayer.stop();
-                } catch (Exception e) {
-                    Alert.error(this, R.string.unknown_error);
-                }
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer = null;
+                resetPlayer();
             }
             binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             binding.videoGroup.setVisibility(View.GONE);
-            binding.videoView.stopPlayback();
+            if (binding.videoView.isPlaying()) {
+                binding.videoView.stopPlayback();
+            }
             mMediaController.hide();
         }
         setImageButton();
