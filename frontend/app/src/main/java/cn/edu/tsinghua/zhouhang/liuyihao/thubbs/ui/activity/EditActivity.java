@@ -95,24 +95,6 @@ public class EditActivity extends AppCompatActivity {
     private void initView() {
         binding.imageGroup.bindImageUriList(mImageUriList)
                 .setEditable(true)
-                .registerImageGroupListener(new ImageGroup.ImageGroupListener() {
-                    @Override
-                    public void onClickImage(MyImageView myImageView, int index) {
-
-                    }
-
-                    @Override
-                    public void onClickAddImage(MyImageView myImageView, int index) {
-                        if (index == mImageUriList.size()) {
-                            selectImage();
-                        }
-                    }
-
-                    @Override
-                    public void onClickCloseButton(View view, int index) {
-                        removeImage(index);
-                    }
-                })
                 .refresh();
     }
 
@@ -124,6 +106,24 @@ public class EditActivity extends AppCompatActivity {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
                 create().show());
+        binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
+            @Override
+            public void onClickImage(MyImageView myImageView, int index) {
+
+            }
+
+            @Override
+            public void onClickAddImage(MyImageView myImageView, int index) {
+                if (index == mImageUriList.size()) {
+                    selectImage();
+                }
+            }
+
+            @Override
+            public void onClickCloseButton(View view, int index) {
+                removeImage(index);
+            }
+        });
         binding.audioPlayButton.setOnClickListener(view -> {
             if (mMediaPlayer == null) {
                 initPlayer();

@@ -26,6 +26,7 @@ public class ImageGroup extends ConstraintLayout {
     private final ArrayList<ImageView> mCloseButtonList = new ArrayList<>();
     private boolean mEditable = false;
     private final int mTotalCount = Constant.MAX_IMAGE_COUNT;
+    private ImageGroupListener mImageGroupListener = null;
 
     public interface ImageGroupListener {
         void onClickImage(MyImageView myImageView, int index);
@@ -54,6 +55,7 @@ public class ImageGroup extends ConstraintLayout {
         binding = ComponentImageGroupBinding.inflate(LayoutInflater.from(context), this, true);
         initList();
         initView();
+        initListener();
     }
 
     private void initList() {
@@ -87,7 +89,27 @@ public class ImageGroup extends ConstraintLayout {
         }
     }
 
-    public ImageGroup bindImageUriList(ArrayList<String> imageUriList) {
+    private void initListener() {
+        for (int i = 0; i < mTotalCount; i++) {
+            mImageViewList.get(i).setOnClickListener(view -> {
+                int index = mImageViewList.indexOf((MyImageView) view);
+                if (mImageGroupListener != null) {
+                    mImageGroupListener.onClickImage(mImageViewList.get(index), index);
+                    mImageGroupListener.onClickAddImage(mImageViewList.get(index), index);
+                }
+            });
+        }
+        for (int i = 0; i < mTotalCount; i++) {
+            mCloseButtonList.get(i).setOnClickListener(view -> {
+                int index = mCloseButtonList.indexOf((ImageView) view);
+                if (mImageGroupListener != null) {
+                    mImageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
+                }
+            });
+        }
+    }
+
+    public ImageGroup bindImageUriList(@NonNull ArrayList<String> imageUriList) {
         mImageUriList = imageUriList;
         return this;
     }
@@ -97,21 +119,8 @@ public class ImageGroup extends ConstraintLayout {
         return this;
     }
 
-    public ImageGroup registerImageGroupListener(ImageGroupListener imageGroupListener) {
-        for (int i = 0; i < mTotalCount; i++) {
-            mImageViewList.get(i).setOnClickListener(view -> {
-                int index = mImageViewList.indexOf((MyImageView) view);
-                imageGroupListener.onClickImage(mImageViewList.get(index), index);
-                imageGroupListener.onClickAddImage(mImageViewList.get(index), index);
-            });
-        }
-        for (int i = 0; i < mTotalCount; i++) {
-            mCloseButtonList.get(i).setOnClickListener(view -> {
-                int index = mCloseButtonList.indexOf((ImageView) view);
-                imageGroupListener.onClickCloseButton(mCloseButtonList.get(index), index);
-            });
-        }
-        return this;
+    public void registerImageGroupListener(@Nullable ImageGroupListener imageGroupListener) {
+        mImageGroupListener = imageGroupListener;
     }
 
     public void refresh() {
@@ -158,5 +167,4 @@ public class ImageGroup extends ConstraintLayout {
             mCloseButtonList.get(size).setVisibility(INVISIBLE);
         }
     }
-
 }
