@@ -25,4 +25,7 @@
     <dimen name="footer_height">48dp</dimen>
     <dimen name="margin_middle">32dp</dimen>
     <dimen name="margin_small">16dp</dimen>
+
+    <!-- 推文 -->
+    <dimen name="author_avatar_size">48dp</dimen>
 </resources>
