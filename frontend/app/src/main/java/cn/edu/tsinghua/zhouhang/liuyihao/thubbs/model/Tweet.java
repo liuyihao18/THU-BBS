@@ -5,9 +5,10 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tweet {
+public class Tweet implements Serializable {
     public static final int TYPE_TEXT = 0;
     public static final int TYPE_IMAGE = 1;
     public static final int TYPE_AUDIO = 2;

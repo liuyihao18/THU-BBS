@@ -34,7 +34,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
     class TweetViewHolder extends RecyclerView.ViewHolder {
         TweetItemBinding binding;
         MediaPlayer mMediaPlayer;
-        MediaResource mMediaResource = new MediaResource();
+        boolean loaded = false;
         Tweet mTweet;
 
         public TweetViewHolder(@NonNull TweetItemBinding binding) {
@@ -88,7 +88,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
 
         public void refresh() {
             /* 初始化 */
-            mMediaResource.loaded = false;
+            loaded = false;
             binding.locationLayout.setVisibility(View.GONE);
             binding.imageGroup.setVisibility(View.GONE);
             binding.imageView.setVisibility(View.GONE);
@@ -168,7 +168,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                         });
                         binding.videoView.setOnErrorListener((mediaPlayer, i, i1) -> {
                             Alert.error(mContext, R.string.network_error);
-                            mMediaResource.loaded = false;
+                            loaded = false;
                             binding.videoPlayButton.setVisibility(View.VISIBLE);
                             return true;
                         });
@@ -179,9 +179,9 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                         });
                         binding.videoPlayButton.setVisibility(View.VISIBLE);
                         binding.videoPlayButton.setOnClickListener(view -> {
-                            if (!mMediaResource.loaded) {
+                            if (!loaded) {
                                 binding.videoView.setVideoPath(mTweet.getVideoUrl());
-                                mMediaResource.loaded = true;
+                                loaded = true;
                             }
                             binding.videoView.start();
                             binding.videoPlayButton.setVisibility(View.GONE);
@@ -192,10 +192,14 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
             binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
             binding.contentText.setOnClickListener(view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.setAction(Constant.DETAIL_HAVE_DATA);
+                intent.putExtra(Constant.EXTRA_TWEET, mTweet);
                 mContext.startActivity(intent);
             });
             binding.commentButton.setOnClickListener(view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.setAction(Constant.DETAIL_HAVE_DATA);
+                intent.putExtra(Constant.EXTRA_TWEET, mTweet);
                 mContext.startActivity(intent);
             });
         }

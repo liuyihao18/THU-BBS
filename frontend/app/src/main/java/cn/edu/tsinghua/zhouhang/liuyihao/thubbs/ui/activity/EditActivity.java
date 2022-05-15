@@ -355,8 +355,8 @@ public class EditActivity extends AppCompatActivity {
             }
         }
         if (bestLocation == null) {
-            mLocation = "(0°E, 0°N)";
-            binding.addLocationText.setText(mLocation);
+            mLocation = null;
+            binding.addLocationText.setText(R.string.add_location);
             Alert.info(this, "获取位置信息失败");
             return;
         }
