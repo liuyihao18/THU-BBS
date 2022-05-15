@@ -92,6 +92,16 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.question_cancel_edit)
+                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                }))
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                .create().show();
+    }
+
     private void initView() {
         binding.imageGroup.bindImageUriList(mImageUriList)
                 .setEditable(true)
@@ -132,14 +142,9 @@ public class EditActivity extends AppCompatActivity {
         binding.audioPlayButton.setOnClickListener(view -> {
             if (mMediaPlayer == null) {
                 initPlayer();
-                if (mMediaPlayer != null) {
-                    mMediaPlayer.start();
-                    binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
-                }
             } else {
                 resetPlayer();
             }
-
         });
         binding.audioCloseButton.setOnClickListener(view -> {
             removeAudio();
@@ -184,6 +189,8 @@ public class EditActivity extends AppCompatActivity {
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             });
             mMediaPlayer.prepare();
+            mMediaPlayer.start();
+            binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
         } catch (IOException ioe) {
             Alert.error(this, R.string.unknown_error);
             mMediaPlayer.reset();

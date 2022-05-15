@@ -163,10 +163,24 @@
 
         <VideoView
             android:id="@+id/video_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/max_video_height"
+            android:layout_width="@dimen/display_video_width"
+            android:layout_height="@dimen/display_video_height"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/audio_play_button" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/audio_play_button" />
+
+        <ImageView
+            android:id="@+id/video_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/video_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/video_view"
+            app:srcCompat="@drawable/ps_ic_audio_play" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

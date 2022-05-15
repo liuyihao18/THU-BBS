@@ -22,6 +22,8 @@
 
     <!-- 视频大小 -->
     <dimen name="max_video_height">400dp</dimen>
+    <dimen name="display_video_width">300dp</dimen>
+    <dimen name="display_video_height">200dp</dimen>
 
     <!-- 位置 -->
     <dimen name="fab_margin">16dp</dimen>

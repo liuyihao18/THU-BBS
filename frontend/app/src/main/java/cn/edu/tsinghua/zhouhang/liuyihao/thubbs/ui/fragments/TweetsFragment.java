@@ -5,6 +5,8 @@ import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet.TYPE_TEXT;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,7 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -71,10 +77,28 @@ public class TweetsFragment extends Fragment {
                 4, 1, Tweet.TYPE_IMAGE, "这是多张图片的~", "(116.12°E, 24.5°N)",
                 "2022-05-15", 18, 45, new ArrayList<>(imageList), null, null
         ));
+        imageList.clear();
+        for (int i = 0; i < 9; i++) {
+            imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
+        }
         mTweetList.add(new Tweet(
-                5, 1, Tweet.TYPE_AUDIO, "这是有音频的~", "(116.12°E, 24.5°N)",
+                5, 1, Tweet.TYPE_IMAGE, "这是九宫格~", "(116.12°E, 24.5°N)",
+                "2022-05-15", 66, 66, new ArrayList<>(imageList), null, null
+        ));
+        mTweetList.add(new Tweet(
+                6, 1, Tweet.TYPE_AUDIO, "这是有音频的~", "(116.12°E, 24.5°N)",
                 "2022-05-15", 10, 40, null,
-                Static.Audio.getAudioUrl("africa-toto.wav"), null
+                Static.Audio.getAudioUrl("jump.mp3"), null
+        ));
+        mTweetList.add(new Tweet(
+                7, 1, Tweet.TYPE_AUDIO, "还是音频的~", "(116.12°E, 24.5°N)",
+                "2022-05-15", 6, 23, null,
+                Static.Audio.getAudioUrl("success.mp3"), null
+        ));
+        mTweetList.add(new Tweet(
+                8, 1, Tweet.TYPE_VIDEO, "开始有视频了~", "(116.12°E, 24.5°N)",
+                "2022-05-15", 12, 33, null,
+                null, Static.Video.getVideoUrl("test.mp4")
         ));
         /* 测试数据结束 */
         initLauncher();
