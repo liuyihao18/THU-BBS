@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

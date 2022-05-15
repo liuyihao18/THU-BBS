@@ -360,9 +360,9 @@ params: **form-data**
   "audio": file,    /* optional */
   "video": file,    /* optional */
   "image_count": int,
-  "image1": file,  /* optional */
+  "image0": file,  /* optional */
   ...
-  "image9": file   /* optional */
+  "image8": file   /* optional */
 }
 ```
 
@@ -397,9 +397,9 @@ params: **form-data**
   "audio": file,    /* optional */
   "video": file,    /* optional */
   "image_count": int,
-  "image1": file,   /* optional */
+  "image0": file,   /* optional */
   ...
-  "image9": file    /* optional */
+  "image8": file    /* optional */
 }
 ```
 
@@ -482,7 +482,8 @@ ret:
       "comment_count": int,
       "nickname": string,
       "headshot": url,
-      "is_follow": boolean
+      "is_follow": boolean,
+      "is_like": boolean
     }
     ...
   ]

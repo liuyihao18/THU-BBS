@@ -41,10 +41,6 @@ public class Tweet {
         this.videoUrl = videoUrl;
     }
 
-    public static Tweet createFromJSON(@NonNull JSONObject data) {
-        return null;
-    }
-
     public int getTweetID() {
         return tweetID;
     }

@@ -1,12 +1,6 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
-import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet.TYPE_IMAGE;
-import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet.TYPE_TEXT;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,11 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 

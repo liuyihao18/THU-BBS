@@ -188,9 +188,11 @@ public class EditActivity extends AppCompatActivity {
                 mMediaPlayer = null;
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             });
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
-            binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+            mMediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                mMediaPlayer.start();
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+            });
+            mMediaPlayer.prepareAsync();
         } catch (IOException ioe) {
             Alert.error(this, R.string.unknown_error);
             mMediaPlayer.reset();

@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
         <activity
+            android:name=".ui.activity.DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.notifications.launchedActivities.CommentNotificationActivity"
             android:exported="false"
             android:label="@string/comment" />
