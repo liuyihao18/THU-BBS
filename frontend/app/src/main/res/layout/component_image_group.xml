@@ -29,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/close_button1"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -59,8 +59,8 @@
 
             <ImageView
                 android:id="@+id/close_button2"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -87,8 +87,8 @@
 
             <ImageView
                 android:id="@+id/close_button3"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -124,8 +124,8 @@
 
             <ImageView
                 android:id="@+id/close_button4"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -153,8 +153,8 @@
 
             <ImageView
                 android:id="@+id/close_button5"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -182,8 +182,8 @@
 
             <ImageView
                 android:id="@+id/close_button6"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -219,8 +219,8 @@
 
             <ImageView
                 android:id="@+id/close_button7"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -248,8 +248,8 @@
 
             <ImageView
                 android:id="@+id/close_button8"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"
@@ -277,8 +277,8 @@
 
             <ImageView
                 android:id="@+id/close_button9"
-                android:layout_width="@dimen/image_close_button_size"
-                android:layout_height="@dimen/image_close_button_size"
+                android:layout_width="@dimen/button_size_medium"
+                android:layout_height="@dimen/button_size_medium"
                 android:layout_marginTop="@dimen/image_padding"
                 android:layout_marginEnd="@dimen/image_padding"
                 android:contentDescription="@string/button_close"

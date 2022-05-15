@@ -137,10 +137,13 @@ public class ImageGroup extends ConstraintLayout {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(GONE);
-        } else {
+        } else if (size < 9) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(VISIBLE);
+        } else {
+            Alert.error(getContext(), R.string.unknown_error);
+            return;
         }
         for (int i = 0; i < size; i++) {
             Glide.with(getContext())

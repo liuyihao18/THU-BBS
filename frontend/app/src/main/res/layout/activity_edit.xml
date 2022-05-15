@@ -125,8 +125,8 @@
 
                 <ImageView
                     android:id="@+id/audio_close_button"
-                    android:layout_width="@dimen/image_close_button_size"
-                    android:layout_height="@dimen/image_close_button_size"
+                    android:layout_width="@dimen/button_size_medium"
+                    android:layout_height="@dimen/button_size_medium"
                     android:contentDescription="@string/button_close"
                     app:layout_constraintStart_toEndOf="@id/audio_play_button"
                     app:layout_constraintTop_toTopOf="parent"
@@ -151,8 +151,8 @@
 
                 <ImageView
                     android:id="@+id/video_close_button"
-                    android:layout_width="@dimen/image_close_button_size"
-                    android:layout_height="@dimen/image_close_button_size"
+                    android:layout_width="@dimen/button_size_medium"
+                    android:layout_height="@dimen/button_size_medium"
                     android:layout_marginTop="@dimen/image_padding"
                     android:layout_marginEnd="@dimen/image_padding"
                     android:contentDescription="@string/button_close"
