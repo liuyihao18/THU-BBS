@@ -15,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.LoginActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
@@ -26,12 +26,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 public class TweetsFragment extends Fragment {
-    public static final String TWEETS_TYPE = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments.TweetsFragment.TWEETS_TYPE";
-    public static final int TWEETS_EMPTY = 0; // 空
-    public static final int TWEETS_ALL = 1; // 全部推送
-    public static final int TWEETS_MY = 2; // 关注的人的推送
-    public static final int TWEETS_ME = 3; // 我的推送
-
     private FragmentTweetsBinding binding;
     private TweetsViewModel mTweetsViewModel;
     private ActivityResultLauncher<Intent> mLoginLauncher;
@@ -83,21 +77,21 @@ public class TweetsFragment extends Fragment {
         Bundle bundle = getArguments();
         int type;
         if (bundle != null) {
-            type = bundle.getInt(TWEETS_TYPE, TWEETS_EMPTY);
+            type = bundle.getInt(Constant.TWEETS_TYPE, Constant.TWEETS_EMPTY);
         } else {
-            type = TWEETS_EMPTY;
+            type = Constant.TWEETS_EMPTY;
         }
         switch (type) {
-            case TWEETS_EMPTY:
+            case Constant.TWEETS_EMPTY:
                 mTweetsViewModel.setText("这里是空动态列表");
                 break;
-            case TWEETS_ALL:
+            case Constant.TWEETS_ALL:
                 mTweetsViewModel.setText("这里是全部动态列表");
                 break;
-            case TWEETS_MY:
+            case Constant.TWEETS_FOLLOW:
                 mTweetsViewModel.setText("这里是已关注列表");
                 break;
-            case TWEETS_ME:
+            case Constant.TWEETS_USER:
                 mTweetsViewModel.setText("这里是我的动态列表");
                 break;
             default:

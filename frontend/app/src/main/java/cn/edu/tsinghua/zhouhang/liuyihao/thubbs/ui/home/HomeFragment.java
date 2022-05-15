@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentHomeBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments.TweetsFragment;
 
@@ -49,13 +50,13 @@ public class HomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 switch (position) {
                     case 0:
-                        bundle.putInt(TweetsFragment.TWEETS_TYPE, TweetsFragment.TWEETS_ALL);
+                        bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_ALL);
                         break;
                     case 1:
-                        bundle.putInt(TweetsFragment.TWEETS_TYPE, TweetsFragment.TWEETS_MY);
+                        bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_FOLLOW);
                         break;
                     default:
-                        bundle.putInt(TweetsFragment.TWEETS_TYPE, TweetsFragment.TWEETS_EMPTY);
+                        bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_EMPTY);
                         break;
                 }
                 tweetsFragment.setArguments(bundle);
