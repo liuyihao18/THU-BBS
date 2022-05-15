@@ -147,7 +147,7 @@ public class EditActivity extends AppCompatActivity {
                 .setTitle(R.string.question_cancel_edit)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> super.onBackPressed())
                 .create().show();
     }
 
@@ -222,97 +222,18 @@ public class EditActivity extends AppCompatActivity {
             refresh();
         });
         binding.post.setOnClickListener(view -> {
-            int type = Tweet.TYPE_TEXT;
-            if (mImageUriList.size() > 0) {
-                type = Tweet.TYPE_IMAGE;
-            } else if (mAudioUri != null) {
-                type = Tweet.TYPE_AUDIO;
-            } else if (mVideoUri != null) {
-                type = Tweet.TYPE_VIDEO;
+            if (binding.content.getText().toString().isEmpty() &&
+                    mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
+                Alert.info(this, R.string.post_required);
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_post)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                            post(false);
+                        }).create().show();
             }
-            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-            builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
-            builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(true));
-            builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
-            if (mLocation != null) {
-                builder.addFormDataPart(TweetAPI.location, mLocation);
-            }
-            File file;
-            String path;
-            switch (type) {
-                case Tweet.TYPE_IMAGE:
-                    builder.addFormDataPart(TweetAPI.imageCount, String.valueOf(mImageUriList.size()));
-                    for (int i = 0; i < Math.min(mImageUriList.size(), Constant.MAX_IMAGE_COUNT); i++) {
-                        path = Util.getPathFromUri(this, Uri.parse(mImageUriList.get(i)));
-                        if (path == null) {
-                            Alert.error(this, R.string.unknown_error);
-                            return;
-                        } else {
-                            file = new File(path);
-                            builder.addFormDataPart(TweetAPI.image + i,
-                                    file.getName(),
-                                    RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                            );
-                        }
-                    }
-                    break;
-                case Tweet.TYPE_AUDIO:
-                    path = Util.getPathFromUri(this, Uri.parse(mAudioUri));
-                    if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
-                    } else {
-                        file = new File(path);
-                        builder.addFormDataPart(TweetAPI.audio,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
-                    }
-                    break;
-                case Tweet.TYPE_VIDEO:
-                    path = Util.getPathFromUri(this, Uri.parse(mVideoUri));
-                    if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
-                    } else {
-                        file = new File(path);
-                        builder.addFormDataPart(TweetAPI.video,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
-                    }
-                    break;
-            }
-            TweetAPI.createTweet(builder.build(), new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Message msg = new Message();
-                    msg.what = APIConstant.NETWORK_ERROR;
-                    handler.sendMessage(msg);
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    Message msg = new Message();
-                    if (body == null) {
-                        msg.what = APIConstant.SERVER_ERROR;
-                        handler.sendMessage(msg);
-                        return;
-                    }
-                    try {
-                        JSONObject data = new JSONObject(body.string());
-                        msg.what = POST;
-                        msg.obj = data;
-                        handler.sendMessage(msg);
-                    } catch (JSONException je) {
-                        System.err.println("Bad response format.");
-                    } finally {
-                        body.close();
-                    }
-                }
-            });
         });
     }
 
@@ -636,5 +557,99 @@ public class EditActivity extends AppCompatActivity {
 
     private void removeVideo() {
         mVideoUri = null;
+    }
+
+    private void post(boolean isDraft) {
+        int type = Tweet.TYPE_TEXT;
+        if (mImageUriList.size() > 0) {
+            type = Tweet.TYPE_IMAGE;
+        } else if (mAudioUri != null) {
+            type = Tweet.TYPE_AUDIO;
+        } else if (mVideoUri != null) {
+            type = Tweet.TYPE_VIDEO;
+        }
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
+        builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(isDraft));
+        builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
+        if (mLocation != null) {
+            builder.addFormDataPart(TweetAPI.location, mLocation);
+        }
+        File file;
+        String path;
+        switch (type) {
+            case Tweet.TYPE_IMAGE:
+                builder.addFormDataPart(TweetAPI.imageCount, String.valueOf(mImageUriList.size()));
+                for (int i = 0; i < Math.min(mImageUriList.size(), Constant.MAX_IMAGE_COUNT); i++) {
+                    path = Util.getPathFromUri(this, Uri.parse(mImageUriList.get(i)));
+                    if (path == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    } else {
+                        file = new File(path);
+                        builder.addFormDataPart(TweetAPI.image + i,
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                        );
+                    }
+                }
+                break;
+            case Tweet.TYPE_AUDIO:
+                path = Util.getPathFromUri(this, Uri.parse(mAudioUri));
+                if (path == null) {
+                    Alert.error(this, R.string.unknown_error);
+                    return;
+                } else {
+                    file = new File(path);
+                    builder.addFormDataPart(TweetAPI.audio,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
+                }
+                break;
+            case Tweet.TYPE_VIDEO:
+                path = Util.getPathFromUri(this, Uri.parse(mVideoUri));
+                if (path == null) {
+                    Alert.error(this, R.string.unknown_error);
+                    return;
+                } else {
+                    file = new File(path);
+                    builder.addFormDataPart(TweetAPI.video,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
+                }
+                break;
+        }
+        TweetAPI.createTweet(builder.build(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Message msg = new Message();
+                msg.what = APIConstant.NETWORK_ERROR;
+                handler.sendMessage(msg);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ResponseBody body = response.body();
+                Message msg = new Message();
+                if (body == null) {
+                    msg.what = APIConstant.SERVER_ERROR;
+                    handler.sendMessage(msg);
+                    return;
+                }
+                try {
+                    JSONObject data = new JSONObject(body.string());
+                    msg.what = POST;
+                    msg.obj = data;
+                    handler.sendMessage(msg);
+                } catch (JSONException je) {
+                    System.err.println("Bad response format.");
+                } finally {
+                    body.close();
+                }
+            }
+        });
     }
 }
