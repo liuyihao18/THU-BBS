@@ -479,7 +479,10 @@ ret:
       "location": string,
       "last_modified": string,
       "like_count": int,
-      "comment_count": int
+      "comment_count": int,
+      "nickname": string,
+      "headshot": url,
+      "is_follow": boolean
     }
     ...
   ]
