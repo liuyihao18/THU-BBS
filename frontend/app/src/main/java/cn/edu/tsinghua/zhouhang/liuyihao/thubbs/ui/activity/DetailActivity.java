@@ -59,8 +59,8 @@ public class DetailActivity extends AppCompatActivity {
         binding.videoView.setVisibility(View.GONE);
         binding.videoPlayButton.setVisibility(View.GONE);
         /* 加载数据 */
-        binding.authorHeadshot.setImageUrl(Static.HeadShot.getHeadShotUrl("default_headshot.jpg"));
-        binding.authorName.setText("かみ");
+        binding.authorHeadshot.setImageUrl(mTweet.getHeadshot());
+        binding.authorName.setText(mTweet.getNickname());
         binding.contentText.setText(mTweet.getContent());
         binding.lastModified.setText(mTweet.getLastModified());
         if (mTweet.getLocation() != null) {
@@ -114,7 +114,7 @@ public class DetailActivity extends AppCompatActivity {
                     binding.videoView.setOnPreparedListener(mediaPlayer -> {
                         DisplayMetrics dm = new DisplayMetrics();
                         this.getDisplay().getRealMetrics(dm);
-                        int maxWidth = dm.widthPixels - 2 * this.getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
+                        int maxWidth = dm.widthPixels - 4 * this.getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
                         int maxHeight = this.getResources().getDimensionPixelSize(R.dimen.max_video_height);
                         int videoWith = mediaPlayer.getVideoWidth();
                         int videoHeight = mediaPlayer.getVideoHeight();
@@ -153,10 +153,59 @@ public class DetailActivity extends AppCompatActivity {
         }
         binding.commentButtonText.setText(String.valueOf(mTweet.getCommentCount()));
         binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
+        if (mTweet.isFollow) {
+            binding.followButton.setText(R.string.unfollow);
+            binding.followButton.setBackgroundColor(this.getColor(R.color.button_disabled));
+        } else {
+            binding.followButton.setText(R.string.follow);
+            binding.followButton.setBackgroundColor(this.getColor(R.color.pink));
+        }
+        if (mTweet.isLike) {
+            binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
+        } else {
+            binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
+        }
+        /* 设置监听器 */
+        binding.followButton.setOnClickListener(view -> {
+            if (mTweet.isFollow) {
+                mTweet.isFollow = false;
+                binding.followButton.setText(R.string.follow);
+                binding.followButton.setBackgroundColor(this.getColor(R.color.pink));
+            } else {
+                mTweet.isFollow = true;
+                binding.followButton.setText(R.string.unfollow);
+                binding.followButton.setBackgroundColor(this.getColor(R.color.button_disabled));
+            }
+        });
+        binding.likeButton.setOnClickListener(view -> {
+            if (mTweet.isLike) {
+                mTweet.isLike = false;
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
+                mTweet.likeCount--;
+            } else {
+                mTweet.isLike = true;
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
+                mTweet.likeCount++;
+            }
+            binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
     }
 
     private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> finish());
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
 
     private void initPlayer(@NotNull String audioUri) {

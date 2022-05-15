@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.TweetViewHolder> {
     private final LinkedList<Tweet> mTweetList;
     private final Context mContext;
+    private final TweetsFragment mParent;
 
     class TweetViewHolder extends RecyclerView.ViewHolder {
         TweetItemBinding binding;
@@ -96,8 +98,8 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
             binding.videoView.setVisibility(View.GONE);
             binding.videoPlayButton.setVisibility(View.GONE);
             /* 加载数据 */
-            binding.authorHeadshot.setImageUrl(Static.HeadShot.getHeadShotUrl("default_headshot.jpg"));
-            binding.authorName.setText("かみ");
+            binding.authorHeadshot.setImageUrl(mTweet.getHeadshot());
+            binding.authorName.setText(mTweet.getNickname());
             binding.contentText.setText(mTweet.getContent());
             binding.lastModified.setText(mTweet.getLastModified());
             if (mTweet.getLocation() != null) {
@@ -190,24 +192,73 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
             }
             binding.commentButtonText.setText(String.valueOf(mTweet.getCommentCount()));
             binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
+            if (mTweet.isFollow) {
+                binding.followButton.setText(R.string.unfollow);
+                binding.followButton.setBackgroundColor(mContext.getColor(R.color.button_disabled));
+            } else {
+                binding.followButton.setText(R.string.follow);
+                binding.followButton.setBackgroundColor(mContext.getColor(R.color.pink));
+            }
+            if (mTweet.isLike) {
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
+            } else {
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
+            }
+            /* 设置监听器 */
+            binding.followButton.setOnClickListener(view -> {
+                if (mTweet.isFollow) {
+                    mTweet.isFollow = false;
+                    binding.followButton.setText(R.string.follow);
+                    binding.followButton.setBackgroundColor(mContext.getColor(R.color.pink));
+                } else {
+                    mTweet.isFollow = true;
+                    binding.followButton.setText(R.string.unfollow);
+                    binding.followButton.setBackgroundColor(mContext.getColor(R.color.button_disabled));
+                }
+            });
+            binding.likeButton.setOnClickListener(view -> {
+                if (mTweet.isLike) {
+                    mTweet.isLike = false;
+                    binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
+                    mTweet.likeCount--;
+                } else {
+                    mTweet.isLike = true;
+                    binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
+                    mTweet.likeCount++;
+                }
+                binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
+            });
             binding.contentText.setOnClickListener(view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-                mContext.startActivity(intent);
+                mParent.setOnDetailReturnListener((result) -> {
+                    Intent resultIntent = result.getData();
+                    if (resultIntent != null) {
+                        mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
+                    }
+                    refresh();
+                }).goDetail(intent);
             });
             binding.commentButton.setOnClickListener(view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-                mContext.startActivity(intent);
+                mParent.setOnDetailReturnListener((result) -> {
+                    Intent resultIntent = result.getData();
+                    if (resultIntent != null) {
+                        mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
+                    }
+                    refresh();
+                }).goDetail(intent);
             });
         }
     }
 
-    public TweetListAdapter(Context context, LinkedList<Tweet> tweetList) {
+    public TweetListAdapter(Context context, LinkedList<Tweet> tweetList, TweetsFragment parent) {
         mContext = context;
         mTweetList = tweetList;
+        mParent = parent;
     }
 
     @NonNull
