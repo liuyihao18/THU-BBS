@@ -1,6 +1,8 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 
 public class APIConstant {
+    public static final String AUTHORIZATION = "Authorization";
+
     public static final String API_PREFIX = "/user-api/v1";
 
     public static final String ERR_CODE = "errCode";

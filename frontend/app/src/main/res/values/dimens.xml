@@ -15,15 +15,15 @@
     <dimen name="image_margin">8dp</dimen>
     <dimen name="image_padding">4dp</dimen>
 
-    <!-- 按钮 -->
-    <dimen name="button_size_small">20dp</dimen>
-    <dimen name="button_size_medium">24dp</dimen>
-    <dimen name="button_size_big">28dp</dimen>
-
     <!-- 视频大小 -->
     <dimen name="max_video_height">400dp</dimen>
     <dimen name="display_video_width">300dp</dimen>
     <dimen name="display_video_height">200dp</dimen>
+
+    <!-- 按钮 -->
+    <dimen name="button_size_small">20dp</dimen>
+    <dimen name="button_size_medium">24dp</dimen>
+    <dimen name="button_size_big">28dp</dimen>
 
     <!-- 位置 -->
     <dimen name="fab_margin">16dp</dimen>
@@ -37,6 +37,6 @@
     <dimen name="author_headshot_size">48dp</dimen>
     <dimen name="follow_button_width">66dp</dimen>
     <dimen name="follow_button_height">40dp</dimen>
-    <dimen name="context_text_padding">4dp</dimen>
+    <dimen name="content_text_padding">4dp</dimen>
 
 </resources>

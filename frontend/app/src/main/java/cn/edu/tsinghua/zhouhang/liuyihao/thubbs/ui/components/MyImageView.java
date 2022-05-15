@@ -69,7 +69,7 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Message msg = new Message();
                 msg.what = APIConstant.NETWORK_ERROR;
-                e.printStackTrace();
+                handler.sendMessage(msg);
             }
 
             @Override

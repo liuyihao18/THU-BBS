@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 
 import androidx.annotation.NonNull;
