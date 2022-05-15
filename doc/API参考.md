@@ -4,7 +4,7 @@ root path = "http://47.93.89.166"
 
 ## 登录
 
-@bp_user.route('/user-api/v1/user/register', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/register', methods=['POST'])
 
 params:
 
@@ -29,7 +29,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/user/login', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/login', methods=['POST'])
 
 params:
 
@@ -56,7 +56,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/user/get_profile', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/get_profile', methods=['POST'])
 
 @login_required
 
@@ -86,7 +86,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/user/get_minimum_profile', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/get_minimum_profile', methods=['POST'])
 
 @login_required
 
@@ -115,7 +115,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/user/edit_profile', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/edit_profile', methods=['POST'])
 
 @login_required
 
@@ -143,7 +143,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/user/edit_password', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/user/edit_password', methods=['POST'])
 
 @login_required
 
@@ -172,7 +172,7 @@ ret:
 
 ## 关系
 
-@bp_user.route('/user-api/v1/relation/follow', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/follow', methods=['POST'])
 
 @login_required
 
@@ -198,7 +198,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/unfollow', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/unfollow', methods=['POST'])
 
 @login_required
 
