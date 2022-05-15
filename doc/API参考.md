@@ -495,6 +495,44 @@ ret:
 }
 ```
 
+@bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "start": int /* 按照修改时间反向排序 */
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0,
+  "tweet_list": [
+    {
+      "tweet_id": int,
+      "type": int,
+      "content": string,
+      "location": string,
+      "last_modified": string
+    }
+    ...
+  ]
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
+> 因为太难处理网络url和本地uri的转化（总不能上传的时候混合一起上传），所以草稿只保存文字吧
+
 @bp_user.route('/user-api/v1/tweet/get_single_tweet', methods=['POST'])
 
 @login_required
@@ -522,7 +560,11 @@ ret:
   "location": string,
   "last_modified": string,
   "like_count": int,
-  "comment_count": int
+  "comment_count": int,
+  "nickname": string,
+  "headshot": url,
+  "is_follow": boolean,
+  "is_like": boolean
 }
 /* 失败情形 */
 {
@@ -605,7 +647,10 @@ ret:
   "comment_list": [
     {
       "userid": int,
-      "comment": string
+      "comment": string,
+      "nickname": string,
+      "headshot": url,
+      "comment_time": string
     }
   ]
 }
