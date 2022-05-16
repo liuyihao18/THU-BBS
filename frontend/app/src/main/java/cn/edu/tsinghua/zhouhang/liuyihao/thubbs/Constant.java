@@ -28,6 +28,8 @@ public class Constant {
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";
     public static final String DETAIL_HAVE_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_HAVE_DATA";
     public static final String DETAIL_NO_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_NO_DATA";
+    public static final String EDIT_FROM_DRAFT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_DRAFT";
+    public static final String EDIT_FROM_BLANK = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_BLANK";
     public static final String EXTRA_TWEET = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET";
     public static final String EXTRA_TWEET_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_ID";
     public static final String EXTRA_TWEET_CONTENT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_CONTENT";

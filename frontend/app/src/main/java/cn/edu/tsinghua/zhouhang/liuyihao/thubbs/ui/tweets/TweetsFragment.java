@@ -180,7 +180,7 @@ public class TweetsFragment extends Fragment {
     private void initListener() {
         if (State.getState().isLogin) {
             binding.fab.setOnClickListener(view -> {
-                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class));
+                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class).setAction(Constant.EDIT_FROM_BLANK));
             });
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {

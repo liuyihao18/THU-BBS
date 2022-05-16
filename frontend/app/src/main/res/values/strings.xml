@@ -74,6 +74,7 @@
     <string name="audio_recording_over">录音结束</string>
     <string name="post_success">发布成功</string>
     <string name="post_required">添加些有趣的东西吧~</string>
+    <string name="draft_success">保存草稿成功</string>
 
     <!-- 用户 -->
     <string name="nickname">用户名</string>
