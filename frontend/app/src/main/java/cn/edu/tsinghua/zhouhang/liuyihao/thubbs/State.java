@@ -5,11 +5,13 @@ public class State {
     public boolean isLogin;
     public String jwt;
     public int userID;
+    public String headshot;
 
     private State() {
         isLogin = false;
         jwt = null;
         userID = 0;
+        headshot = "default_headshot.jpg";
     }
 
     public static State getState() {
