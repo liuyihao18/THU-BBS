@@ -359,13 +359,13 @@ params: **form-data**
   "type": int,
   "is_draft": boolean,
   "content": string,
-  "location": string,
-  "audio": file,    /* optional */
-  "video": file,    /* optional */
-  "image_count": int,
-  "image0": file,  /* optional */
+  "location": string, /* optional */
+  "audio": file,      /* optional */
+  "video": file,      /* optional */
+  "image_count": int, /* optional */
+  "image0": file,     /* optional */
   ...
-  "image8": file   /* optional */
+  "image8": file      /* optional */
 }
 ```
 
@@ -396,13 +396,13 @@ params: **form-data**
   "type": int,
   "is_draft": boolean,
   "content": string,
-  "location": string,
-  "audio": file,    /* optional */
-  "video": file,    /* optional */
-  "image_count": int,
-  "image0": file,   /* optional */
+  "location": string, /* optional */
+  "audio": file,      /* optional */
+  "video": file,      /* optional */
+  "image_count": int, /* optional */
+  "image0": file,     /* optional */
   ...
-  "image8": file    /* optional */
+  "image8": file      /* optional */
 }
 ```
 
@@ -629,6 +629,32 @@ ret:
 }
 ```
 
+@bp_user.route('/user-api/v1/tweet/delete_comment', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "comment_id": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
 @bp_user.route('/user-api/v1/tweet/get_tweet_comment_list', methods=['POST'])
 
 @login_required
@@ -649,8 +675,9 @@ ret:
   "errCode": 0,
   "comment_list": [
     {
+      "comment_id": int,
       "userid": int,
-      "comment": string,
+      "cotent": string,
       "nickname": string,
       "headshot": url,
       "comment_time": string
@@ -783,7 +810,7 @@ ret:
       "userid": int,
       "tweet_id": int,
       "comment_time": string,
-      "comment": string
+      "content": string
     }
   ]
 }
