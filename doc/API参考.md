@@ -77,7 +77,10 @@ ret:
   "nickname": string,
   "headshot": url,
   "description": string,
-  "is_follow": boolean
+  "is_follow": boolean,
+  "tweet_count": int,
+  "follow_count": int, /* 关注 */
+  "follower_count": int, /* 粉丝 */
 }
 /* 失败情形 */
 {
