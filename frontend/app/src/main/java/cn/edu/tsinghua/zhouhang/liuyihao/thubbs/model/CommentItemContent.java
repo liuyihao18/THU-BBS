@@ -6,6 +6,7 @@ public class CommentItemContent {
     private final String CommentDate;
     private final String CommentContent;
     private final int TweetID;
+
     public CommentItemContent(String headshotURL, String commentUserName, String commentDate, int tweetID, String commentContent) {
         HeadshotURL = headshotURL;
         CommentUserName = commentUserName;

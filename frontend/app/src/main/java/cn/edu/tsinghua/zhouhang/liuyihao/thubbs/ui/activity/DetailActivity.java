@@ -2,6 +2,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -9,17 +10,23 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityDetailBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.CommentItemBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
@@ -28,6 +35,8 @@ public class DetailActivity extends AppCompatActivity {
     MediaPlayer mMediaPlayer;
     boolean loaded = false;
     private Tweet mTweet;
+
+    private final LinkedList<Comment> mCommentList = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +49,115 @@ public class DetailActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         String action = intent.getAction();
+        initView();
         if (action.equals(Constant.DETAIL_HAVE_DATA)) {
             mTweet = (Tweet) intent.getSerializableExtra(Constant.EXTRA_TWEET);
-            initView();
+            bindTweet();
         } else {
             // TODO: 获取推特数据
         }
+        /* 测试数据开始 */
+        mCommentList.add(new Comment(1, 1, "用户1", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(2, 1, "用户1", State.getState().headshot,
+                "不也挺好的", "2022-05-16"));
+        mCommentList.add(new Comment(3, 1, "用户2", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(4, 1, "用户3", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(5, 1, "用户1", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(6, 1, "用户4", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(7, 1, "用户2", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        mCommentList.add(new Comment(1, 1, "用户8", State.getState().headshot,
+                "真棒~", "2022-05-16"));
+        /* 测试数据结束 */
+        bindComment();
         initListener();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
+
     private void initView() {
+        binding.commentHeadshot.setImageUrl(State.getState().headshot);
+    }
+
+    private void initListener() {
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+            Intent intent = new Intent();
+            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
+        binding.followButton.setOnClickListener(view -> {
+            if (mTweet.isFollow) {
+                mTweet.isFollow = false;
+                binding.followButton.setText(R.string.follow);
+                binding.followButton.setBackgroundColor(this.getColor(R.color.pink));
+            } else {
+                mTweet.isFollow = true;
+                binding.followButton.setText(R.string.button_unfollow);
+                binding.followButton.setBackgroundColor(this.getColor(R.color.button_disabled));
+            }
+        });
+        binding.likeButton.setOnClickListener(view -> {
+            if (mTweet.isLike) {
+                mTweet.isLike = false;
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
+                mTweet.likeCount--;
+            } else {
+                mTweet.isLike = true;
+                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
+                mTweet.likeCount++;
+            }
+            binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
+        });
+    }
+
+    private void initPlayer(@NotNull String audioUri) {
+        mMediaPlayer = new MediaPlayer();
+        try {
+            mMediaPlayer.setDataSource(audioUri);
+            mMediaPlayer.setOnCompletionListener(view -> {
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+            });
+            mMediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                mMediaPlayer.start();
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+            });
+            mMediaPlayer.prepareAsync();
+        } catch (IOException ioe) {
+            Alert.error(this, R.string.unknown_error);
+            mMediaPlayer.reset();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
+    }
+
+    private void resetPlayer() {
+        try {
+            mMediaPlayer.stop();
+        } catch (Exception e) {
+            Alert.error(this, R.string.unknown_error);
+        }
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
+        mMediaPlayer = null;
+        binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+    }
+
+    private void bindTweet() {
         /* 初始化 */
         loaded = false;
         binding.locationLayout.setVisibility(View.GONE);
@@ -154,7 +262,7 @@ public class DetailActivity extends AppCompatActivity {
         binding.commentButtonText.setText(String.valueOf(mTweet.getCommentCount()));
         binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
         if (mTweet.isFollow) {
-            binding.followButton.setText(R.string.unfollow);
+            binding.followButton.setText(R.string.button_unfollow);
             binding.followButton.setBackgroundColor(this.getColor(R.color.button_disabled));
         } else {
             binding.followButton.setText(R.string.follow);
@@ -165,81 +273,20 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
-        /* 设置监听器 */
-        binding.followButton.setOnClickListener(view -> {
-            if (mTweet.isFollow) {
-                mTweet.isFollow = false;
-                binding.followButton.setText(R.string.follow);
-                binding.followButton.setBackgroundColor(this.getColor(R.color.pink));
-            } else {
-                mTweet.isFollow = true;
-                binding.followButton.setText(R.string.unfollow);
-                binding.followButton.setBackgroundColor(this.getColor(R.color.button_disabled));
-            }
-        });
-        binding.likeButton.setOnClickListener(view -> {
-            if (mTweet.isLike) {
-                mTweet.isLike = false;
-                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
-                mTweet.likeCount--;
-            } else {
-                mTweet.isLike = true;
-                binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
-                mTweet.likeCount++;
-            }
-            binding.likeButtonText.setText(String.valueOf(mTweet.getLikeCount()));
-        });
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }
-
-    private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-            setResult(RESULT_OK, intent);
-            finish();
-        });
-    }
-
-    private void initPlayer(@NotNull String audioUri) {
-        mMediaPlayer = new MediaPlayer();
-        try {
-            mMediaPlayer.setDataSource(audioUri);
-            mMediaPlayer.setOnCompletionListener(view -> {
-                mMediaPlayer.reset();
-                mMediaPlayer.release();
-                mMediaPlayer = null;
-                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
-            });
-            mMediaPlayer.setOnPreparedListener(mediaPlayer -> {
-                mMediaPlayer.start();
-                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
-            });
-            mMediaPlayer.prepareAsync();
-        } catch (IOException ioe) {
-            Alert.error(this, R.string.unknown_error);
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+    void bindComment() {
+        System.out.println(mCommentList.size());
+        for (int i = binding.commentGroup.getChildCount(); i < mCommentList.size(); i++) {
+            CommentItemBinding commentItemBinding = CommentItemBinding.inflate(getLayoutInflater(), binding.commentGroup, false);
+            commentItemBinding.headshot.setImageUrl(mCommentList.get(i).getHeadshot());
+            commentItemBinding.nickname.setText(mCommentList.get(i).getNickname());
+            commentItemBinding.commentTime.setText(mCommentList.get(i).getCommentTime());
+            commentItemBinding.content.setText(mCommentList.get(i).getContent());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            View view = commentItemBinding.getRoot();
+            view.setLayoutParams(layoutParams);
+            binding.commentGroup.addView(view);
         }
-    }
-
-    private void resetPlayer() {
-        try {
-            mMediaPlayer.stop();
-        } catch (Exception e) {
-            Alert.error(this, R.string.unknown_error);
-        }
-        mMediaPlayer.reset();
-        mMediaPlayer.release();
-        mMediaPlayer = null;
-        binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
     }
 }

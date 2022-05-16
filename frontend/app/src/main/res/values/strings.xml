@@ -19,9 +19,16 @@
     <string name="button_post">发布</string>
     <string name="button_close">关闭</string>
     <string name="button_draft">存草稿</string>
+    <string name="button_follow">关注</string>
+    <string name="button_unfollow">已关注</string>
+    <string name="button_send">发送</string>
 
     <!-- 提示 -->
-    <string name="login_required">登录后查看</string>
+    <string name="content_hint">发布你此刻的看法~</string>
+    <string name="comment_hint">发布你的评论~</string>
+    <string name="max_image_hint">最多只能添加9张图片</string>
+    <string name="max_audio_hint">最多只能添加1段音频</string>
+    <string name="max_video_hint">最多只能添加1段视频</string>
 
     <!-- 询问 -->
     <string name="question_cancel_edit">确定退出编辑？</string>
@@ -36,6 +43,7 @@
     <string name="forget_label">忘记密码</string>
     <string name="register_label">注册账号</string>
     <string name="register_success">注册成功</string>
+    <string name="login_required">登录后查看</string>
     <string name="login_success">登录成功</string>
     <string name="logout_success">退出登录成功</string>
     <string name="email_required">请输入邮箱</string>
@@ -51,7 +59,6 @@
     <string name="menu_search_description">搜索</string>
     <string name="is_searching">搜索中</string>
     <string name="follow">关注</string>
-    <string name="unfollow">取消关注</string>
     <string name="share">分享</string>
     <string name="follow_success">关注成功</string>
     <string name="unfollow_success">取消关注成功</string>
@@ -63,17 +70,13 @@
     <string name="audio">音频</string>
     <string name="image">图像</string>
     <string name="video">视频</string>
-    <string name="content_hint">发布你此刻的看法~</string>
     <string name="add_location_success">获取位置信息成功</string>
     <string name="add_location_fail">获取位置信息失败</string>
-    <string name="max_image_hint">最多只能添加9张图片</string>
-    <string name="max_audio_hint">最多只能添加1段音频</string>
-    <string name="max_video_hint">最多只能添加1段视频</string>
     <string name="audio_recording_time_is_short">录音时间过短</string>
     <string name="audio_recording">长按录音</string>
     <string name="audio_recording_over">录音结束</string>
     <string name="post_success">发布成功</string>
-    <string name="post_required">添加些有趣的东西吧~</string>
+    <string name="post_required">写些有趣的东西吧~</string>
     <string name="draft_success">保存草稿成功</string>
 
     <!-- 用户 -->
