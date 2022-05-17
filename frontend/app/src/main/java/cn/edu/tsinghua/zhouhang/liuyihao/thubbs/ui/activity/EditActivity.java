@@ -607,42 +607,39 @@ public class EditActivity extends AppCompatActivity {
                     for (int i = 0; i < Math.min(mImageUriList.size(), Constant.MAX_IMAGE_COUNT); i++) {
                         path = Util.getPathFromUri(this, Uri.parse(mImageUriList.get(i)));
                         if (path == null) {
-                            Alert.error(this, R.string.unknown_error);
-                            return;
+                            file = new File(mImageUriList.get(i));
                         } else {
                             file = new File(path);
-                            builder.addFormDataPart(TweetAPI.image + i,
-                                    file.getName(),
-                                    RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                            );
                         }
+                        builder.addFormDataPart(TweetAPI.image + i,
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                        );
                     }
                     break;
                 case Tweet.TYPE_AUDIO:
                     path = Util.getPathFromUri(this, Uri.parse(mAudioUri));
                     if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
+                        file = new File(mAudioUri);
                     } else {
                         file = new File(path);
-                        builder.addFormDataPart(TweetAPI.audio,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
                     }
+                    builder.addFormDataPart(TweetAPI.audio,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
                     break;
                 case Tweet.TYPE_VIDEO:
                     path = Util.getPathFromUri(this, Uri.parse(mVideoUri));
                     if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
+                        file = new File(mVideoUri);
                     } else {
                         file = new File(path);
-                        builder.addFormDataPart(TweetAPI.video,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
                     }
+                    builder.addFormDataPart(TweetAPI.video,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
                     break;
             }
         }
