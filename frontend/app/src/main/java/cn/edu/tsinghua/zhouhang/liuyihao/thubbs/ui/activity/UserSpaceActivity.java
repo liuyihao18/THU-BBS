@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -88,6 +89,15 @@ public class UserSpaceActivity extends AppCompatActivity {
 
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.user_space);
+        if (mUserId == State.getState().userId) {
+            binding.settingButton.setVisibility(View.VISIBLE);
+            binding.followButton.setVisibility(View.GONE);
+            binding.blackButton.setVisibility(View.GONE);
+        } else {
+            binding.settingButton.setVisibility(View.GONE);
+            binding.followButton.setVisibility(View.VISIBLE);
+            binding.blackButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListener() {
