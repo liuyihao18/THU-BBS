@@ -672,45 +672,7 @@ public class EditActivity extends AppCompatActivity {
         if (mTweetId > 0) {
             // TODO: editTweet
         } else {
-            TweetAPI.createTweet(builder.build(), new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Message msg = new Message();
-                    msg.what = APIConstant.NETWORK_ERROR;
-                    handler.sendMessage(msg);
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    Message msg = new Message();
-                    if (body == null) {
-                        msg.what = APIConstant.SERVER_ERROR;
-                        handler.sendMessage(msg);
-                        return;
-                    }
-                    try {
-                        JSONObject data = new JSONObject(body.string());
-                        int errCode = data.getInt(APIConstant.ERR_CODE);
-                        if (errCode == 0) {
-                            if (isDraft) {
-                                msg.what = DRAFT;
-                            } else {
-                                msg.what = POST;
-                            }
-                        } else {
-                            Alert.error(this, data.getString(APIConstant.ERR_MSG));
-                        }
-                        msg.obj = data;
-                        handler.sendMessage(msg);
-                    } catch (JSONException je) {
-                        System.err.println("Bad response format.");
-                    } finally {
-                        body.close();
-                    }
-                }
-            });
+            TweetAPI.createTweet(builder.build(), callback);
         }
     }
 }
