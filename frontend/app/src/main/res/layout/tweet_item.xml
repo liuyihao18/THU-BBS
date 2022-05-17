@@ -51,7 +51,7 @@
             android:layout_height="@dimen/follow_button_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:padding="0dp"
-            android:text="@string/follow"
+            android:text="@string/button_follow"
             android:textSize="@dimen/textSize_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/black_button"

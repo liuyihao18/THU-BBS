@@ -34,4 +34,5 @@ public class Constant {
     public static final String EXTRA_TWEET_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_ID";
     public static final String EXTRA_TWEET_CONTENT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_CONTENT";
     public static final String EXTRA_IMAGE_URL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_IMAGE_URL";
+    public static final String EXTRA_USER_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_USER_ID";
 }

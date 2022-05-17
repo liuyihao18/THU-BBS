@@ -41,8 +41,8 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
 
     class TweetViewHolder extends RecyclerView.ViewHolder {
         TweetItemBinding binding;
-        MediaResource mediaResource = new MediaResource();
         Tweet mTweet;
+        private final MediaResource mediaResource = new MediaResource();
 
         public TweetViewHolder(@NonNull TweetItemBinding binding) {
             super(binding.getRoot());

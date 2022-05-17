@@ -158,6 +158,7 @@ public class TweetsFragment extends Fragment {
                 break;
             case Constant.TWEETS_USER:
                 mTweetsViewModel.setText("这里是我的动态列表");
+                binding.menu.setVisibility(View.GONE);
                 break;
             default:
                 mTweetsViewModel.setText("什么玩意？");

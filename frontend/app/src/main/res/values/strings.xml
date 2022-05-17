@@ -22,6 +22,7 @@
     <string name="button_follow">关注</string>
     <string name="button_unfollow">已关注</string>
     <string name="button_send">发送</string>
+    <string name="button_setting">编辑资料</string>
 
     <!-- 提示 -->
     <string name="content_hint">发布你此刻的看法~</string>
@@ -34,6 +35,7 @@
     <string name="question_cancel_edit">确定退出编辑？</string>
     <string name="question_add_location">确定添加位置信息？</string>
     <string name="question_post">确定发布？</string>
+    <string name="question_logout">确定退出登录？</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>
@@ -88,7 +90,8 @@
     <string name="blacklist">黑名单</string>
     <string name="edit_password">修改密码</string>
     <string name="quit">退出登录</string>
-    <string name="question_logout">确定退出登录？</string>
+    <string name="description_empty">这个人很懒，什么都没留下~</string>
+
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>

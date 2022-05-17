@@ -36,7 +36,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private TweetItemBinding tweetItemBinding;
-    private MediaResource mediaResource = new MediaResource();
+    private final MediaResource mediaResource = new MediaResource();
     private Tweet mTweet;
 
     private final LinkedList<Comment> mCommentList = new LinkedList<>();
