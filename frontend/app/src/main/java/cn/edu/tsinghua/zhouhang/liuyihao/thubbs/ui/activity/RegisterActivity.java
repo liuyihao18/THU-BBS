@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.User;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityRegisterBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Security;
@@ -92,14 +92,14 @@ public class RegisterActivity extends AppCompatActivity {
             password = Security.encode(password);
             JSONObject data = new JSONObject();
             try {
-                data.put(User.email, email);
-                data.put(User.password, password);
-                User.register(data, new Callback() {
+                data.put(UserAPI.email, email);
+                data.put(UserAPI.password, password);
+                UserAPI.register(data, new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                         Message msg = new Message();
                         msg.what = APIConstant.NETWORK_ERROR;
-                        e.printStackTrace();
+                        handler.sendMessage(msg);
                     }
 
                     @Override

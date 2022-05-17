@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header_layout"
@@ -28,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/button_icon_text_margin"
             android:textColor="@color/text_black"
             android:textSize="@dimen/textSize_big"
             app:layout_constraintStart_toEndOf="@id/author_headshot"
@@ -38,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/button_icon_text_margin"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/author_headshot"
             app:layout_constraintStart_toEndOf="@id/author_headshot" />
@@ -47,7 +50,9 @@
             android:layout_width="@dimen/follow_button_width"
             android:layout_height="@dimen/follow_button_height"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:padding="0dp"
             android:text="@string/follow"
+            android:textSize="@dimen/textSize_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/black_button"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,8 +60,8 @@
 
         <ImageView
             android:id="@+id/black_button"
-            android:layout_width="@dimen/black_button_size"
-            android:layout_height="@dimen/black_button_size"
+            android:layout_width="@dimen/button_size_big"
+            android:layout_height="@dimen/button_size_big"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +77,8 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout">
+        app:layout_constraintTop_toBottomOf="@+id/header_layout"
+        tools:layout_editor_absoluteX="0dp">
 
         <TextView
             android:id="@+id/content_text"
@@ -80,13 +86,44 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/context_text_padding"
-            android:paddingBottom="@dimen/context_text_padding"
+            android:paddingBottom="@dimen/content_text_vertical_padding"
             android:textColor="@color/text_black"
-            app:layout_constraintBottom_toTopOf="@id/image_group"
+            android:textSize="@dimen/textSize_big"
+            app:layout_constraintBottom_toTopOf="@id/location_layout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/content_text_vertical_padding"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/content_text">
+
+            <ImageView
+                android:id="@+id/location_icon"
+                android:layout_width="@dimen/button_size_small"
+                android:layout_height="@dimen/button_size_small"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:contentDescription="@string/add_location"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_location_gray_24dp" />
+
+            <TextView
+                android:id="@+id/location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/button_disabled"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/location_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup
             android:id="@+id/image_group"
@@ -97,7 +134,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/content_text" />
+            app:layout_constraintTop_toBottomOf="@id/location_layout" />
 
         <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
             android:id="@+id/image_view"
@@ -111,7 +148,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/content_text"
+            app:layout_constraintTop_toBottomOf="@id/image_group"
             app:srcCompat="@drawable/ic_quit_24dp" />
 
         <ImageView
@@ -122,15 +159,29 @@
             android:contentDescription="@null"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/content_text"
+            app:layout_constraintTop_toBottomOf="@id/image_view"
             app:srcCompat="@drawable/ps_ic_audio_play" />
 
         <VideoView
             android:id="@+id/video_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/max_video_height"
+            android:layout_width="@dimen/display_video_width"
+            android:layout_height="@dimen/display_video_height"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/content_text" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/audio_play_button" />
+
+        <ImageView
+            android:id="@+id/video_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/video_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/video_view"
+            app:srcCompat="@drawable/ps_ic_audio_play" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -155,8 +206,8 @@
 
             <ImageView
                 android:id="@id/share_button_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/button_size_small"
+                android:layout_height="@dimen/button_size_small"
                 android:contentDescription="@string/share"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -169,6 +220,7 @@
                 android:layout_marginStart="@dimen/button_icon_text_margin"
                 android:text="@string/share"
                 android:textColor="@color/button_color"
+                android:textSize="@dimen/textSize_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/share_button_icon"
@@ -188,8 +240,8 @@
 
             <ImageView
                 android:id="@id/comment_button_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/button_size_small"
+                android:layout_height="@dimen/button_size_small"
                 android:contentDescription="@string/share"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -202,6 +254,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/button_icon_text_margin"
                 android:textColor="@color/button_color"
+                android:textSize="@dimen/textSize_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/comment_button_icon"
@@ -221,8 +274,8 @@
 
             <ImageView
                 android:id="@id/like_button_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/button_size_small"
+                android:layout_height="@dimen/button_size_small"
                 android:contentDescription="@string/share"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -235,6 +288,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/button_icon_text_margin"
                 android:textColor="@color/button_color"
+                android:textSize="@dimen/textSize_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/like_button_icon"

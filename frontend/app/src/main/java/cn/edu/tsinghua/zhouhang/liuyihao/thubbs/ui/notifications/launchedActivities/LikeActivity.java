@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 
@@ -34,7 +35,7 @@ public class LikeActivity extends AppCompatActivity {
         for(int i = 0; i < 5; i++) {
             likeItemContents.add(
                     new LikeItemContent(
-                            getString(R.string.default_headshot_url),
+                            Static.HeadShot.getHeadShotUrl("default_headshot.jpg"),
                             "xxx",
                             "2022-05-07",
                             0));

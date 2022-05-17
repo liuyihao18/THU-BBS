@@ -22,4 +22,6 @@
     <color name="button_pushed">#7D7DFF</color>
     <!-- 背景 -->
     <color name="background_dark">#393A3E</color>
+    <!-- 边框 -->
+    <color name="border_gray">#D8D8D8</color>
 </resources>

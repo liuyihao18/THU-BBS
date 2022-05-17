@@ -10,6 +10,9 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,20 +30,37 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityEditBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
 
 public class EditActivity extends AppCompatActivity {
+    private static final int POST = 1;
+    private static final int DRAFT = 2;
 
     private ActivityEditBinding binding;
     private final ArrayList<String> mImageUriList = new ArrayList<>();
@@ -50,6 +70,45 @@ public class EditActivity extends AppCompatActivity {
     private String mLocation = null;
     private MediaController mMediaController = null;
     private MediaPlayer mMediaPlayer = null;
+    private int mTweetId = -1;
+
+    private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        try {
+            JSONObject data;
+            int errCode;
+            switch (msg.what) {
+                case POST:
+                    data = (JSONObject) msg.obj;
+                    errCode = data.getInt(APIConstant.ERR_CODE);
+                    if (errCode == 0) {
+                        Alert.info(this, R.string.post_success);
+                        finish();
+                    } else {
+                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
+                    }
+                    break;
+                case DRAFT:
+                    data = (JSONObject) msg.obj;
+                    errCode = data.getInt(APIConstant.ERR_CODE);
+                    if (errCode == 0) {
+                        Alert.info(this, R.string.draft_success);
+                        mTweetId = data.getInt(TweetAPI.tweetId);
+                    } else {
+                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
+                    }
+                    break;
+                case APIConstant.NETWORK_ERROR:
+                    Alert.error(this, R.string.network_error);
+                    break;
+                case APIConstant.SERVER_ERROR:
+                    Alert.error(this, R.string.server_error);
+                    break;
+            }
+        } catch (JSONException je) {
+            System.err.println("Bad response format.");
+        }
+        return true;
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +118,12 @@ public class EditActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
+        }
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action.equals(Constant.EDIT_FROM_DRAFT)) {
+            mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, -1);
+            binding.content.setText(intent.getStringExtra(Constant.EXTRA_TWEET_CONTENT));
         }
         initView();
         initController();
@@ -92,6 +157,16 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.question_cancel_edit)
+                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                }))
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> super.onBackPressed())
+                .create().show();
+    }
+
     private void initView() {
         binding.imageGroup.bindImageUriList(mImageUriList)
                 .setEditable(true)
@@ -99,13 +174,18 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        binding.cancel.setOnClickListener(view -> finish());
+        binding.cancel.setOnClickListener(view -> new AlertDialog.Builder(this)
+                .setTitle(R.string.question_cancel_edit)
+                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                }))
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                .create().show());
         binding.addLocationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setTitle(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation()).
-                create().show());
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation())
+                .create().show());
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {
@@ -127,14 +207,9 @@ public class EditActivity extends AppCompatActivity {
         binding.audioPlayButton.setOnClickListener(view -> {
             if (mMediaPlayer == null) {
                 initPlayer();
-                if (mMediaPlayer != null) {
-                    mMediaPlayer.start();
-                    binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
-                }
             } else {
                 resetPlayer();
             }
-
         });
         binding.audioCloseButton.setOnClickListener(view -> {
             removeAudio();
@@ -162,6 +237,28 @@ public class EditActivity extends AppCompatActivity {
             removeVideo();
             refresh();
         });
+        binding.post.setOnClickListener(view -> {
+            if (binding.content.getText().toString().isEmpty() &&
+                    mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
+                Alert.info(this, R.string.post_required);
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_post)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                            post(false);
+                        }).create().show();
+            }
+        });
+        binding.saveDraft.setOnClickListener(view -> {
+            if (binding.content.getText().toString().isEmpty() &&
+                    mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
+                Alert.info(this, R.string.post_required);
+            } else {
+                post(true);
+            }
+        });
     }
 
     private void initPlayer() {
@@ -178,7 +275,11 @@ public class EditActivity extends AppCompatActivity {
                 mMediaPlayer = null;
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             });
-            mMediaPlayer.prepare();
+            mMediaPlayer.setOnPreparedListener(mediaPlayer -> {
+                mMediaPlayer.start();
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+            });
+            mMediaPlayer.prepareAsync();
         } catch (IOException ioe) {
             Alert.error(this, R.string.unknown_error);
             mMediaPlayer.reset();
@@ -341,8 +442,8 @@ public class EditActivity extends AppCompatActivity {
             }
         }
         if (bestLocation == null) {
-            mLocation = "(0°E, 0°N)";
-            binding.addLocationText.setText(mLocation);
+            mLocation = null;
+            binding.addLocationText.setText(R.string.add_location);
             Alert.info(this, "获取位置信息失败");
             return;
         }
@@ -480,5 +581,114 @@ public class EditActivity extends AppCompatActivity {
 
     private void removeVideo() {
         mVideoUri = null;
+    }
+
+    private void post(boolean isDraft) {
+        int type = Tweet.TYPE_TEXT;
+        if (!isDraft) {
+            if (mImageUriList.size() > 0) {
+                type = Tweet.TYPE_IMAGE;
+            } else if (mAudioUri != null) {
+                type = Tweet.TYPE_AUDIO;
+            } else if (mVideoUri != null) {
+                type = Tweet.TYPE_VIDEO;
+            }
+        }
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        if (mTweetId > 0) {
+            builder.addFormDataPart(TweetAPI.tweetId, String.valueOf(mTweetId));
+        }
+        builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
+        builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(isDraft));
+        builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
+        if (mLocation != null) {
+            builder.addFormDataPart(TweetAPI.location, mLocation);
+        }
+        if (!isDraft) {
+            File file;
+            String path;
+            switch (type) {
+                case Tweet.TYPE_IMAGE:
+                    builder.addFormDataPart(TweetAPI.imageCount, String.valueOf(mImageUriList.size()));
+                    for (int i = 0; i < Math.min(mImageUriList.size(), Constant.MAX_IMAGE_COUNT); i++) {
+                        path = Util.getPathFromUri(this, Uri.parse(mImageUriList.get(i)));
+                        if (path == null) {
+                            Alert.error(this, R.string.unknown_error);
+                            return;
+                        } else {
+                            file = new File(path);
+                            builder.addFormDataPart(TweetAPI.image + i,
+                                    file.getName(),
+                                    RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                            );
+                        }
+                    }
+                    break;
+                case Tweet.TYPE_AUDIO:
+                    path = Util.getPathFromUri(this, Uri.parse(mAudioUri));
+                    if (path == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    } else {
+                        file = new File(path);
+                        builder.addFormDataPart(TweetAPI.audio,
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                        );
+                    }
+                    break;
+                case Tweet.TYPE_VIDEO:
+                    path = Util.getPathFromUri(this, Uri.parse(mVideoUri));
+                    if (path == null) {
+                        Alert.error(this, R.string.unknown_error);
+                        return;
+                    } else {
+                        file = new File(path);
+                        builder.addFormDataPart(TweetAPI.video,
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                        );
+                    }
+                    break;
+            }
+        }
+        if (mTweetId > 0) {
+            // TODO: editTweet
+        } else {
+            TweetAPI.createTweet(builder.build(), new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Message msg = new Message();
+                    msg.what = APIConstant.NETWORK_ERROR;
+                    handler.sendMessage(msg);
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    ResponseBody body = response.body();
+                    Message msg = new Message();
+                    if (body == null) {
+                        msg.what = APIConstant.SERVER_ERROR;
+                        handler.sendMessage(msg);
+                        return;
+                    }
+                    try {
+                        JSONObject data = new JSONObject(body.string());
+                        if (isDraft) {
+                            msg.what = DRAFT;
+                        } else {
+                            msg.what = POST;
+                        }
+                        msg.obj = data;
+                        handler.sendMessage(msg);
+                    } catch (JSONException je) {
+                        System.err.println("Bad response format.");
+                    } finally {
+                        body.close();
+                    }
+                }
+            });
+        }
     }
 }

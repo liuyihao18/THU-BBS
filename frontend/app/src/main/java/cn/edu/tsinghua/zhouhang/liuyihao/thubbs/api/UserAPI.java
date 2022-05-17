@@ -4,13 +4,13 @@ import org.json.JSONObject;
 
 import okhttp3.Callback;
 
-public class User {
+public class UserAPI {
     public static final String email = "email";
     public static final String password = "password";
     private static final String prefix = "/user";
 
     private static String getUrl(String suffix) {
-        return Config.BASE_URL + prefix + suffix;
+        return Config.BASE_URL + APIConstant.API_PREFIX + prefix + suffix;
     }
 
     public static void register(JSONObject data, Callback callback) {

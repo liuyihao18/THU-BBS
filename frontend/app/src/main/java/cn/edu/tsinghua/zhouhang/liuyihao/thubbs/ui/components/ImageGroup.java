@@ -129,18 +129,21 @@ public class ImageGroup extends ConstraintLayout {
             return;
         }
         int size = mImageUriList.size();
-        if (size < 3) {
+        if ((mEditable && size < 3) || (!mEditable && size <= 3)) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
             binding.imageGroupRow3.setVisibility(GONE);
-        } else if (size < 6) {
+        } else if ((mEditable && size < 6) || (!mEditable && size <= 6)) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(GONE);
-        } else {
+        } else if (size <= Constant.MAX_IMAGE_COUNT) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(VISIBLE);
             binding.imageGroupRow3.setVisibility(VISIBLE);
+        } else {
+            Alert.error(getContext(), R.string.unknown_error);
+            return;
         }
         for (int i = 0; i < size; i++) {
             Glide.with(getContext())

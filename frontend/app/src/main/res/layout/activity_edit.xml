@@ -29,7 +29,7 @@
             tools:ignore="TextContrastCheck" />
 
         <TextView
-            android:id="@+id/add_draft"
+            android:id="@+id/save_draft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/button_tweet"
+            android:text="@string/button_post"
             android:textColor="@color/pink"
             android:textSize="@dimen/textSize_big"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -80,11 +80,13 @@
                 android:background="@null"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="@string/edit_hint"
-                android:imeOptions="actionDone"
+                android:hint="@string/content_hint"
                 android:inputType="textMultiLine"
                 android:minLines="8"
-                android:padding="@dimen/context_text_padding"
+                android:paddingStart="@dimen/content_text_horizontal_padding"
+                android:paddingTop="@dimen/content_text_vertical_padding"
+                android:paddingEnd="@dimen/content_text_horizontal_padding"
+                android:paddingBottom="@dimen/content_text_vertical_padding"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -125,8 +127,8 @@
 
                 <ImageView
                     android:id="@+id/audio_close_button"
-                    android:layout_width="@dimen/image_close_button_size"
-                    android:layout_height="@dimen/image_close_button_size"
+                    android:layout_width="@dimen/button_size_medium"
+                    android:layout_height="@dimen/button_size_medium"
                     android:contentDescription="@string/button_close"
                     app:layout_constraintStart_toEndOf="@id/audio_play_button"
                     app:layout_constraintTop_toTopOf="parent"
@@ -144,15 +146,17 @@
 
                 <VideoView
                     android:id="@+id/video_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/max_video_height"
+                    android:layout_width="@dimen/display_video_width"
+                    android:layout_height="@dimen/display_video_height"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/video_close_button"
-                    android:layout_width="@dimen/image_close_button_size"
-                    android:layout_height="@dimen/image_close_button_size"
+                    android:layout_width="@dimen/button_size_medium"
+                    android:layout_height="@dimen/button_size_medium"
                     android:layout_marginTop="@dimen/image_padding"
                     android:layout_marginEnd="@dimen/image_padding"
                     android:contentDescription="@string/button_close"
@@ -196,11 +200,12 @@
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
-        android:layout_height="0.1dp"
+        android:layout_height="0.2dp"
         android:layout_marginBottom="@dimen/footer_height"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
@@ -226,9 +231,9 @@
         <TextView
             android:id="@+id/add_audio_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/add_audio"
+            android:text="@string/audio"
             android:textColor="@color/text_black"
             android:textSize="@dimen/textSize_large" />
     </LinearLayout>
@@ -259,7 +264,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/add_image"
+            android:text="@string/image"
             android:textColor="@color/text_black"
             android:textSize="@dimen/textSize_large" />
     </LinearLayout>
@@ -290,7 +295,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/add_video"
+            android:text="@string/video"
             android:textColor="@color/text_black"
             android:textSize="@dimen/textSize_large" />
     </LinearLayout>
