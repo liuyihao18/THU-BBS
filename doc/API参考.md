@@ -357,6 +357,7 @@ params: **form-data**
 ```json
 {
   "type": int,
+  "title": string,
   "is_draft": boolean,
   "content": string,
   "location": string, /* optional */
@@ -394,6 +395,7 @@ params: **form-data**
 {
   "tweet_id": int,
   "type": int,
+  "title": string,
   "is_draft": boolean,
   "content": string,
   "location": string, /* optional */
@@ -475,6 +477,7 @@ ret:
       "tweet_id": int,
       "userid": int,
       "type": int,
+      "title": string,        
       "content": string,
       "audio_url": url,
       "video_url": url,
@@ -520,6 +523,7 @@ ret:
     {
       "tweet_id": int,
       "type": int,
+      "title": string,
       "content": string,
       "location": string,
       "last_modified": string
@@ -556,6 +560,7 @@ ret:
   "errCode": 0,
   "userid": int,
   "type": int,
+  "title": string,
   "content": string,
   "audio_url": url,
   "video_url": url,

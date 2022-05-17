@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
@@ -42,6 +45,23 @@ public class TweetsFragment extends Fragment {
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
+    private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        switch (msg.what) {
+            case APIConstant.REQUEST_OK:
+                break;
+            case APIConstant.REQUEST_ERROR:
+                Alert.error(getContext(), (String) msg.obj);
+                break;
+            case APIConstant.NETWORK_ERROR:
+                Alert.error(getContext(), R.string.network_error);
+                break;
+            case APIConstant.SERVER_ERROR:
+                Alert.error(getContext(), R.string.server_error);
+                break;
+        }
+        return true;
+    });
+
     interface OnDetailReturnListener {
         void onDetailReturn(ActivityResult result);
     }
@@ -54,7 +74,7 @@ public class TweetsFragment extends Fragment {
 
         binding = FragmentTweetsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        /* 测试数据开始 */
+        /* 测试数据开始
         mTweetList.add(new Tweet(
                 1, 1, Tweet.TYPE_TEXT, "Title", "Hello, world!", null,
                 "2022-05-15", 99, 99, null, null, null,
@@ -105,7 +125,7 @@ public class TweetsFragment extends Fragment {
                 null, Static.Video.getVideoUrl("test.mp4"),
                 "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
-        /* 测试数据结束 */
+         测试数据结束 */
         initLauncher();
         initAdapter();
         init();
@@ -125,9 +145,7 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initLauncher() {
-        mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            init();
-        });
+        mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> init());
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         });
@@ -172,6 +190,7 @@ public class TweetsFragment extends Fragment {
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.loginRequiredLayout.setVisibility(View.GONE);
+
         } else {
             binding.recyclerView.setVisibility(View.GONE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
@@ -222,4 +241,6 @@ public class TweetsFragment extends Fragment {
     public void goDetail(Intent intent) {
         mDetailLauncher.launch(intent);
     }
+
+    private void getTweetList
 }
