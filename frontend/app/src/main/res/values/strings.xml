@@ -25,6 +25,7 @@
     <string name="button_setting">编辑资料</string>
 
     <!-- 提示 -->
+    <string name="title_hint">标题</string>
     <string name="content_hint">发布你此刻的看法~</string>
     <string name="comment_hint">发布你的评论~</string>
     <string name="max_image_hint">最多只能添加9张图片</string>
@@ -79,6 +80,7 @@
     <string name="audio_recording_over">录音结束</string>
     <string name="post_success">发布成功</string>
     <string name="post_required">写些有趣的东西吧~</string>
+    <string name="title_required">填下标题吧~</string>
     <string name="draft_success">保存草稿成功</string>
 
     <!-- 用户 -->

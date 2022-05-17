@@ -222,26 +222,34 @@ public class EditActivity extends AppCompatActivity {
             refresh();
         });
         binding.post.setOnClickListener(view -> {
+            if (binding.title.getText().toString().isEmpty()) {
+                Alert.info(this, R.string.title_required);
+                return;
+            }
             if (binding.content.getText().toString().isEmpty() &&
                     mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
                 Alert.info(this, R.string.post_required);
-            } else {
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.question_post)
-                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                        }))
-                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                            post(false);
-                        }).create().show();
+                return;
             }
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.question_post)
+                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                    }))
+                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                        post(false);
+                    }).create().show();
         });
         binding.saveDraft.setOnClickListener(view -> {
+            if (binding.title.getText().toString().isEmpty()) {
+                Alert.info(this, R.string.title_required);
+                return;
+            }
             if (binding.content.getText().toString().isEmpty() &&
                     mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
                 Alert.info(this, R.string.post_required);
-            } else {
-                post(true);
+                return;
             }
+            post(true);
         });
     }
 
