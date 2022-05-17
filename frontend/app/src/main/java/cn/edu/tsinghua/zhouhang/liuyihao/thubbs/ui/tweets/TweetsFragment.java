@@ -93,58 +93,6 @@ public class TweetsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentTweetsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        /* 测试数据开始
-        mTweetList.add(new Tweet(
-                1, 1, Tweet.TYPE_TEXT, "Title", "Hello, world!", null,
-                "2022-05-15", 99, 99, null, null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        mTweetList.add(new Tweet(
-                2, 1, Tweet.TYPE_TEXT, "Title", "这是有位置信息的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 12, 35, null, null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        ArrayList<String> imageList = new ArrayList<>();
-        imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
-        mTweetList.add(new Tweet(
-                3, 1, Tweet.TYPE_IMAGE, "Title", "这是单张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 16, 33, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        imageList.add(Static.Image.getImageUrl("R-C.png"));
-        mTweetList.add(new Tweet(
-                4, 1, Tweet.TYPE_IMAGE, "Title", "这是多张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 18, 45, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        imageList.clear();
-        for (int i = 0; i < 9; i++) {
-            imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
-        }
-        mTweetList.add(new Tweet(
-                5, 1, Tweet.TYPE_IMAGE, "Title", "这是九宫格~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 66, 66, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        mTweetList.add(new Tweet(
-                6, 1, Tweet.TYPE_AUDIO, "Title", "这是有音频的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 10, 40, null,
-                Static.Audio.getAudioUrl("jump.mp3"), null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        mTweetList.add(new Tweet(
-                7, 1, Tweet.TYPE_AUDIO, "Title", "还是音频的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 6, 23, null,
-                Static.Audio.getAudioUrl("success.mp3"), null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        mTweetList.add(new Tweet(
-                8, 1, Tweet.TYPE_VIDEO, "Title", "开始有视频了~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 12, 33, null,
-                null, Static.Video.getVideoUrl("test.mp4"),
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-         测试数据结束 */
         initLauncher();
         initAdapter();
         init();

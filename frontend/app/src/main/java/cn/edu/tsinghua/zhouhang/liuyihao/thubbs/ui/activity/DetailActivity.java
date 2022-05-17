@@ -107,7 +107,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void bindTweet() {
-        TweetUtil.bind(this, tweetItemBinding, mTweet, mediaResource);
+        TweetUtil.bind(this, tweetItemBinding, mTweet, mediaResource, null,
+                view -> finish());
     }
 
     void bindComment() {

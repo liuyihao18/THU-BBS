@@ -24,7 +24,9 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
 public class TweetUtil {
 
-    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, MediaResource mediaResource) {
+    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, MediaResource mediaResource,
+                            View.OnClickListener onClickFollowButtonListener,
+                            View.OnClickListener onClickBlackButtonListener) {
         /* 初始化 */
         mediaResource.loaded = false;
         binding.locationLayout.setVisibility(View.GONE);
@@ -162,6 +164,11 @@ public class TweetUtil {
                 tweet.isFollow = true;
                 binding.followButton.setText(R.string.button_unfollow);
                 binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+            }
+        });
+        binding.blackButton.setOnClickListener(view -> {
+            if (onClickBlackButtonListener != null) {
+                onClickBlackButtonListener.onClick(view);
             }
         });
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
