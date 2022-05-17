@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.interfaces.OnExternalPreviewEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +26,10 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.TweetViewHolder> {
@@ -57,6 +64,29 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     binding.followButton.setText(R.string.button_unfollow);
                     binding.followButton.setBackgroundColor(mContext.getColor(R.color.button_disabled));
                 }
+            });
+            binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
+                @Override
+                public void onClickImage(MyImageView myImageView, int index) {
+                    Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+                    intent.putExtra(Constant.EXTRA_IMAGE_URL, mTweet.getImageAt(index));
+                    mContext.startActivity(intent);
+                }
+
+                @Override
+                public void onClickAddImage(MyImageView myImageView, int index) {
+
+                }
+
+                @Override
+                public void onClickCloseButton(View view, int index) {
+
+                }
+            });
+            binding.imageView.setOnClickListener(view -> {
+                Intent intent = new Intent(mContext, ImagePreviewActivity.class);
+                intent.putExtra(Constant.EXTRA_IMAGE_URL, mTweet.getImageAt(0));
+                mContext.startActivity(intent);
             });
             binding.likeButton.setOnClickListener(view -> {
                 if (mTweet.isLike) {

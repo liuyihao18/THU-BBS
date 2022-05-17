@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
         <activity
+            android:name=".ui.activity.ImagePreviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.DetailActivity"
             android:exported="false" />
         <activity
