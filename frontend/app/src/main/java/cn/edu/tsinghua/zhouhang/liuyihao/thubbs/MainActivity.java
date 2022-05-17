@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
@@ -12,7 +13,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityMainBinding;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -25,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
             State.getState().jwt = preferences.getString(Constant.JWT, "");
             State.getState().userID = preferences.getInt(Constant.USER_ID, 0);
             State.getState().isLogin = true;
-        }
-        if (preferences.contains(Constant.HEADSHOT)) {
-            State.getState().headshot = preferences.getString(Constant.HEADSHOT, "");
         }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -52,5 +59,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void getMyProfile() {
+        try {
+            JSONObject data = new JSONObject();
+            data.put(UserAPI.userid, State.getState().userID);
+            UserAPI.getProfile(data, new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+
+                }
+            });
+        } catch (JSONException je) {
+            System.err.println("Bad request format.");
+        }
     }
 }

@@ -37,37 +37,21 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> mLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
-        try {
-            switch (msg.what) {
-                case APIConstant.REQUEST_OK:
-                    JSONObject data = (JSONObject) msg.obj;
-                    int errCode = data.getInt(APIConstant.ERR_CODE);
-                    if (errCode == 0) {
-                        setResult(RESULT_OK);
-                        State.getState().jwt = data.getString(Constant.JWT);
-                        State.getState().userID = data.getInt(Constant.USER_ID);
-                        State.getState().isLogin = true;
-                        SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
-                        preferences.edit().putString(Constant.JWT, State.getState().jwt).apply();
-                        preferences.edit().putInt(Constant.USER_ID, State.getState().userID).apply();
-                        Alert.info(this, R.string.login_success);
-                        finish();
-                    } else {
-                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
-                    }
-                    break;
-                case APIConstant.NETWORK_ERROR:
-                    Alert.error(this, R.string.network_error);
-                    break;
-                case APIConstant.SERVER_ERROR:
-                    Alert.error(this, R.string.server_error);
-                    break;
-            }
-        } catch (JSONException je) {
-            System.err.println("Bad response format.");
-            State.getState().jwt = null;
-            State.getState().userID = 0;
-            State.getState().isLogin = false;
+        switch (msg.what) {
+            case APIConstant.REQUEST_OK:
+                Alert.info(LoginActivity.this, R.string.login_success);
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case APIConstant.REQUEST_ERROR:
+                Alert.error(this, (String) msg.obj);
+                break;
+            case APIConstant.NETWORK_ERROR:
+                Alert.error(this, R.string.network_error);
+                break;
+            case APIConstant.SERVER_ERROR:
+                Alert.error(this, R.string.server_error);
+                break;
         }
         return true;
     });
@@ -137,11 +121,25 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         try {
                             JSONObject data = new JSONObject(body.string());
-                            msg.what = APIConstant.REQUEST_OK;
-                            msg.obj = data;
+                            int errCode = data.getInt(APIConstant.ERR_CODE);
+                            if (errCode == 0) {
+                                State.getState().jwt = data.getString(Constant.JWT);
+                                State.getState().userID = data.getInt(Constant.USER_ID);
+                                State.getState().isLogin = true;
+                                SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
+                                preferences.edit().putString(Constant.JWT, State.getState().jwt).apply();
+                                preferences.edit().putInt(Constant.USER_ID, State.getState().userID).apply();
+                                msg.what = APIConstant.REQUEST_OK;
+                            } else {
+                                msg.what = APIConstant.REQUEST_ERROR;
+                                msg.obj = data.getString(APIConstant.ERR_MSG);
+                            }
                             handler.sendMessage(msg);
                         } catch (JSONException je) {
                             System.err.println("Bad response format.");
+                            State.getState().jwt = null;
+                            State.getState().userID = 0;
+                            State.getState().isLogin = false;
                         } finally {
                             body.close();
                         }

@@ -33,30 +33,23 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityRegisterBinding binding;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
-        try {
-            switch (msg.what) {
-                case APIConstant.REQUEST_OK:
-                    JSONObject data = (JSONObject) msg.obj;
-                    int errCode = data.getInt(APIConstant.ERR_CODE);
-                    if (errCode == 0) {
-                        Intent intent = new Intent();
-                        intent.putExtra(Constant.EXTRA_EMAIL, binding.emailInput.getText().toString());
-                        setResult(RESULT_OK, intent);
-                        Alert.info(this, R.string.register_success);
-                        finish();
-                    } else {
-                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
-                    }
-                    break;
-                case APIConstant.NETWORK_ERROR:
-                    Alert.error(this, R.string.network_error);
-                    break;
-                case APIConstant.SERVER_ERROR:
-                    Alert.error(this, R.string.server_error);
-                    break;
-            }
-        } catch (JSONException je) {
-            System.err.println("Bad response format.");
+        switch (msg.what) {
+            case APIConstant.REQUEST_OK:
+                Alert.info(this, R.string.register_success);
+                Intent intent = new Intent();
+                intent.putExtra(Constant.EXTRA_EMAIL, binding.emailInput.getText().toString());
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            case APIConstant.REQUEST_ERROR:
+                Alert.error(this, (String) msg.obj);
+                break;
+            case APIConstant.NETWORK_ERROR:
+                Alert.error(this, R.string.network_error);
+                break;
+            case APIConstant.SERVER_ERROR:
+                Alert.error(this, R.string.server_error);
+                break;
         }
         return true;
     });
@@ -103,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    public void onResponse(@NonNull Call call, @NonNull Response response) {
                         ResponseBody body = response.body();
                         Message msg = new Message();
                         if (body == null) {
@@ -112,9 +105,14 @@ public class RegisterActivity extends AppCompatActivity {
                             return;
                         }
                         try {
-                            JSONObject data = new JSONObject(body.string());
-                            msg.what = APIConstant.REQUEST_OK;
-                            msg.obj = data;
+                            JSONObject data = (JSONObject) msg.obj;
+                            int errCode = data.getInt(APIConstant.ERR_CODE);
+                            if (errCode == 0) {
+                                msg.what = APIConstant.REQUEST_OK;
+                            } else {
+                                msg.what = APIConstant.REQUEST_ERROR;
+                                msg.obj = data.getString(APIConstant.ERR_MSG);
+                            }
                             handler.sendMessage(msg);
                         } catch (JSONException je) {
                             System.err.println("Bad response format.");
