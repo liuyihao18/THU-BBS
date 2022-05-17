@@ -348,7 +348,7 @@ ret:
 
 ## 推文
 
-@bp_user.route('/user-api/v1/tweet/create_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/create_tweet', methods=['POST'])
 
 @login_required
 
@@ -421,7 +421,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/delete_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/delete_tweet', methods=['POST'])
 
 @login_required
 
@@ -447,7 +447,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/get_tweet_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/get_tweet_list', methods=['POST'])
 
 @login_required
 
@@ -455,12 +455,12 @@ params:
 
 ```json
 {
-  "start": int,
+  "block": int, /* 从0开始， 一次10个*/
   "of": int, /* TWEET_ALL = 1 表示全部，TWEET_FOLLOW = 2 表示我关注的，TWEET_USER = 3 表示某个用户的 */
   "userid": int, /* 如果 TWEET_USER = 3，则必须有这一项 */
   "order_by": string, /* "time" or "likes" */
-  "type": int, /* TYPE_TEXT = 0, TYPE_IMAGE = 1, TYPE_AUDIO = 2, TYPE_VIDEO = 3 */
-  "search_str": string
+  "tweet_type": int, /* TYPE_TEXT = 0, TYPE_IMAGE = 1, TYPE_AUDIO = 2, TYPE_VIDEO = 3 */	//optional
+  "search_str": string  // optional
 }
 ```
 
