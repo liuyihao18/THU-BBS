@@ -122,7 +122,7 @@ params: **form-data**
 ```json
 {
   "nickname": nickname,
-  "headshot": file,
+  "headshot": file, /* optional */
   "description": description
 }
 ```
