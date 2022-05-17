@@ -3,7 +3,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -11,6 +10,8 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,12 +63,13 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     public void setImageUrl(String url) {
+        /*
         BaseRequest.get(url, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Message msg = new Message();
                 msg.what = APIConstant.NETWORK_ERROR;
-                e.printStackTrace();
+                handler.sendMessage(msg);
             }
 
             @Override
@@ -88,5 +90,10 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
                 body.close();
             }
         });
+         */
+        Glide.with(getContext())
+                .load(url)
+                .placeholder(R.drawable.ic_loading_spinner_black_24dp)
+                .into(this);
     }
 }

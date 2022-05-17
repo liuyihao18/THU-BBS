@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import okhttp3.Callback;
 
-public class User {
+public class UserAPI {
     public static final String email = "email";
     public static final String password = "password";
     private static final String prefix = "/user";

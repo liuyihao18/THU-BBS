@@ -1,14 +1,9 @@
-package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments;
+package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
-import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet.TYPE_IMAGE;
-import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet.TYPE_TEXT;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -21,11 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -45,9 +36,15 @@ public class TweetsFragment extends Fragment {
     private TweetsViewModel mTweetsViewModel;
     private ActivityResultLauncher<Intent> mLoginLauncher;
     private ActivityResultLauncher<Intent> mEditLauncher;
+    private ActivityResultLauncher<Intent> mDetailLauncher;
     private TweetListAdapter mAdapter;
+    private OnDetailReturnListener onDetailReturnListener;
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
+
+    interface OnDetailReturnListener {
+        void onDetailReturn(ActivityResult result);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -60,22 +57,26 @@ public class TweetsFragment extends Fragment {
         /* 测试数据开始 */
         mTweetList.add(new Tweet(
                 1, 1, Tweet.TYPE_TEXT, "Hello, world!", null,
-                "2022-05-15", 99, 99, null, null, null
+                "2022-05-15", 99, 99, null, null, null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
         ));
         mTweetList.add(new Tweet(
                 2, 1, Tweet.TYPE_TEXT, "这是有位置信息的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 12, 35, null, null, null
+                "2022-05-15", 12, 35, null, null, null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
         ArrayList<String> imageList = new ArrayList<>();
         imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
         mTweetList.add(new Tweet(
                 3, 1, Tweet.TYPE_IMAGE, "这是单张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 16, 33, new ArrayList<>(imageList), null, null
+                "2022-05-15", 16, 33, new ArrayList<>(imageList), null, null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
         ));
         imageList.add(Static.Image.getImageUrl("R-C.png"));
         mTweetList.add(new Tweet(
                 4, 1, Tweet.TYPE_IMAGE, "这是多张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 18, 45, new ArrayList<>(imageList), null, null
+                "2022-05-15", 18, 45, new ArrayList<>(imageList), null, null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
         imageList.clear();
         for (int i = 0; i < 9; i++) {
@@ -83,22 +84,26 @@ public class TweetsFragment extends Fragment {
         }
         mTweetList.add(new Tweet(
                 5, 1, Tweet.TYPE_IMAGE, "这是九宫格~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 66, 66, new ArrayList<>(imageList), null, null
+                "2022-05-15", 66, 66, new ArrayList<>(imageList), null, null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
         ));
         mTweetList.add(new Tweet(
                 6, 1, Tweet.TYPE_AUDIO, "这是有音频的~", "(116.12°E, 24.5°N)",
                 "2022-05-15", 10, 40, null,
-                Static.Audio.getAudioUrl("jump.mp3"), null
+                Static.Audio.getAudioUrl("jump.mp3"), null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
         mTweetList.add(new Tweet(
                 7, 1, Tweet.TYPE_AUDIO, "还是音频的~", "(116.12°E, 24.5°N)",
                 "2022-05-15", 6, 23, null,
-                Static.Audio.getAudioUrl("success.mp3"), null
+                Static.Audio.getAudioUrl("success.mp3"), null,
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
         mTweetList.add(new Tweet(
                 8, 1, Tweet.TYPE_VIDEO, "开始有视频了~", "(116.12°E, 24.5°N)",
                 "2022-05-15", 12, 33, null,
-                null, Static.Video.getVideoUrl("test.mp4")
+                null, Static.Video.getVideoUrl("test.mp4"),
+                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
         ));
         /* 测试数据结束 */
         initLauncher();
@@ -126,6 +131,11 @@ public class TweetsFragment extends Fragment {
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         });
+        mDetailLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (onDetailReturnListener != null) {
+                onDetailReturnListener.onDetailReturn(result);
+            }
+        });
     }
 
     private void initMode() {
@@ -148,6 +158,7 @@ public class TweetsFragment extends Fragment {
                 break;
             case Constant.TWEETS_USER:
                 mTweetsViewModel.setText("这里是我的动态列表");
+                binding.menu.setVisibility(View.GONE);
                 break;
             default:
                 mTweetsViewModel.setText("什么玩意？");
@@ -170,7 +181,7 @@ public class TweetsFragment extends Fragment {
     private void initListener() {
         if (State.getState().isLogin) {
             binding.fab.setOnClickListener(view -> {
-                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class));
+                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class).setAction(Constant.EDIT_FROM_BLANK));
             });
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
@@ -199,7 +210,16 @@ public class TweetsFragment extends Fragment {
         }
     }
 
-    public void initAdapter() {
-        mAdapter = new TweetListAdapter(getContext(), mTweetList);
+    private void initAdapter() {
+        mAdapter = new TweetListAdapter(getContext(), mTweetList, this);
+    }
+
+    public TweetsFragment setOnDetailReturnListener(OnDetailReturnListener onDetailReturnListener) {
+        this.onDetailReturnListener = onDetailReturnListener;
+        return this;
+    }
+
+    public void goDetail(Intent intent) {
+        mDetailLauncher.launch(intent);
     }
 }

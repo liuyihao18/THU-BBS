@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
             State.getState().userID = preferences.getInt(Constant.USER_ID, 0);
             State.getState().isLogin = true;
         }
+        if (preferences.contains(Constant.HEADSHOT)) {
+            State.getState().headshot = preferences.getString(Constant.HEADSHOT, "");
+        }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
     }

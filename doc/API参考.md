@@ -77,7 +77,10 @@ ret:
   "nickname": string,
   "headshot": url,
   "description": string,
-  "is_follow": boolean
+  "is_follow": boolean,
+  "tweet_count": int,
+  "follow_count": int, /* 关注 */
+  "follower_count": int, /* 粉丝 */
 }
 /* 失败情形 */
 {
@@ -124,7 +127,7 @@ params: **form-data**
 ```json
 {
   "nickname": string,
-  "headshot": file,
+  "headshot": file, /* optional */
   "description": string
 }
 ```
@@ -356,13 +359,13 @@ params: **form-data**
   "type": int,
   "is_draft": boolean,
   "content": string,
-  "location": string,
-  "audio": file,    /* optional */
-  "video": file,    /* optional */
-  "image_count": int,
-  "image1": file,  /* optional */
+  "location": string, /* optional */
+  "audio": file,      /* optional */
+  "video": file,      /* optional */
+  "image_count": int, /* optional */
+  "image0": file,     /* optional */
   ...
-  "image9": file   /* optional */
+  "image8": file      /* optional */
 }
 ```
 
@@ -393,13 +396,13 @@ params: **form-data**
   "type": int,
   "is_draft": boolean,
   "content": string,
-  "location": string,
-  "audio": file,    /* optional */
-  "video": file,    /* optional */
-  "image_count": int,
-  "image1": file,   /* optional */
+  "location": string, /* optional */
+  "audio": file,      /* optional */
+  "video": file,      /* optional */
+  "image_count": int, /* optional */
+  "image0": file,     /* optional */
   ...
-  "image9": file    /* optional */
+  "image8": file      /* optional */
 }
 ```
 
@@ -482,7 +485,8 @@ ret:
       "comment_count": int,
       "nickname": string,
       "headshot": url,
-      "is_follow": boolean
+      "is_follow": boolean,
+      "is_like": boolean
     }
     ...
   ]
@@ -493,6 +497,44 @@ ret:
   "errMsg": errMsg
 }
 ```
+
+@bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "start": int /* 按照修改时间反向排序 */
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0,
+  "tweet_list": [
+    {
+      "tweet_id": int,
+      "type": int,
+      "content": string,
+      "location": string,
+      "last_modified": string
+    }
+    ...
+  ]
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
+> 因为太难处理网络url和本地uri的转化（总不能上传的时候混合一起上传），所以草稿只保存文字吧
 
 @bp_user.route('/user-api/v1/tweet/get_single_tweet', methods=['POST'])
 
@@ -521,7 +563,11 @@ ret:
   "location": string,
   "last_modified": string,
   "like_count": int,
-  "comment_count": int
+  "comment_count": int,
+  "nickname": string,
+  "headshot": url,
+  "is_follow": boolean,
+  "is_like": boolean
 }
 /* 失败情形 */
 {
@@ -583,6 +629,32 @@ ret:
 }
 ```
 
+@bp_user.route('/user-api/v1/tweet/delete_comment', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "comment_id": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
 @bp_user.route('/user-api/v1/tweet/get_tweet_comment_list', methods=['POST'])
 
 @login_required
@@ -603,8 +675,12 @@ ret:
   "errCode": 0,
   "comment_list": [
     {
+      "comment_id": int,
       "userid": int,
-      "comment": string
+      "cotent": string,
+      "nickname": string,
+      "headshot": url,
+      "comment_time": string
     }
   ]
 }
@@ -734,7 +810,7 @@ ret:
       "userid": int,
       "tweet_id": int,
       "comment_time": string,
-      "comment": string
+      "content": string
     }
   ]
 }

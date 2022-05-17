@@ -15,7 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentHomeBinding;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.fragments.TweetsFragment;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets.TweetsFragment;
 
 public class HomeFragment extends Fragment {
 

@@ -2,6 +2,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
@@ -40,6 +42,11 @@ public class AccountFragment extends Fragment {
     }
 
     private void initListener() {
+        binding.accountHeadshot.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), UserSpaceActivity.class);
+            intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userID);
+            startActivity(intent);
+        });
         binding.logoutButton.setOnClickListener(view -> {
             new AlertDialog.Builder(getContext())
                     .setTitle(R.string.question_logout)
