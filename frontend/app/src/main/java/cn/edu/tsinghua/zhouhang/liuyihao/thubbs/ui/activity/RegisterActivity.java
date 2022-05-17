@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         ResponseBody body = response.body();
                         Message msg = new Message();
                         if (body == null) {
@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
                             return;
                         }
                         try {
-                            JSONObject data = (JSONObject) msg.obj;
+                            JSONObject data = new JSONObject(body.string());
                             int errCode = data.getInt(APIConstant.ERR_CODE);
                             if (errCode == 0) {
                                 msg.what = APIConstant.REQUEST_OK;
