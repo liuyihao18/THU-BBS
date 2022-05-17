@@ -657,7 +657,9 @@ public class EditActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject(body.string());
                     if (isDraft) {
                         msg.what = DRAFT_OK;
-                        mTweetId = data.getInt(TweetAPI.tweetId);
+                        if (mTweetId <= 0) {
+                            mTweetId = data.getInt(TweetAPI.tweetId);
+                        }
                     } else {
                         msg.what = POST_OK;
                     }

@@ -56,11 +56,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tweet_num"
+                    android:id="@+id/tweet_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSize_large" />
 
@@ -94,11 +93,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/follow_num"
+                    android:id="@+id/follow_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="2"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSize_large" />
 
@@ -132,11 +130,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/follower_num"
+                    android:id="@+id/follower_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="3"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSize_large" />
 
@@ -201,6 +198,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"

@@ -124,11 +124,11 @@ public class LoginActivity extends AppCompatActivity {
                             int errCode = data.getInt(APIConstant.ERR_CODE);
                             if (errCode == 0) {
                                 State.getState().jwt = data.getString(Constant.JWT);
-                                State.getState().userID = data.getInt(Constant.USER_ID);
+                                State.getState().userId = data.getInt(Constant.USER_ID);
                                 State.getState().isLogin = true;
                                 SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
                                 preferences.edit().putString(Constant.JWT, State.getState().jwt).apply();
-                                preferences.edit().putInt(Constant.USER_ID, State.getState().userID).apply();
+                                preferences.edit().putInt(Constant.USER_ID, State.getState().userId).apply();
                                 msg.what = APIConstant.REQUEST_OK;
                             } else {
                                 msg.what = APIConstant.REQUEST_ERROR;
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                         } catch (JSONException je) {
                             System.err.println("Bad response format.");
                             State.getState().jwt = null;
-                            State.getState().userID = 0;
+                            State.getState().userId = 0;
                             State.getState().isLogin = false;
                         } finally {
                             body.close();

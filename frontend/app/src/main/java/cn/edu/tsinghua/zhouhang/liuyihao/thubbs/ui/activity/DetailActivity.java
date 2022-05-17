@@ -62,21 +62,21 @@ public class DetailActivity extends AppCompatActivity {
             // TODO: 获取推特数据
         }
         /* 测试数据开始 */
-        mCommentList.add(new Comment(1, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(1, 1, "用户1", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(2, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(2, 1, "用户1", State.getState().user.headshot,
                 "不也挺好的", "2022-05-16"));
-        mCommentList.add(new Comment(3, 1, "用户2", State.getState().headshot,
+        mCommentList.add(new Comment(3, 1, "用户2", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(4, 1, "用户3", State.getState().headshot,
+        mCommentList.add(new Comment(4, 1, "用户3", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(5, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(5, 1, "用户1", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(6, 1, "用户4", State.getState().headshot,
+        mCommentList.add(new Comment(6, 1, "用户4", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(7, 1, "用户2", State.getState().headshot,
+        mCommentList.add(new Comment(7, 1, "用户2", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(1, 1, "用户8", State.getState().headshot,
+        mCommentList.add(new Comment(1, 1, "用户8", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
         /* 测试数据结束 */
         bindComment();
@@ -92,7 +92,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.commentHeadshot.setImageUrl(State.getState().headshot);
+        binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
     }
 
     private void initListener() {
