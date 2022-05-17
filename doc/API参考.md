@@ -77,7 +77,6 @@ ret:
   "nickname": string,
   "headshot": url,
   "description": string,
-  "is_follow": boolean,
   "tweet_count": int,
   "follow_count": int, /* 关注 */
   "follower_count": int, /* 粉丝 */
@@ -411,8 +410,7 @@ ret:
 ```json
 /* 成功情形 */
 {
-  "errCode": 0,
-  "tweet_id": int
+  "errCode": 0
 }
 /* 失败情形 */
 {
@@ -498,7 +496,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
 
 @login_required
 
@@ -506,7 +504,7 @@ params:
 
 ```json
 {
-  "start": int /* 按照修改时间反向排序 */
+  "block": int /* 按照修改时间反向排序 */
 }
 ```
 
