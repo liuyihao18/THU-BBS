@@ -7,6 +7,14 @@ import okhttp3.Callback;
 public class UserAPI {
     public static final String email = "email";
     public static final String password = "password";
+    public static final String userid = "userid";
+    public static final String nickname = "nickname";
+    public static final String headshot = "headshot";
+    public static final String description = "description";
+    public static final String tweetCount = "tweet_count";
+    public static final String followCount = "follow_count";
+    public static final String followerCount = "follower_count";
+
     private static final String prefix = "/user";
 
     private static String getUrl(String suffix) {
@@ -19,5 +27,9 @@ public class UserAPI {
 
     public static void login(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/login"), data, callback);
+    }
+
+    public static void getProfile(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/get_profile"), data, callback);
     }
 }

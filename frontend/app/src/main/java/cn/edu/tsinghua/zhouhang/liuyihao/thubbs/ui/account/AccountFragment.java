@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,16 +33,22 @@ public class AccountFragment extends Fragment {
 
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        MyCircleImageView imageView = binding.accountHeadshot;
-        imageView.setImageUrl(Static.HeadShot.getHeadShotUrl("default_headshot.jpg"));
+        initView();
         initListener();
         return root;
+    }
+
+    private void initView() {
+        binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
+        binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
+        binding.followCount.setText(String.valueOf(State.getState().user.followCount));
+        binding.followerCount.setText(String.valueOf(State.getState().user.followerCount));
     }
 
     private void initListener() {
         binding.accountHeadshot.setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), UserSpaceActivity.class);
-            intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userID);
+            intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
             startActivity(intent);
         });
         binding.logoutButton.setOnClickListener(view -> {
@@ -54,7 +58,7 @@ public class AccountFragment extends Fragment {
                     }))
                     .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
                         State.getState().jwt = null;
-                        State.getState().userID = 0;
+                        State.getState().userId = 0;
                         State.getState().isLogin = false;
                         Activity activity = getActivity();
                         if (activity == null) {

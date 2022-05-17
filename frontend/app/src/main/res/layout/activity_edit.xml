@@ -67,8 +67,25 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingBottom="@dimen/activity_vertical_margin">
+
+            <EditText
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:autofillHints=""
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/title_hint"
+                android:inputType="textPersonName"
+                android:paddingStart="@dimen/content_text_horizontal_padding"
+                android:paddingTop="@dimen/content_text_vertical_padding"
+                android:paddingEnd="@dimen/content_text_horizontal_padding"
+                android:paddingBottom="@dimen/content_text_vertical_padding"
+                android:textSize="@dimen/textSize_large"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/content"
@@ -87,9 +104,10 @@
                 android:paddingTop="@dimen/content_text_vertical_padding"
                 android:paddingEnd="@dimen/content_text_horizontal_padding"
                 android:paddingBottom="@dimen/content_text_vertical_padding"
+                android:textSize="@dimen/textSize_big"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title"
                 tools:ignore="TextContrastCheck" />
 
             <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup

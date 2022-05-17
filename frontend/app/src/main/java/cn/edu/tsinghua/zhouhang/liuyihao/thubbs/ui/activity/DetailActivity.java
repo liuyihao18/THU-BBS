@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -62,21 +63,21 @@ public class DetailActivity extends AppCompatActivity {
             // TODO: 获取推特数据
         }
         /* 测试数据开始 */
-        mCommentList.add(new Comment(1, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(1, 1, "用户1", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(2, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(2, 2, "用户1", State.getState().user.headshot,
                 "不也挺好的", "2022-05-16"));
-        mCommentList.add(new Comment(3, 1, "用户2", State.getState().headshot,
+        mCommentList.add(new Comment(3, 3, "用户2", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(4, 1, "用户3", State.getState().headshot,
+        mCommentList.add(new Comment(4, 4, "用户3", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(5, 1, "用户1", State.getState().headshot,
+        mCommentList.add(new Comment(5, 1, "用户1", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(6, 1, "用户4", State.getState().headshot,
+        mCommentList.add(new Comment(6, 2, "用户4", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(7, 1, "用户2", State.getState().headshot,
+        mCommentList.add(new Comment(7, 3, "用户2", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
-        mCommentList.add(new Comment(1, 1, "用户8", State.getState().headshot,
+        mCommentList.add(new Comment(1, 4, "用户8", State.getState().user.headshot,
                 "真棒~", "2022-05-16"));
         /* 测试数据结束 */
         bindComment();
@@ -92,7 +93,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.commentHeadshot.setImageUrl(State.getState().headshot);
+        ((TextView) findViewById(R.id.header_title)).setText(R.string.detail);
+        binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
     }
 
     private void initListener() {
@@ -115,6 +117,17 @@ public class DetailActivity extends AppCompatActivity {
             commentItemBinding.nickname.setText(mCommentList.get(i).getNickname());
             commentItemBinding.commentTime.setText(mCommentList.get(i).getCommentTime());
             commentItemBinding.content.setText(mCommentList.get(i).getContent());
+            if (mCommentList.get(i).getUserId() == State.getState().userId) {
+                commentItemBinding.closeButton.setVisibility(View.VISIBLE);
+            } else {
+                commentItemBinding.closeButton.setVisibility(View.GONE);
+            }
+            int finalI = i;
+            commentItemBinding.headshot.setOnClickListener(view -> {
+                Intent intent = new Intent(this, UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, mCommentList.get(finalI).getUserId());
+                this.startActivity(intent);
+            });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             View view = commentItemBinding.getRoot();
             view.setLayoutParams(layoutParams);

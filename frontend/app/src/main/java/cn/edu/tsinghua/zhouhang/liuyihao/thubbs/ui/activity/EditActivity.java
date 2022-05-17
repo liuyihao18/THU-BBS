@@ -59,8 +59,8 @@ import okhttp3.ResponseBody;
 
 
 public class EditActivity extends AppCompatActivity {
-    private static final int POST = 1;
-    private static final int DRAFT = 2;
+    private static final int POST_OK = 1;
+    private static final int DRAFT_OK = 2;
 
     private ActivityEditBinding binding;
     private final ArrayList<String> mImageUriList = new ArrayList<>();
@@ -73,39 +73,24 @@ public class EditActivity extends AppCompatActivity {
     private int mTweetId = -1;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
-        try {
-            JSONObject data;
-            int errCode;
-            switch (msg.what) {
-                case POST:
-                    data = (JSONObject) msg.obj;
-                    errCode = data.getInt(APIConstant.ERR_CODE);
-                    if (errCode == 0) {
-                        Alert.info(this, R.string.post_success);
-                        finish();
-                    } else {
-                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
-                    }
-                    break;
-                case DRAFT:
-                    data = (JSONObject) msg.obj;
-                    errCode = data.getInt(APIConstant.ERR_CODE);
-                    if (errCode == 0) {
-                        Alert.info(this, R.string.draft_success);
-                        mTweetId = data.getInt(TweetAPI.tweetId);
-                    } else {
-                        Alert.error(this, data.getString(APIConstant.ERR_MSG));
-                    }
-                    break;
-                case APIConstant.NETWORK_ERROR:
-                    Alert.error(this, R.string.network_error);
-                    break;
-                case APIConstant.SERVER_ERROR:
-                    Alert.error(this, R.string.server_error);
-                    break;
-            }
-        } catch (JSONException je) {
-            System.err.println("Bad response format.");
+        switch (msg.what) {
+            case POST_OK:
+                Alert.info(this, R.string.post_success);
+                setResult(RESULT_OK);
+                finish();
+                break;
+            case DRAFT_OK:
+                Alert.info(this, R.string.draft_success);
+                break;
+            case APIConstant.REQUEST_ERROR:
+                Alert.error(this, (String) msg.obj);
+                break;
+            case APIConstant.NETWORK_ERROR:
+                Alert.error(this, R.string.network_error);
+                break;
+            case APIConstant.SERVER_ERROR:
+                Alert.error(this, R.string.server_error);
+                break;
         }
         return true;
     });
@@ -238,26 +223,34 @@ public class EditActivity extends AppCompatActivity {
             refresh();
         });
         binding.post.setOnClickListener(view -> {
+            if (binding.title.getText().toString().isEmpty()) {
+                Alert.info(this, R.string.title_required);
+                return;
+            }
             if (binding.content.getText().toString().isEmpty() &&
                     mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
                 Alert.info(this, R.string.post_required);
-            } else {
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.question_post)
-                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                        }))
-                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                            post(false);
-                        }).create().show();
+                return;
             }
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.question_post)
+                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                    }))
+                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                        post(false);
+                    }).create().show();
         });
         binding.saveDraft.setOnClickListener(view -> {
+            if (binding.title.getText().toString().isEmpty()) {
+                Alert.info(this, R.string.title_required);
+                return;
+            }
             if (binding.content.getText().toString().isEmpty() &&
                     mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
                 Alert.info(this, R.string.post_required);
-            } else {
-                post(true);
+                return;
             }
+            post(true);
         });
     }
 
@@ -600,6 +593,7 @@ public class EditActivity extends AppCompatActivity {
         }
         builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
         builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(isDraft));
+        builder.addFormDataPart(TweetAPI.title, binding.title.getText().toString());
         builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
         if (mLocation != null) {
             builder.addFormDataPart(TweetAPI.location, mLocation);
@@ -652,43 +646,45 @@ public class EditActivity extends AppCompatActivity {
                     break;
             }
         }
+        Callback callback = new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Message msg = new Message();
+                msg.what = APIConstant.NETWORK_ERROR;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ResponseBody body = response.body();
+                Message msg = new Message();
+                if (body == null) {
+                    msg.what = APIConstant.SERVER_ERROR;
+                    handler.sendMessage(msg);
+                    return;
+                }
+                try {
+                    JSONObject data = new JSONObject(body.string());
+                    if (isDraft) {
+                        msg.what = DRAFT_OK;
+                        if (mTweetId <= 0) {
+                            mTweetId = data.getInt(TweetAPI.tweetId);
+                        }
+                    } else {
+                        msg.what = POST_OK;
+                    }
+                    handler.sendMessage(msg);
+                } catch (JSONException je) {
+                    System.err.println("Bad response format.");
+                } finally {
+                    body.close();
+                }
+            }
+        };
         if (mTweetId > 0) {
             // TODO: editTweet
         } else {
-            TweetAPI.createTweet(builder.build(), new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Message msg = new Message();
-                    msg.what = APIConstant.NETWORK_ERROR;
-                    handler.sendMessage(msg);
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    Message msg = new Message();
-                    if (body == null) {
-                        msg.what = APIConstant.SERVER_ERROR;
-                        handler.sendMessage(msg);
-                        return;
-                    }
-                    try {
-                        JSONObject data = new JSONObject(body.string());
-                        if (isDraft) {
-                            msg.what = DRAFT;
-                        } else {
-                            msg.what = POST;
-                        }
-                        msg.obj = data;
-                        handler.sendMessage(msg);
-                    } catch (JSONException je) {
-                        System.err.println("Bad response format.");
-                    } finally {
-                        body.close();
-                    }
-                }
-            });
+            TweetAPI.createTweet(builder.build(), callback);
         }
     }
 }

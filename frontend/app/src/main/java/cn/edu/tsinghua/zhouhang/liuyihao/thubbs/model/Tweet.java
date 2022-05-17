@@ -1,9 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +14,7 @@ public class Tweet implements Serializable {
     private final int tweetID;
     private final int userID;
     private final int type;
+    private final String title;
     private final String content;
     private final String location;
     private final String lastModified;
@@ -31,13 +29,14 @@ public class Tweet implements Serializable {
     public boolean isLike;
 
 
-    public Tweet(int tweetID, int userID, int type, String content, @Nullable String location,
-                 String lastModified, int commentCount, int likeCount,
+    public Tweet(int tweetID, int userID, int type, String title, String content,
+                 @Nullable String location, String lastModified, int commentCount, int likeCount,
                  @Nullable ArrayList<String> imageList, @Nullable String audioUrl, @Nullable String videoUrl,
                  String nickname, String headshot, boolean isFollow, boolean isLike) {
         this.tweetID = tweetID;
         this.userID = userID;
         this.type = type;
+        this.title = title;
         this.content = content;
         this.location = location;
         this.lastModified = lastModified;
@@ -62,6 +61,10 @@ public class Tweet implements Serializable {
 
     public int getType() {
         return type;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getContent() {

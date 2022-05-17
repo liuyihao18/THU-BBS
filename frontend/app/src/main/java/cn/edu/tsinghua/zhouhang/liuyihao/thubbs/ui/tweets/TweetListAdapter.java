@@ -46,11 +46,11 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
 
         public TweetViewHolder(@NonNull TweetItemBinding binding) {
             super(binding.getRoot());
+            this.binding = binding;
             binding.getRoot().setBackgroundResource(R.drawable.my_white_rounded_corner_8dp);
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) binding.getRoot().getLayoutParams();
             layoutParams.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
             binding.getRoot().setLayoutParams(layoutParams);
-            this.binding = binding;
             initListener();
         }
 
@@ -115,4 +115,11 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         return mTweetList.size();
     }
 
+    @Override
+    public void onViewDetachedFromWindow(@NonNull TweetViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder.mediaResource.mediaPlayer != null) {
+            holder.mediaResource.resetPlayer(mContext);
+        }
+    }
 }
