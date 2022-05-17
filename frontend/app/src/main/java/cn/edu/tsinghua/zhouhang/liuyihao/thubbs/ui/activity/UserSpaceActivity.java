@@ -84,6 +84,7 @@ public class UserSpaceActivity extends AppCompatActivity {
         final NavController navController = Navigation.findNavController(this, R.id.fragment_tweets_container);
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_USER);
+        bundle.putInt(Constant.EXTRA_USER_ID, mUserId);
         navController.setGraph(R.navigation.tweets_navigation, bundle);
     }
 

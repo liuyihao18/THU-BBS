@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
@@ -38,7 +39,7 @@ public class TweetUtil {
         binding.title.setText(tweet.getTitle());
         binding.contentText.setText(tweet.getContent());
         binding.lastModified.setText(tweet.getLastModified());
-        if (tweet.getLocation() != null) {
+        if (tweet.getLocation() != null && !Objects.equals(tweet.getLocation(), "null")) {
             binding.locationLayout.setVisibility(View.VISIBLE);
             binding.locationText.setText(tweet.getLocation());
         }
@@ -74,9 +75,9 @@ public class TweetUtil {
                     binding.audioPlayButton.setVisibility(View.VISIBLE);
                     binding.audioPlayButton.setOnClickListener(view -> {
                         if (mediaResource.mediaPlayer == null) {
-                            initPlayer(context, binding, mediaResource, tweet.getAudioUrl());
+                            mediaResource.initPlayer(context, tweet.getAudioUrl());
                         } else {
-                            resetPlayer(context, binding, mediaResource);
+                            mediaResource.resetPlayer(context);
                         }
                     });
                 }
@@ -141,6 +142,17 @@ public class TweetUtil {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
         /* 监听器 */
+        mediaResource.registerMediaResourceListener(new MediaResource.MediaResourceListener() {
+            @Override
+            public void onInit() {
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
+            }
+
+            @Override
+            public void onReset() {
+                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
+            }
+        });
         binding.followButton.setOnClickListener(view -> {
             if (tweet.isFollow) {
                 tweet.isFollow = false;
@@ -194,38 +206,5 @@ public class TweetUtil {
         });
     }
 
-    private static void initPlayer(Context context, TweetItemBinding binding, MediaResource mediaResource, String audioUri) {
-        mediaResource.mediaPlayer = new MediaPlayer();
-        try {
-            mediaResource.mediaPlayer.setDataSource(audioUri);
-            mediaResource.mediaPlayer.setOnCompletionListener(view -> {
-                mediaResource.mediaPlayer.reset();
-                mediaResource.mediaPlayer.release();
-                mediaResource.mediaPlayer = null;
-                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
-            });
-            mediaResource.mediaPlayer.setOnPreparedListener(mediaPlayer -> {
-                mediaResource.mediaPlayer.start();
-                binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_stop);
-            });
-            mediaResource.mediaPlayer.prepareAsync();
-        } catch (IOException ioe) {
-            Alert.error(context, R.string.unknown_error);
-            mediaResource.mediaPlayer.reset();
-            mediaResource.mediaPlayer.release();
-            mediaResource.mediaPlayer = null;
-        }
-    }
 
-    private static void resetPlayer(Context context, TweetItemBinding binding, MediaResource mediaResource) {
-        try {
-            mediaResource.mediaPlayer.stop();
-        } catch (Exception e) {
-            Alert.error(context, R.string.unknown_error);
-        }
-        mediaResource.mediaPlayer.reset();
-        mediaResource.mediaPlayer.release();
-        mediaResource.mediaPlayer = null;
-        binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
-    }
 }

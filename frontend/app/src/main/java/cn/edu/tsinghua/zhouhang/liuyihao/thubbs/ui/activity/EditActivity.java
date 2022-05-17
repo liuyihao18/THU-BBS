@@ -76,6 +76,7 @@ public class EditActivity extends AppCompatActivity {
         switch (msg.what) {
             case POST_OK:
                 Alert.info(this, R.string.post_success);
+                setResult(RESULT_OK);
                 finish();
                 break;
             case DRAFT_OK:
@@ -592,7 +593,7 @@ public class EditActivity extends AppCompatActivity {
         }
         builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
         builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(isDraft));
-        builder.addFormDataPart(TweetAPI.content, binding.title.getText().toString());
+        builder.addFormDataPart(TweetAPI.title, binding.title.getText().toString());
         builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
         if (mLocation != null) {
             builder.addFormDataPart(TweetAPI.location, mLocation);
