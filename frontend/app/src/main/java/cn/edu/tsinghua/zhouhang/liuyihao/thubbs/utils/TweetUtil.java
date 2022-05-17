@@ -13,9 +13,11 @@ import java.io.IOException;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
@@ -33,6 +35,7 @@ public class TweetUtil {
         /* 加载数据 */
         binding.authorHeadshot.setImageUrl(tweet.getHeadshot());
         binding.authorName.setText(tweet.getNickname());
+        binding.title.setText(tweet.getTitle());
         binding.contentText.setText(tweet.getContent());
         binding.lastModified.setText(tweet.getLastModified());
         if (tweet.getLocation() != null) {
@@ -183,6 +186,11 @@ public class TweetUtil {
                 tweet.likeCount++;
             }
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
+        });
+        binding.authorHeadshot.setOnClickListener(view -> {
+            Intent intent = new Intent(context, UserSpaceActivity.class);
+            intent.putExtra(Constant.EXTRA_USER_ID, tweet.getUserID());
+            context.startActivity(intent);
         });
     }
 

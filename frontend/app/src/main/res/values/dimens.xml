@@ -40,6 +40,7 @@
     <dimen name="follow_button_height">40dp</dimen>
     <dimen name="content_text_vertical_padding">4dp</dimen>
     <dimen name="content_text_horizontal_padding">8dp</dimen>
+    <dimen name="tweet_horizontal_margin">4dp</dimen>
 
     <!-- 个人空间 -->
     <dimen name="user_space_headshot_size">88dp</dimen>

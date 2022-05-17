@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +42,7 @@ public class UserSpaceActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
-                initView();
+                refresh();
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -72,6 +73,7 @@ public class UserSpaceActivity extends AppCompatActivity {
             finish();
         }
         getProfile();
+        initView();
         initListener();
     }
 
@@ -85,6 +87,16 @@ public class UserSpaceActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        ((TextView) findViewById(R.id.header_title)).setText(R.string.user_space);
+    }
+
+    private void initListener() {
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+            finish();
+        });
+    }
+
+    private void refresh() {
         binding.headshot.setImageUrl(mUser.headshot);
         binding.nickname.setText(mUser.nickname);
         if (mUser.description.isEmpty()) {
@@ -95,12 +107,6 @@ public class UserSpaceActivity extends AppCompatActivity {
         binding.tweetCount.setText(String.valueOf(mUser.tweetCount));
         binding.followCount.setText(String.valueOf(mUser.followCount));
         binding.followerCount.setText(String.valueOf(mUser.followerCount));
-    }
-
-    private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
-        });
     }
 
     private void getProfile() {

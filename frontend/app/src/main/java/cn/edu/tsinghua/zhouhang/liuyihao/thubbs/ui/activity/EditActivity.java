@@ -592,6 +592,7 @@ public class EditActivity extends AppCompatActivity {
         }
         builder.addFormDataPart(TweetAPI.type, String.valueOf(type));
         builder.addFormDataPart(TweetAPI.isDraft, String.valueOf(isDraft));
+        builder.addFormDataPart(TweetAPI.content, binding.title.getText().toString());
         builder.addFormDataPart(TweetAPI.content, binding.content.getText().toString());
         if (mLocation != null) {
             builder.addFormDataPart(TweetAPI.location, mLocation);

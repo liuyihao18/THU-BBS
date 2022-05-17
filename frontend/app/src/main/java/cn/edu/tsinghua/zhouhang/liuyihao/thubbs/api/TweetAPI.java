@@ -13,6 +13,7 @@ public class TweetAPI {
     public static final String image = "image";
     public static final String imageCount = "image_count";
     public static final String tweetId = "tweet_id";
+    public static final String title = "title";
 
     private static final String prefix = "/tweet";
 

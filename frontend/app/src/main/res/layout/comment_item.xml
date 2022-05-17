@@ -46,7 +46,7 @@
             app:layout_constraintStart_toEndOf="@id/headshot" />
 
         <ImageView
-            android:id="@+id/audio_close_button"
+            android:id="@+id/close_button"
             android:layout_width="@dimen/button_size_medium"
             android:layout_height="@dimen/button_size_medium"
             android:layout_marginTop="@dimen/activity_vertical_margin"
