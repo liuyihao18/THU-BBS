@@ -193,6 +193,10 @@ public class TweetsFragment extends Fragment {
         mAdapter = new TweetListAdapter(getContext(), mTweetList, this);
     }
 
+    public int getType() {
+        return mType;
+    }
+
     public TweetsFragment setOnDetailReturnListener(OnDetailReturnListener onDetailReturnListener) {
         this.onDetailReturnListener = onDetailReturnListener;
         return this;

@@ -3,6 +3,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,18 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) binding.getRoot().getLayoutParams();
             layoutParams.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
             binding.getRoot().setLayoutParams(layoutParams);
+            initView();
             initListener();
+        }
+
+        private void initView() {
+            if (mParent.getType() == Constant.TWEETS_USER) {
+                binding.followButton.setVisibility(View.GONE);
+                binding.blackButton.setVisibility(View.GONE);
+            } else {
+                binding.followButton.setVisibility(View.VISIBLE);
+                binding.blackButton.setVisibility(View.VISIBLE);
+            }
         }
 
         private void initListener() {
