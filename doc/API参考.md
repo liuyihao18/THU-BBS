@@ -227,7 +227,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/black', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/black', methods=['POST'])
 
 @login_required
 
@@ -253,7 +253,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/white', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/white', methods=['POST'])
 
 @login_required
 
@@ -287,7 +287,7 @@ params:
 
 ```json
 {
-  "start": int
+  "block": int
 }
 ```
 
@@ -321,7 +321,7 @@ params:
 
 ```json
 {
-  "start": int
+  "block": int
 }
 ```
 
@@ -345,6 +345,40 @@ ret:
   "errMsg": errMsg
 }
 ```
+
+@bp_user.route('/user-api/v1/relation/get_fan_list', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "block": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0,
+  "fan_list": [
+    {
+      "userid": int,
+      "nickname": string,
+      "headshot": file
+    }
+  ]
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
 
 ## 推文
 
@@ -660,7 +694,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/get_tweet_comment_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/get_tweet_comment_list', methods=['POST'])
 
 @login_required
 
@@ -682,7 +716,7 @@ ret:
     {
       "comment_id": int,
       "userid": int,
-      "cotent": string,
+      "content": string,
       "nickname": string,
       "headshot": url,
       "comment_time": string
