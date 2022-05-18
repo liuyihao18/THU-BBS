@@ -13,6 +13,7 @@ import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
@@ -42,13 +43,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         private void initView() {
-            if (mParent.getType() == Constant.TWEETS_USER) {
-                binding.followButton.setVisibility(View.GONE);
-                binding.blackButton.setVisibility(View.GONE);
-            } else {
-                binding.followButton.setVisibility(View.VISIBLE);
-                binding.blackButton.setVisibility(View.VISIBLE);
-            }
+
         }
 
         private void initListener() {

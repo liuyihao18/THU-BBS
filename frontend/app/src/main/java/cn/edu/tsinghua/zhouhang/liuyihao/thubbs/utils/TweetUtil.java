@@ -142,6 +142,18 @@ public class TweetUtil {
         } else {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
+        if (tweetsType == Constant.TWEETS_USER) {
+            binding.followButton.setVisibility(View.GONE);
+            binding.blackButton.setVisibility(View.GONE);
+        } else {
+            binding.followButton.setVisibility(View.VISIBLE);
+            if (State.getState().userId == tweet.getUserID()) {
+                binding.followButton.setText("我自己");
+                binding.blackButton.setVisibility(View.GONE);
+            } else {
+                binding.blackButton.setVisibility(View.VISIBLE);
+            }
+        }
         /* 监听器 */
         mediaResource.registerMediaResourceListener(new MediaResource.MediaResourceListener() {
             @Override
@@ -154,22 +166,25 @@ public class TweetUtil {
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             }
         });
-        binding.followButton.setOnClickListener(view -> {
-            if (tweet.isFollow) {
-                tweet.isFollow = false;
-                binding.followButton.setText(R.string.follow);
-                binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
-            } else {
-                tweet.isFollow = true;
-                binding.followButton.setText(R.string.button_unfollow);
-                binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
-            }
-        });
-        binding.blackButton.setOnClickListener(view -> {
-            if (onClickBlackButtonListener != null) {
-                onClickBlackButtonListener.onClick(view);
-            }
-        });
+        if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserID()) {
+            binding.followButton.setOnClickListener(view -> {
+                if (tweet.isFollow) {
+                    tweet.isFollow = false;
+                    binding.followButton.setText(R.string.follow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
+                } else {
+                    tweet.isFollow = true;
+                    binding.followButton.setText(R.string.button_unfollow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+                }
+            });
+            binding.blackButton.setOnClickListener(view -> {
+                if (onClickBlackButtonListener != null) {
+                    onClickBlackButtonListener.onClick(view);
+                }
+            });
+            binding.blackButton.setVisibility(View.VISIBLE);
+        }
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {
