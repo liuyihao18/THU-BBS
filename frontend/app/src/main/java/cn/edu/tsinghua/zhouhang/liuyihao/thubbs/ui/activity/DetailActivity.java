@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -103,7 +104,17 @@ public class DetailActivity extends AppCompatActivity {
 
     private void bindTweet() {
         // 绑定动态
-        TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource, view -> finish());
+        TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource, view ->
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_black)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                            Intent intent = new Intent();
+                            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+                            finish();
+                        })
+                        .create().show());
     }
 
     void bindComment() {

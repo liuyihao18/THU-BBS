@@ -287,7 +287,7 @@ public class TweetsFragment extends Fragment {
         }
     }
 
-    private void getTweetList(boolean isRefresh) {
+    public void getTweetList(boolean isRefresh) {
         if (mType == Constant.TWEETS_EMPTY) {
             return;
         }
