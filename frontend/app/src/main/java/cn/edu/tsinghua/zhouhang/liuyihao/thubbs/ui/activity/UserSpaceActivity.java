@@ -1,14 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,6 +9,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,9 +148,7 @@ public class UserSpaceActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
                         .create().show());
         // 编辑资料按钮
-        binding.editProfileButton.setOnClickListener(view -> {
-            mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class));
-        });
+        binding.editProfileButton.setOnClickListener(view -> mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class)));
     }
 
     private void refresh() {
@@ -194,8 +191,7 @@ public class UserSpaceActivity extends AppCompatActivity {
                         if (errCode == 0) {
                             User user = JSONUtil.createUserFromJSON(data);
                             if (user == null) {
-                                msg.what = APIConstant.REQUEST_ERROR;
-                                msg.obj = getResources().getString(R.string.server_error);
+                                msg.what = APIConstant.SERVER_ERROR;
                             } else {
                                 mUser = user;
                                 msg.what = APIConstant.REQUEST_OK;

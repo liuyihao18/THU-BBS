@@ -95,7 +95,7 @@ public class TweetUtil {
                     Alert.error(context, R.string.unknown_error);
                 } else {
                     binding.videoView.setVisibility(View.VISIBLE);
-                    // 视频播放
+                    // 视频大小调整
                     binding.videoView.setOnPreparedListener(mediaPlayer -> {
                         DisplayMetrics dm = new DisplayMetrics();
                         DisplayManager displayManager = (DisplayManager) context.getSystemService(
@@ -116,17 +116,21 @@ public class TweetUtil {
                         }
                         binding.videoView.setLayoutParams(layoutParams);
                     });
+                    // 视频错误
                     binding.videoView.setOnErrorListener((mediaPlayer, i, i1) -> {
                         Alert.error(context, R.string.network_error);
                         mediaResource.loaded = false;
                         binding.videoPlayButton.setVisibility(View.VISIBLE);
                         return true;
                     });
+                    // 视频播放完毕
                     binding.videoView.setOnCompletionListener(mediaPlayer -> binding.videoPlayButton.setVisibility(View.VISIBLE));
+                    // 点击视频暂停
                     binding.videoView.setOnClickListener(view -> {
                         binding.videoView.pause();
                         binding.videoPlayButton.setVisibility(View.VISIBLE);
                     });
+                    // 点击视频播放按钮播放
                     binding.videoPlayButton.setVisibility(View.VISIBLE);
                     binding.videoPlayButton.setOnClickListener(view -> {
                         if (!mediaResource.loaded) {

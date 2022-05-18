@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
-            case APIConstant.REQUEST_OK:
+            case Constant.LOGIN_OK:
                 // 此时已经登录成功，保证State.getState().user != null
                 if (State.getState().onLoginListener != null) {
                     // 处理回调

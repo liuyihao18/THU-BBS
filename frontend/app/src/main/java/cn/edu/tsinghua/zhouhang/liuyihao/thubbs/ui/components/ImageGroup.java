@@ -123,12 +123,16 @@ public class ImageGroup extends ConstraintLayout {
         mImageGroupListener = imageGroupListener;
     }
 
+    /**
+     * 刷新图片的显示
+     */
     public void refresh() {
         if (mImageUriList == null) {
             Alert.error(getContext(), R.string.unknown_error);
             return;
         }
         int size = mImageUriList.size();
+        // 确认显示多少行
         if ((mEditable && size < 3) || (!mEditable && size <= 3)) {
             binding.imageGroupRow1.setVisibility(VISIBLE);
             binding.imageGroupRow2.setVisibility(GONE);
@@ -145,6 +149,7 @@ public class ImageGroup extends ConstraintLayout {
             Alert.error(getContext(), R.string.unknown_error);
             return;
         }
+        // 前半部分图片加载显示
         for (int i = 0; i < size; i++) {
             Glide.with(getContext())
                     .load(mImageUriList.get(i))
@@ -156,10 +161,12 @@ public class ImageGroup extends ConstraintLayout {
                 mCloseButtonList.get(i).setVisibility(VISIBLE);
             }
         }
+        // 后半部分图片不显示
         for (int i = size + 1; i < mTotalCount; i++) {
             mImageViewList.get(i).setVisibility(INVISIBLE);
             mCloseButtonList.get(i).setVisibility(INVISIBLE);
         }
+        // 中间的图片显示加号（编辑状态）或不显示（非编辑状态）
         if (size < mTotalCount) {
             if (mEditable) {
                 mImageViewList.get(size).setImageResource(R.drawable.ic_add_image_gray_24dp);

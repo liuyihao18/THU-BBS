@@ -65,7 +65,7 @@ public class State {
      * @param context 上下文
      * @param handler 消息处理句柄
      *                有可能发出以下信息：
-     *                1. 成功：msg.what = APIConstant.REQUEST_OK, msg.obj = null
+     *                1. 成功：msg.what = Constant.LOGIN_OK = 0, msg.obj = null
      *                2. 失败：msg.what = APIConstant.NETWORK_ERROR, msg.obj = null
      *                3. 失败：msg.what = APIConstant.SERVER_ERROR, msg.obj = null
      *                4. 失败：msg.what = APIConstant.REQUEST_ERROR, msg.obj = ERR_MSG
@@ -105,7 +105,7 @@ public class State {
                                 msg.obj = context.getString(R.string.server_error);
                             } else {
                                 getState().user = user;
-                                msg.what = APIConstant.REQUEST_OK;
+                                msg.what = Constant.LOGIN_OK;
                             }
                         } else {
                             msg.what = APIConstant.REQUEST_ERROR;

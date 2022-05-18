@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +14,15 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class AccountFragment extends Fragment {
@@ -37,7 +32,7 @@ public class AccountFragment extends Fragment {
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
-            case APIConstant.REQUEST_OK:
+            case Constant.LOGIN_OK:
                 refresh();
                 break;
             case APIConstant.REQUEST_ERROR:
@@ -67,7 +62,6 @@ public class AccountFragment extends Fragment {
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 State.getState().refreshMyProfile(getContext(), handler);
-
             }
         });
     }
@@ -77,6 +71,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void initListener() {
+        // 头像
         binding.accountHeadshot.setOnClickListener(view -> {
             if (State.getState().isLogin) {
                 Intent intent = new Intent(getContext(), UserSpaceActivity.class);
@@ -87,31 +82,32 @@ public class AccountFragment extends Fragment {
                         .login(getContext());
             }
         });
+        // 登录按钮
         binding.loginButton.setOnClickListener(view -> State.getState()
                 .setOnLoginListener(this::refresh)
                 .login(getContext()));
-        binding.logoutButton.setOnClickListener(view -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.question_logout)
-                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                    }))
-                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                        State.getState().jwt = null;
-                        State.getState().userId = 0;
-                        State.getState().isLogin = false;
-                        Activity activity = getActivity();
-                        if (activity == null) {
-                            Alert.error(getContext(), R.string.unknown_error);
-                            return;
-                        }
-                        SharedPreferences preferences = activity.getSharedPreferences(Constant.SHARED_PREFERENCES, Activity.MODE_PRIVATE);
-                        preferences.edit().remove(Constant.JWT).apply();
-                        preferences.edit().remove(Constant.USER_ID).apply();
-                        Alert.info(getContext(), R.string.logout_success);
-                        refresh();
-                    }).
-                    create().show();
-        });
+        // 退出按钮
+        binding.logoutButton.setOnClickListener(view -> new AlertDialog.Builder(getContext())
+                .setTitle(R.string.question_logout)
+                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                }))
+                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                    State.getState().jwt = null;
+                    State.getState().userId = 0;
+                    State.getState().isLogin = false;
+                    Activity activity = getActivity();
+                    if (activity == null) {
+                        Alert.error(getContext(), R.string.unknown_error);
+                        return;
+                    }
+                    SharedPreferences preferences = activity.getSharedPreferences(Constant.SHARED_PREFERENCES, Activity.MODE_PRIVATE);
+                    preferences.edit().remove(Constant.JWT).apply();
+                    preferences.edit().remove(Constant.USER_ID).apply();
+                    Alert.info(getContext(), R.string.logout_success);
+                    refresh();
+                }).
+                create().show());
+        // 编辑资料
         binding.editProfileButton.setOnClickListener(view -> {
             if (State.getState().isLogin) {
                 mEditProfileLauncher.launch(new Intent(getContext(), EditProfileActivity.class));
@@ -138,6 +134,9 @@ public class AccountFragment extends Fragment {
             binding.followerCount.setText(String.valueOf(0));
             binding.accountUserName.setVisibility(View.GONE);
             binding.loginButton.setVisibility(View.VISIBLE);
+            if (State.getState().isLogin) {
+                State.getState().refreshMyProfile(getContext(), handler);
+            }
         }
     }
 

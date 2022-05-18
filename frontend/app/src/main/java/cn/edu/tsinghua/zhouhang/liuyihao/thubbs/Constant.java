@@ -3,23 +3,26 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 
 public class Constant {
+    /* 本地文件 */
     public static final String SHARED_PREFERENCES = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.prefFile";
 
+    /* 状态常量 */
     public static final String JWT = "jwt";
     public static final String USER_ID = "userid";
     public static final String DEFAULT_HEADSHOT = Static.HeadShot.getHeadShotUrl("default_headshot.jpg");
     public static final String TMP_DIR = "tmp";
+    public static final int LOGIN_OK = 0;
 
-    /* Permission */
+    /* 权限 */
     public static final int LOCATION_PERMISSION = 0;
     public static final int RECORD_PERMISSION = 1;
 
-    /* Edit Constant */
+    /* 编辑相关常量 */
     public static final int MAX_IMAGE_COUNT = 9;
     public static final int MAX_AUDIO_COUNT = 1;
     public static final int MAX_VIDEO_COUNT = 1;
 
-    /* Tweet Fragment */
+    /* 动态列表相关常量 */
     public static final String TWEETS_TYPE = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.TWEETS_TYPE";
     public static final int TWEETS_EMPTY = 0; // 空
     public static final int TWEETS_ALL = 1; // 全部推送
@@ -28,11 +31,13 @@ public class Constant {
     public static final int TWEETS_DETAIL = 4; // 用户的推送
 
     /* Intent Constant */
-    public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";
+    // Action
     public static final String DETAIL_HAVE_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_HAVE_DATA";
     public static final String DETAIL_NO_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_NO_DATA";
     public static final String EDIT_FROM_DRAFT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_DRAFT";
     public static final String EDIT_FROM_BLANK = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_BLANK";
+    // Extra
+    public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";
     public static final String EXTRA_TWEET = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET";
     public static final String EXTRA_TWEET_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_ID";
     public static final String EXTRA_TWEET_CONTENT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_CONTENT";

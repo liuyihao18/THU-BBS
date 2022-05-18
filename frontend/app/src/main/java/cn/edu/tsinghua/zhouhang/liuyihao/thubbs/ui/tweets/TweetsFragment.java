@@ -107,6 +107,7 @@ public class TweetsFragment extends Fragment {
         View root = binding.getRoot();
         initLauncher();
         initAdapter();
+        initType();
         init();
         return root;
     }
@@ -118,7 +119,6 @@ public class TweetsFragment extends Fragment {
     }
 
     private void init() {
-        initType();
         initView();
         initListener();
     }
@@ -350,8 +350,7 @@ public class TweetsFragment extends Fragment {
                             for (int i = 0; i < tweetList.length(); i++) {
                                 Tweet tweet = JSONUtil.createTweetFromJSON(tweetList.getJSONObject(i));
                                 if (tweet == null) {
-                                    msg.what = APIConstant.REQUEST_ERROR;
-                                    msg.obj = getResources().getString(R.string.server_error);
+                                    msg.what = APIConstant.SERVER_ERROR;
                                     break;
                                 }
                                 mTweetList.add(tweet);

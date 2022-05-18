@@ -267,7 +267,7 @@ public class RecordActivity extends AppCompatActivity {
         try {
             mMediaRecorder.stop();
         } catch (Exception e) {
-            Alert.error(this, R.string.unknown_error);
+            // Alert.error(this, R.string.unknown_error);
             atBefore();
         }
         mMediaRecorder.reset();
