@@ -38,6 +38,7 @@
     <string name="question_add_location">确定添加位置信息？</string>
     <string name="question_post">确定发布？</string>
     <string name="question_logout">确定退出登录？</string>
+    <string name="question_black">确定屏蔽该用户？</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>

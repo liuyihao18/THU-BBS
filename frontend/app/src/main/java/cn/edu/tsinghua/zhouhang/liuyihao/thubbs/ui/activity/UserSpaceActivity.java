@@ -7,6 +7,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -105,6 +106,24 @@ public class UserSpaceActivity extends AppCompatActivity {
         findViewById(R.id.back_button).setOnClickListener(view -> {
             finish();
         });
+        binding.followButton.setOnClickListener(view -> {
+            if (mUser.isFollow) {
+                mUser.isFollow = false;
+                binding.followButton.setText(R.string.follow);
+                binding.followButton.setBackgroundColor(getColor(R.color.pink));
+            } else {
+                mUser.isFollow = true;
+                binding.followButton.setText(R.string.button_unfollow);
+                binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
+            }
+        });
+        binding.blackButton.setOnClickListener(view ->
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_black)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                        .create().show());
     }
 
     private void refresh() {
