@@ -1,11 +1,13 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
+
 public class Constant {
     public static final String SHARED_PREFERENCES = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.prefFile";
 
     public static final String JWT = "jwt";
     public static final String USER_ID = "userid";
-    public static final String HEADSHOT = "headshot";
+    public static final String DEFAULT_HEADSHOT = Static.HeadShot.getHeadShotUrl("default_headshot.jpg");
     public static final String TMP_DIR = "tmp";
 
     /* Permission */

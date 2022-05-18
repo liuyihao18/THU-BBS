@@ -28,7 +28,6 @@ public class AccountFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         initView();
@@ -37,12 +36,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void initView() {
-        if (State.getState().isLogin) {
-            binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
-            binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
-            binding.followCount.setText(String.valueOf(State.getState().user.followCount));
-            binding.followerCount.setText(String.valueOf(State.getState().user.followerCount));
-        }
+        refresh();
     }
 
     private void initListener() {
@@ -51,6 +45,9 @@ public class AccountFragment extends Fragment {
             intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
             startActivity(intent);
         });
+        binding.loginButton.setOnClickListener(view -> State.getState()
+                .setOnLoginListener(this::refresh)
+                .login(getContext()));
         binding.logoutButton.setOnClickListener(view -> {
             new AlertDialog.Builder(getContext())
                     .setTitle(R.string.question_logout)
@@ -69,9 +66,29 @@ public class AccountFragment extends Fragment {
                         preferences.edit().remove(Constant.JWT).apply();
                         preferences.edit().remove(Constant.USER_ID).apply();
                         Alert.info(getContext(), R.string.logout_success);
+                        refresh();
                     }).
                     create().show();
         });
+    }
+
+    public void refresh() {
+        if (State.getState().isLogin) {
+            binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
+            binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
+            binding.followCount.setText(String.valueOf(State.getState().user.followCount));
+            binding.followerCount.setText(String.valueOf(State.getState().user.followerCount));
+            binding.accountUserName.setText(State.getState().user.nickname);
+            binding.accountUserName.setVisibility(View.VISIBLE);
+            binding.loginButton.setVisibility(View.GONE);
+        } else {
+            binding.accountHeadshot.setImageUrl(Constant.DEFAULT_HEADSHOT);
+            binding.tweetCount.setText(String.valueOf(0));
+            binding.followCount.setText(String.valueOf(0));
+            binding.followerCount.setText(String.valueOf(0));
+            binding.accountUserName.setVisibility(View.GONE);
+            binding.loginButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

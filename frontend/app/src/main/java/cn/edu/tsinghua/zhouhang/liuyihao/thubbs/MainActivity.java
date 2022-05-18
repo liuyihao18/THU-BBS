@@ -34,11 +34,13 @@ import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private ActivityResultLauncher<Intent> mLoginLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
+                if (State.getState().onLoginListener != null) {
+                    State.getState().onLoginListener.onLogin();
+                }
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -63,9 +65,8 @@ public class MainActivity extends AppCompatActivity {
             State.getState().isLogin = true;
         }
         State.getState().mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            getMyProfile();
-            if (State.getState().onLoginListener != null) {
-                State.getState().onLoginListener.onLogin();
+            if (result.getResultCode() == RESULT_OK) {
+                getMyProfile();
             }
         });
         getMyProfile();
