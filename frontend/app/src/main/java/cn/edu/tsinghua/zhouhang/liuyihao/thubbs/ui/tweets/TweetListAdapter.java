@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -48,11 +49,16 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
                 mParent.setOnDetailReturnListener((result) -> {
-                    Intent resultIntent = result.getData();
-                    if (resultIntent != null) {
-                        mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
+                    // 屏蔽用户
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent resultIntent = result.getData();
+                        if (resultIntent != null) {
+                            mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
+                        }
+                        refresh();
+                    } else {
+                        mParent.getTweetList(true);
                     }
-                    refresh();
                 }).goDetail(intent);
             };
             // 点击内容或评论都打开详情界面
