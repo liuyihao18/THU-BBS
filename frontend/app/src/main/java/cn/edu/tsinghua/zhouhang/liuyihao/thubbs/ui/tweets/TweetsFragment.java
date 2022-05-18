@@ -56,11 +56,11 @@ public class TweetsFragment extends Fragment {
     private FragmentTweetsBinding binding;
     private int mType;
     private int mUserId = 0;
-    private ActivityResultLauncher<Intent> mLoginLauncher;
     private ActivityResultLauncher<Intent> mEditLauncher;
     private ActivityResultLauncher<Intent> mDetailLauncher;
     private TweetListAdapter mAdapter;
     private OnDetailReturnListener onDetailReturnListener;
+    private int mBlock = -1;
     private boolean firstTypeSelect = true;
     private boolean firstOrderSelect = true;
 
@@ -74,7 +74,6 @@ public class TweetsFragment extends Fragment {
                     if (mTweetList.size() - msg.arg1 > 0) {
                         String loadStr = getString(R.string.continue_load);
                         Alert.info(getContext(), String.format(loadStr, mTweetList.size() - msg.arg1));
-                        binding.recyclerView.smoothScrollToPosition(msg.arg1);
                     } else {
                         Alert.info(getContext(), R.string.no_new_load);
                     }
@@ -129,7 +128,6 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initLauncher() {
-        mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> init());
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 getTweetList(true);
@@ -239,7 +237,9 @@ public class TweetsFragment extends Fragment {
                 }
             });
         } else {
-            binding.loginButton.setOnClickListener(view -> mLoginLauncher.launch(new Intent(getActivity(), LoginActivity.class)));
+            binding.loginButton.setOnClickListener(view -> State.getState()
+                    .setOnLoginListener(this::init)
+                    .login(getContext()));
         }
     }
 
@@ -275,10 +275,11 @@ public class TweetsFragment extends Fragment {
         try {
             JSONObject data = new JSONObject();
             if (isRefresh) {
-                data.put(TweetAPI.block, 0);
+                mBlock = 0;
             } else {
-                data.put(TweetAPI.block, mTweetList.size());
+                mBlock++;
             }
+            data.put(TweetAPI.block, mBlock);
             data.put(TweetAPI.of, mType);
             if (mType == Constant.TWEETS_USER) {
                 data.put(TweetAPI.userId, mUserId);
