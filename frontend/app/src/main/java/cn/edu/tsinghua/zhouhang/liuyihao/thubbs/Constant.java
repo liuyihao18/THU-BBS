@@ -23,6 +23,7 @@ public class Constant {
     public static final int TWEETS_ALL = 1; // 全部推送
     public static final int TWEETS_FOLLOW = 2; // 关注的人的推送
     public static final int TWEETS_USER = 3; // 用户的推送
+    public static final int TWEETS_DETAIL = 4; // 用户的推送
 
     /* Intent Constant */
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";

@@ -24,8 +24,8 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
 public class TweetUtil {
 
-    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, MediaResource mediaResource,
-                            View.OnClickListener onClickBlackButtonListener) {
+    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, int tweetsType,
+                            MediaResource mediaResource, View.OnClickListener onClickBlackButtonListener) {
         /* 初始化 */
         mediaResource.loaded = false;
         binding.locationLayout.setVisibility(View.GONE);
@@ -206,9 +206,11 @@ public class TweetUtil {
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });
         binding.authorHeadshot.setOnClickListener(view -> {
-            Intent intent = new Intent(context, UserSpaceActivity.class);
-            intent.putExtra(Constant.EXTRA_USER_ID, tweet.getUserID());
-            context.startActivity(intent);
+            if (tweetsType != Constant.TWEETS_USER) {
+                Intent intent = new Intent(context, UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, tweet.getUserID());
+                context.startActivity(intent);
+            }
         });
     }
 
