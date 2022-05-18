@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,20 +61,32 @@ public class TweetsFragment extends Fragment {
     private ActivityResultLauncher<Intent> mDetailLauncher;
     private TweetListAdapter mAdapter;
     private OnDetailReturnListener onDetailReturnListener;
+    private boolean firstTypeSelect = true;
+    private boolean firstOrderSelect = true;
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
-                if (msg.arg2 < 0) {
+                if (msg.arg2 < 0) { // 加载
                     mAdapter.notifyItemRangeInserted(msg.arg1, mTweetList.size() - msg.arg1);
-                } else {
+                    if (mTweetList.size() - msg.arg1 > 0) {
+                        String loadStr = getString(R.string.continue_load);
+                        Alert.info(getContext(), String.format(loadStr, mTweetList.size() - msg.arg1));
+                        binding.recyclerView.smoothScrollToPosition(msg.arg1);
+                    } else {
+                        Alert.info(getContext(), R.string.no_new_load);
+                    }
+                } else { // 刷新
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
+                    String loadStr = getString(R.string.initial_load);
+                    Alert.info(getContext(), String.format(loadStr, mTweetList.size()));
+                    binding.recyclerView.smoothScrollBy(0, 0);
                 }
-                binding.recyclerView.smoothScrollToPosition(msg.arg1);
                 refresh();
+                binding.swipeRefreshLayout.setRefreshing(false);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
@@ -141,7 +156,7 @@ public class TweetsFragment extends Fragment {
 
     private void initView() {
         if (State.getState().isLogin) {
-            binding.recyclerView.setVisibility(View.GONE);
+            binding.swipeRefreshLayout.setVisibility(View.VISIBLE);
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.loginRequiredLayout.setVisibility(View.GONE);
@@ -151,7 +166,7 @@ public class TweetsFragment extends Fragment {
             getTweetList(true);
             binding.noTweetLayout.setVisibility(View.VISIBLE);
         } else {
-            binding.recyclerView.setVisibility(View.GONE);
+            binding.swipeRefreshLayout.setVisibility(View.GONE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
             binding.noTweetLayout.setVisibility(View.GONE);
         }
@@ -164,17 +179,22 @@ public class TweetsFragment extends Fragment {
             });
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    // TODO: 进行搜索
-                    Alert.info(getContext(), R.string.is_searching);
+                    if (!binding.search.getText().toString().isEmpty()) {
+                        Alert.info(getContext(), R.string.is_searching);
+                    }
+                    getTweetList(true);
                 }
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;
             });
-            binding.typeSpinner.setSelection(0, true);
             binding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Alert.info(getContext(), getResources().getStringArray(R.array.type_array)[i]);
+                    if (firstTypeSelect) {
+                        firstTypeSelect = false;
+                    } else {
+                        getTweetList(true);
+                    }
                 }
 
                 @Override
@@ -182,10 +202,44 @@ public class TweetsFragment extends Fragment {
 
                 }
             });
-        } else {
-            binding.loginButton.setOnClickListener(view -> {
-                mLoginLauncher.launch(new Intent(getActivity(), LoginActivity.class));
+            binding.orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (firstOrderSelect) {
+                        firstOrderSelect = false;
+                    } else {
+                        getTweetList(true);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
             });
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+                getTweetList(true);
+            });
+
+            binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        if (!recyclerView.canScrollVertically(1)) { // 下拉加载
+                            binding.swipeRefreshLayout.setRefreshing(true);
+                            getTweetList(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
+        } else {
+            binding.loginButton.setOnClickListener(view -> mLoginLauncher.launch(new Intent(getActivity(), LoginActivity.class)));
         }
     }
 
@@ -208,10 +262,8 @@ public class TweetsFragment extends Fragment {
 
     public void refresh() {
         if (mTweetList.size() > 0) {
-            binding.recyclerView.setVisibility(View.VISIBLE);
             binding.noTweetLayout.setVisibility(View.GONE);
         } else {
-            binding.recyclerView.setVisibility(View.GONE);
             binding.noTweetLayout.setVisibility(View.VISIBLE);
         }
     }

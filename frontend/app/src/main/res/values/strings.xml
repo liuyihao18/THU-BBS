@@ -68,6 +68,9 @@
     <string name="follow_success">关注成功</string>
     <string name="unfollow_success">取消关注成功</string>
     <string name="like_success">点赞成功</string>
+    <string name="initial_load">已为您加载了%d条动态~</string>
+    <string name="continue_load">wow，又有新的%d条动态~</string>
+    <string name="no_new_load">没有更多的动态了~</string>
 
     <!-- 编辑 -->
     <string name="edit_name">编辑</string>
@@ -96,7 +99,6 @@
     <string name="quit">退出登录</string>
     <string name="user_space">个人主页</string>
     <string name="description_empty">这个人很懒，什么都没留下~</string>
-
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>

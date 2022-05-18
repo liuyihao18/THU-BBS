@@ -37,10 +37,12 @@ public class AccountFragment extends Fragment {
     }
 
     private void initView() {
-        binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
-        binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
-        binding.followCount.setText(String.valueOf(State.getState().user.followCount));
-        binding.followerCount.setText(String.valueOf(State.getState().user.followerCount));
+        if (State.getState().isLogin) {
+            binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
+            binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
+            binding.followCount.setText(String.valueOf(State.getState().user.followCount));
+            binding.followerCount.setText(String.valueOf(State.getState().user.followerCount));
+        }
     }
 
     private void initListener() {
