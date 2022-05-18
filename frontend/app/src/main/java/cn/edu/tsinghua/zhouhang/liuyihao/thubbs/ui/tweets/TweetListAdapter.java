@@ -13,7 +13,6 @@ import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
@@ -34,16 +33,13 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         public TweetViewHolder(@NonNull TweetItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            // 每个动态的背景和位置参数
             binding.getRoot().setBackgroundResource(R.drawable.my_white_rounded_corner_8dp);
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) binding.getRoot().getLayoutParams();
             layoutParams.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
             binding.getRoot().setLayoutParams(layoutParams);
-            initView();
+            // 初始化
             initListener();
-        }
-
-        private void initView() {
-
         }
 
         private void initListener() {
@@ -59,6 +55,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     refresh();
                 }).goDetail(intent);
             };
+            // 点击内容或评论都打开详情界面
             binding.contentLayout.setOnClickListener(onClickListener);
             binding.commentButton.setOnClickListener(onClickListener);
         }
@@ -69,7 +66,9 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         public void refresh() {
+            // 绑定动态
             TweetUtil.bind(mContext, binding, mTweet, mParent.getType(), mediaResource,
+                    // 这里的屏蔽按钮实际上是不看该条动态
                     view -> {
                         int index = mTweetList.indexOf(mTweet);
                         if (index < 0) {
@@ -109,6 +108,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
     @Override
     public void onViewDetachedFromWindow(@NonNull TweetViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
+        // 终止不在屏幕内的播放
         if (holder.mediaResource.mediaPlayer != null) {
             holder.mediaResource.resetPlayer(mContext);
         }

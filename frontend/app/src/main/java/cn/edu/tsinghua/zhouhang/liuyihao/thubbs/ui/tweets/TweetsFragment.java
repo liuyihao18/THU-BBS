@@ -185,8 +185,8 @@ public class TweetsFragment extends Fragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (!binding.search.getText().toString().isEmpty()) {
                         Alert.info(getContext(), R.string.is_searching);
+                        getTweetList(true);
                     }
-                    getTweetList(true);
                 }
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;

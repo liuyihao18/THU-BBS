@@ -61,9 +61,10 @@ public class State {
 
     /**
      * 通用刷新用户信息接口
+     *
      * @param context 上下文
      * @param handler 消息处理句柄
-     *                用可能发出以下信息：
+     *                有可能发出以下信息：
      *                1. 成功：msg.what = APIConstant.REQUEST_OK, msg.obj = null
      *                2. 失败：msg.what = APIConstant.NETWORK_ERROR, msg.obj = null
      *                3. 失败：msg.what = APIConstant.SERVER_ERROR, msg.obj = null

@@ -39,7 +39,6 @@ public class MediaResource {
                 if (mediaResourceListener != null) {
                     mediaResourceListener.onInit();
                 }
-
             });
             mediaPlayer.prepareAsync();
         } catch (IOException ioe) {

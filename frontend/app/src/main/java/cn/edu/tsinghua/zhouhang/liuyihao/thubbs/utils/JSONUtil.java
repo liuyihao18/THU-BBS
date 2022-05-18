@@ -19,6 +19,12 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 
 public class JSONUtil {
+    /**
+     * 从数据创建用户
+     *
+     * @param data 服务器返回的JSON
+     * @return 成功返回用户，失败返回空
+     */
     public static User createUserFromJSON(@NonNull JSONObject data) {
         try {
             String nickname = data.getString(UserAPI.nickname);
@@ -35,6 +41,12 @@ public class JSONUtil {
         }
     }
 
+    /**
+     * 从数据创建动态
+     *
+     * @param data 服务器返回的JSON
+     * @return 成功返回动态，失败返回空
+     */
     public static Tweet createTweetFromJSON(@NonNull JSONObject data) {
         try {
             int tweetId = data.getInt(TweetAPI.tweetId);
