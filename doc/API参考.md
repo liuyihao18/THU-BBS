@@ -279,7 +279,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/get_follow_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/get_follow_list', methods=['POST'])
 
 @login_required
 
@@ -301,7 +301,7 @@ ret:
     {
       "userid": int,
       "nickname": string,
-      "headshot": file,
+      "headshot": string,
       "description": string
     }
   ]
@@ -313,7 +313,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/get_black_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/get_black_list', methods=['POST'])
 
 @login_required
 
@@ -335,7 +335,7 @@ ret:
     {
       "userid": int,
       "nickname": string,
-      "headshot": file
+      "headshot": string
     }
   ]
 }
@@ -346,7 +346,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/relation/get_fan_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/relation/get_fan_list', methods=['POST'])
 
 @login_required
 
@@ -368,7 +368,7 @@ ret:
     {
       "userid": int,
       "nickname": string,
-      "headshot": file
+      "headshot": string
     }
   ]
 }
