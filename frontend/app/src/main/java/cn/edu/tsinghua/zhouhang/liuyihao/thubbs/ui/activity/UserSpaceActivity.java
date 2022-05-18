@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ public class UserSpaceActivity extends AppCompatActivity {
     private int mUserId = 0;
     private User mUser;
 
+    private ActivityResultLauncher<Intent> mEditProfileLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
@@ -75,6 +79,7 @@ public class UserSpaceActivity extends AppCompatActivity {
             finish();
         }
         getProfile();
+        initLauncher();
         initView();
         initListener();
     }
@@ -87,6 +92,15 @@ public class UserSpaceActivity extends AppCompatActivity {
         bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_USER);
         bundle.putInt(Constant.EXTRA_USER_ID, mUserId);
         navController.setGraph(R.navigation.tweets_navigation, bundle);
+    }
+
+    private void initLauncher() {
+        mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                State.getState().refreshMyProfile(this, null);
+                getProfile();
+            }
+        });
     }
 
     private void initView() {
@@ -103,9 +117,7 @@ public class UserSpaceActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            onBackPressed();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {
                 mUser.isFollow = false;
@@ -124,6 +136,9 @@ public class UserSpaceActivity extends AppCompatActivity {
                         }))
                         .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
                         .create().show());
+        binding.editProfileButton.setOnClickListener(view -> {
+            mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class));
+        });
     }
 
     private void refresh() {

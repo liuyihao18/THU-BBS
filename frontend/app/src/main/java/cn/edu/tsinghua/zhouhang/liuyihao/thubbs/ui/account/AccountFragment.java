@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +15,14 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
@@ -29,6 +34,24 @@ public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     private ActivityResultLauncher<Intent> mEditProfileLauncher;
+
+    private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        switch (msg.what) {
+            case APIConstant.REQUEST_OK:
+                refresh();
+                break;
+            case APIConstant.REQUEST_ERROR:
+                Alert.error(getContext(), (String) msg.obj);
+                break;
+            case APIConstant.NETWORK_ERROR:
+                Alert.error(getContext(), R.string.network_error);
+                break;
+            case APIConstant.SERVER_ERROR:
+                Alert.error(getContext(), R.string.server_error);
+                break;
+        }
+        return true;
+    });
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +66,8 @@ public class AccountFragment extends Fragment {
     private void initLauncher() {
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                refresh();
+                State.getState().refreshMyProfile(getContext(), handler);
+
             }
         });
     }
@@ -54,9 +78,14 @@ public class AccountFragment extends Fragment {
 
     private void initListener() {
         binding.accountHeadshot.setOnClickListener(view -> {
-            Intent intent = new Intent(getContext(), UserSpaceActivity.class);
-            intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
-            startActivity(intent);
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
+                startActivity(intent);
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
         });
         binding.loginButton.setOnClickListener(view -> State.getState()
                 .setOnLoginListener(this::refresh)
@@ -87,13 +116,14 @@ public class AccountFragment extends Fragment {
             if (State.getState().isLogin) {
                 mEditProfileLauncher.launch(new Intent(getContext(), EditProfileActivity.class));
             } else {
-                State.getState().login(getContext());
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
             }
         });
     }
 
     public void refresh() {
-        if (State.getState().isLogin) {
+        if (State.getState().isLogin && State.getState().user != null) {
             binding.accountHeadshot.setImageUrl(State.getState().user.headshot);
             binding.tweetCount.setText(String.valueOf(State.getState().user.tweetCount));
             binding.followCount.setText(String.valueOf(State.getState().user.followCount));

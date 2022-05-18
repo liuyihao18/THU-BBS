@@ -3,6 +3,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 import org.json.JSONObject;
 
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 
 public class UserAPI {
     public static final String email = "email";
@@ -14,6 +15,7 @@ public class UserAPI {
     public static final String tweetCount = "tweet_count";
     public static final String followCount = "follow_count";
     public static final String followerCount = "follower_count";
+    public static final String isFollow = "is_follow";
 
     private static final String prefix = "/user";
 
@@ -31,5 +33,9 @@ public class UserAPI {
 
     public static void getProfile(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_profile"), data, callback);
+    }
+
+    public static void editProfile(MultipartBody body, Callback callback) {
+        BaseRequest.post(getUrl("/edit_profile"), body, callback);
     }
 }
