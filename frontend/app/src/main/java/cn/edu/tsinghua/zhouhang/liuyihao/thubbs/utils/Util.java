@@ -9,10 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -58,7 +56,7 @@ public class Util {
             switch (uri.getAuthority()) {
                 case "com.android.externalstorage.documents":
                     if ("primary".equals(type)) {
-                        path = Environment.getExternalStorageDirectory() + File.separator + id;
+                        path = context.getExternalFilesDir(null) + File.separator + id;
                     }
                     break;
                 case "com.android.providers.downloads.documents":
@@ -107,19 +105,19 @@ public class Util {
         String path;
         uri.getAuthority();
         path = uri.getPath();
-        String sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String sdPath = context.getExternalFilesDir(null).getAbsolutePath();
         if (!path.startsWith(sdPath)) {
             int sepIndex = path.indexOf(File.separator, 1);
             if (sepIndex == -1) path = null;
             else {
-                String sdPah = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String sdPah = context.getExternalFilesDir(null).getAbsolutePath();
                 path = sdPah + path.substring(sepIndex);
             }
         }
 
         if (path == null || !new File(path).exists()) {
             ContentResolver resolver = context.getContentResolver();
-            String[] projection = new String[]{MediaStore.MediaColumns.DATA};
+            String[] projection = new String[]{"_data"}; // MediaStore.MediaColumns.DATA
             Cursor cursor = resolver.query(uri, projection, selection, selectionArgs, null);
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
