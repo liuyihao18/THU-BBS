@@ -2,23 +2,12 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnExternalPreviewEventListener;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -26,10 +15,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
@@ -55,7 +40,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         private void initListener() {
-            binding.contentText.setOnClickListener(view -> {
+            binding.contentLayout.setOnClickListener(view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);

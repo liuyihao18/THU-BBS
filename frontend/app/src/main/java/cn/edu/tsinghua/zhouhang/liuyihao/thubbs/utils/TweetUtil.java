@@ -156,6 +156,9 @@ public class TweetUtil {
             }
         });
         binding.followButton.setOnClickListener(view -> {
+            if (onClickFollowButtonListener != null) {
+                onClickBlackButtonListener.onClick(view);
+            }
             if (tweet.isFollow) {
                 tweet.isFollow = false;
                 binding.followButton.setText(R.string.follow);
@@ -212,6 +215,5 @@ public class TweetUtil {
             context.startActivity(intent);
         });
     }
-
 
 }

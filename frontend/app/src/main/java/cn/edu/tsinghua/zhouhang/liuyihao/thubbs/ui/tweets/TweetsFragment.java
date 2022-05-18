@@ -2,6 +2,8 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
+import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI.type;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -143,6 +145,9 @@ public class TweetsFragment extends Fragment {
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.loginRequiredLayout.setVisibility(View.GONE);
+            if (mType == Constant.TWEETS_USER) {
+                binding.menu.setVisibility(View.GONE);
+            }
             getTweetList(true);
             binding.noTweetLayout.setVisibility(View.VISIBLE);
         } else {
