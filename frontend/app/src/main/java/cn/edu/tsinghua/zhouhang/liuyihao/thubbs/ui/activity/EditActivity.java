@@ -109,8 +109,7 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action.equals(Constant.EDIT_FROM_DRAFT)) {
-            mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, -1);
-            binding.content.setText(intent.getStringExtra(Constant.EXTRA_TWEET_CONTENT));
+            // TODO: 加载草稿
         }
         initView();
         initController();
