@@ -33,6 +33,7 @@ public class State {
     public ActivityResultLauncher<Intent> mLoginLauncher;
     public OnLoginListener onLoginListener;
 
+    // 登录成功后的回调接口
     public interface OnLoginListener {
         void onLogin();
     }
@@ -53,21 +54,22 @@ public class State {
         return this;
     }
 
+    // 通用登录接口
     public void login(Context context) {
         mLoginLauncher.launch(new Intent(context, LoginActivity.class));
     }
 
-    @NonNull
-    public String toString() {
-        String result = "isLogin: " + isLogin + "\n" +
-                "userId: " + userId + "\n";
-        if (user != null) {
-            result += "nickname: " + user.nickname + "\n" +
-                    "description: " + user.description;
-        }
-        return result;
-    }
-
+    /**
+     * 通用刷新用户信息接口
+     *
+     * @param context 上下文
+     * @param handler 消息处理句柄
+     *                有可能发出以下信息：
+     *                1. 成功：msg.what = Constant.LOGIN_OK = 0, msg.obj = null
+     *                2. 失败：msg.what = APIConstant.NETWORK_ERROR, msg.obj = null
+     *                3. 失败：msg.what = APIConstant.SERVER_ERROR, msg.obj = null
+     *                4. 失败：msg.what = APIConstant.REQUEST_ERROR, msg.obj = ERR_MSG
+     */
     public void refreshMyProfile(Context context, @Nullable Handler handler) {
         try {
             JSONObject data = new JSONObject();
@@ -103,7 +105,7 @@ public class State {
                                 msg.obj = context.getString(R.string.server_error);
                             } else {
                                 getState().user = user;
-                                msg.what = APIConstant.REQUEST_OK;
+                                msg.what = Constant.LOGIN_OK;
                             }
                         } else {
                             msg.what = APIConstant.REQUEST_ERROR;
@@ -122,5 +124,16 @@ public class State {
         } catch (JSONException je) {
             System.err.println("Bad request format.");
         }
+    }
+
+    @NonNull
+    public String toString() {
+        String result = "isLogin: " + isLogin + "\n" +
+                "userId: " + userId + "\n";
+        if (user != null) {
+            result += "nickname: " + user.nickname + "\n" +
+                    "description: " + user.description;
+        }
+        return result;
     }
 }

@@ -2,7 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 import static java.lang.Math.abs;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -21,14 +20,20 @@ import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class Util {
-    public static void HideKeyBoard(Activity activity, View v) {
+    /**
+     * 隐藏键盘
+     *
+     * @param context 上下文
+     * @param view    视图
+     */
+    public static void HideKeyBoard(Context context, View view) {
         InputMethodManager manager = null;
-        if (activity != null) {
-            manager = ((InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE));
+        if (context != null) {
+            manager = ((InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE));
         }
         if (manager != null)
-            manager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        v.clearFocus();
+            manager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        view.clearFocus();
     }
 
     public static String FormatLocation(@NonNull Location location) {
@@ -42,6 +47,13 @@ public class Util {
         return "(" + longitude_str + ", " + latitude_str + ")";
     }
 
+    /**
+     * 将uri转化为path
+     *
+     * @param context 上下文
+     * @param uri     文件的uri
+     * @return uri对应的path
+     */
     public static String getPathFromUri(Context context, Uri uri) {
         String path = null;
         if (DocumentsContract.isDocumentUri(context, uri)) {

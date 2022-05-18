@@ -1,36 +1,24 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityDetailBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.CommentItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 
@@ -46,21 +34,27 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailBinding.inflate(getLayoutInflater());
+        // 动态项绑定
         tweetItemBinding = TweetItemBinding.inflate(getLayoutInflater(), binding.getRoot(), false);
         binding.tweet.addView(tweetItemBinding.getRoot());
         setContentView(binding.getRoot());
+        // 隐藏APP顶部栏
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
+        // 获取数据
         Intent intent = getIntent();
         String action = intent.getAction();
         initView();
+        // 携带数据打开的
         if (action.equals(Constant.DETAIL_HAVE_DATA)) {
             mTweet = (Tweet) intent.getSerializableExtra(Constant.EXTRA_TWEET);
             bindTweet();
-        } else {
-            // TODO: 获取推特数据
+        }
+        // 不携带数据打开的
+        else if (action.equals(Constant.DETAIL_NO_DATA)) {
+            // TODO: 获取动态数据
         }
         /* 测试数据开始 */
         mCommentList.add(new Comment(1, 1, "用户1", State.getState().user.headshot,
@@ -94,14 +88,21 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.detail);
-        binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
+        if (State.getState().user != null) {
+            binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
+        } else {
+            binding.commentHeadshot.setImageUrl(Constant.DEFAULT_HEADSHOT);
+            State.getState().refreshMyProfile(this, null);
+        }
     }
 
     private void initListener() {
+        // 返回
         findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
     }
 
     private void bindTweet() {
+        // 绑定动态
         TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource, view -> finish());
     }
 

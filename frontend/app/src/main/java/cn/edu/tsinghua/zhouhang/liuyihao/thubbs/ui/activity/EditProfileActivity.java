@@ -83,25 +83,31 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.edit_profile);
-        binding.nickname.setText(State.getState().user.nickname);
-        if (State.getState().user.description.isEmpty()) {
-            binding.description.setHint(R.string.description_empty);
-        } else {
-            binding.description.setText(State.getState().user.description);
+        if (State.getState().user != null) {
+            binding.nickname.setText(State.getState().user.nickname);
+            if (State.getState().user.description.isEmpty()) {
+                binding.description.setHint(R.string.description_empty);
+            } else {
+                binding.description.setText(State.getState().user.description);
+            }
         }
     }
 
     private void initListener() {
+        // 返回
         findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
+        // 头像添加
         binding.headshot.setOnClickListener(view -> {
             if (mHeadshotUri == null) {
                 selectImage();
             }
         });
+        // 头像删除
         binding.closeButton.setOnClickListener(view -> {
             mHeadshotUri = null;
             refresh();
         });
+        // 确定
         binding.button.setOnClickListener(view -> editProfile());
     }
 

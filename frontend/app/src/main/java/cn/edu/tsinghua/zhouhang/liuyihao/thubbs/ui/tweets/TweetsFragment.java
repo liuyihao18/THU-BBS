@@ -2,8 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
-import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI.type;
-
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,10 +10,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -25,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +33,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.LoginActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentTweetsBinding;
@@ -69,7 +62,8 @@ public class TweetsFragment extends Fragment {
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
-                if (msg.arg2 < 0) { // 加载
+                // 加载
+                if (msg.arg2 < 0) {
                     mAdapter.notifyItemRangeInserted(msg.arg1, mTweetList.size() - msg.arg1);
                     if (mTweetList.size() - msg.arg1 > 0) {
                         String loadStr = getString(R.string.continue_load);
@@ -77,7 +71,9 @@ public class TweetsFragment extends Fragment {
                     } else {
                         Alert.info(getContext(), R.string.no_new_load);
                     }
-                } else { // 刷新
+                }
+                // 刷新
+                else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
                     String loadStr = getString(R.string.initial_load);
@@ -111,6 +107,7 @@ public class TweetsFragment extends Fragment {
         View root = binding.getRoot();
         initLauncher();
         initAdapter();
+        initType();
         init();
         return root;
     }
@@ -122,7 +119,6 @@ public class TweetsFragment extends Fragment {
     }
 
     private void init() {
-        initType();
         initView();
         initListener();
     }
@@ -141,29 +137,38 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initType() {
+        // 首先确认类型
         Bundle bundle = getArguments();
         if (bundle != null) {
             mType = bundle.getInt(Constant.TWEETS_TYPE, Constant.TWEETS_EMPTY);
         } else {
             mType = Constant.TWEETS_EMPTY;
         }
+        // 如果是个人主页，则获取用户ID
         if (mType == Constant.TWEETS_USER) {
             mUserId = bundle.getInt(Constant.EXTRA_USER_ID, 0);
         }
     }
 
     private void initView() {
+        // 登录
         if (State.getState().isLogin) {
             binding.swipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.recyclerView.setAdapter(mAdapter);
-            binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.loginRequiredLayout.setVisibility(View.GONE);
+            // 暂时显示无更多动态
+            binding.noTweetLayout.setVisibility(View.VISIBLE);
+            // 用户空间不显示顶部工具栏和浮动按钮
             if (mType == Constant.TWEETS_USER) {
                 binding.menu.setVisibility(View.GONE);
+                binding.fab.setVisibility(View.GONE);
             }
+            // 初始获取数据
+            binding.recyclerView.setAdapter(mAdapter);
+            binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             getTweetList(true);
-            binding.noTweetLayout.setVisibility(View.VISIBLE);
-        } else {
+        }
+        // 未登录
+        else {
             binding.swipeRefreshLayout.setVisibility(View.GONE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
             binding.noTweetLayout.setVisibility(View.GONE);
@@ -171,20 +176,22 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initListener() {
+        // 登录
         if (State.getState().isLogin) {
-            binding.fab.setOnClickListener(view -> {
-                mEditLauncher.launch(new Intent(getActivity(), EditActivity.class).setAction(Constant.EDIT_FROM_BLANK));
-            });
+            // 添加按钮
+            binding.fab.setOnClickListener(view -> mEditLauncher.launch(new Intent(getActivity(), EditActivity.class).setAction(Constant.EDIT_FROM_BLANK)));
+            // 搜索按钮
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     if (!binding.search.getText().toString().isEmpty()) {
                         Alert.info(getContext(), R.string.is_searching);
+                        getTweetList(true);
                     }
-                    getTweetList(true);
                 }
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;
             });
+            // 切换筛选类型
             binding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -200,6 +207,7 @@ public class TweetsFragment extends Fragment {
 
                 }
             });
+            // 切换排序类型
             binding.orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -215,16 +223,15 @@ public class TweetsFragment extends Fragment {
 
                 }
             });
-            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-                getTweetList(true);
-            });
-
+            // 下拉刷新
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> getTweetList(true));
+            // 上划加载
             binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if (!recyclerView.canScrollVertically(1)) { // 下拉加载
+                        if (!recyclerView.canScrollVertically(1)) { // 已致底部
                             binding.swipeRefreshLayout.setRefreshing(true);
                             getTweetList(false);
                         }
@@ -236,10 +243,14 @@ public class TweetsFragment extends Fragment {
                     super.onScrolled(recyclerView, dx, dy);
                 }
             });
-        } else {
-            binding.loginButton.setOnClickListener(view -> State.getState()
-                    .setOnLoginListener(this::init)
-                    .login(getContext()));
+        }
+        // 未登录
+        else {
+            // 登录按钮
+            binding.loginButton.setOnClickListener(view ->
+                    State.getState()
+                            .setOnLoginListener(this::init)
+                            .login(getContext()));
         }
     }
 
@@ -256,10 +267,18 @@ public class TweetsFragment extends Fragment {
         return this;
     }
 
+    /**
+     * 前往Detail页面
+     *
+     * @param intent 前往Detail页面的intent
+     */
     public void goDetail(Intent intent) {
         mDetailLauncher.launch(intent);
     }
 
+    /**
+     * 动态刷新“动态”或“暂时没有更多动态”
+     */
     public void refresh() {
         if (mTweetList.size() > 0) {
             binding.noTweetLayout.setVisibility(View.GONE);
@@ -331,8 +350,7 @@ public class TweetsFragment extends Fragment {
                             for (int i = 0; i < tweetList.length(); i++) {
                                 Tweet tweet = JSONUtil.createTweetFromJSON(tweetList.getJSONObject(i));
                                 if (tweet == null) {
-                                    msg.what = APIConstant.REQUEST_ERROR;
-                                    msg.obj = getResources().getString(R.string.server_error);
+                                    msg.what = APIConstant.SERVER_ERROR;
                                     break;
                                 }
                                 mTweetList.add(tweet);

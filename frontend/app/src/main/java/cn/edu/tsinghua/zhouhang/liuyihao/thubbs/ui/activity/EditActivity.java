@@ -109,8 +109,7 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action.equals(Constant.EDIT_FROM_DRAFT)) {
-            mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, -1);
-            binding.content.setText(intent.getStringExtra(Constant.EXTRA_TWEET_CONTENT));
+            // TODO: 加载草稿
         }
         initView();
         initController();
@@ -121,9 +120,11 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        // 停止播放音频
         if (mMediaPlayer != null) {
             resetPlayer();
         }
+        // 停止播放视频
         if (binding.videoView.isPlaying()) {
             binding.videoView.stopPlayback();
         }
@@ -155,24 +156,23 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        // 九宫格
         binding.imageGroup.bindImageUriList(mImageUriList)
                 .setEditable(true)
                 .refresh();
     }
 
     private void initListener() {
-        binding.cancel.setOnClickListener(view -> new AlertDialog.Builder(this)
-                .setTitle(R.string.question_cancel_edit)
-                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
-                .create().show());
+        // 取消按钮
+        binding.cancel.setOnClickListener(view -> onBackPressed());
+        // 添加位置
         binding.addLocationButton.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setTitle(R.string.question_add_location)
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> selectLocation())
                 .create().show());
+        // 九宫格
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {
@@ -191,6 +191,7 @@ public class EditActivity extends AppCompatActivity {
                 removeImage(index);
             }
         });
+        // 音频播放按钮
         binding.audioPlayButton.setOnClickListener(view -> {
             if (mMediaPlayer == null) {
                 initPlayer();
@@ -198,10 +199,12 @@ public class EditActivity extends AppCompatActivity {
                 resetPlayer();
             }
         });
+        // 音频删除按钮
         binding.audioCloseButton.setOnClickListener(view -> {
             removeAudio();
             refresh();
         });
+        // 视频大小控制
         binding.videoView.setOnPreparedListener(mediaPlayer -> {
             DisplayMetrics dm = new DisplayMetrics();
             DisplayManager displayManager = (DisplayManager) getSystemService(
@@ -222,10 +225,12 @@ public class EditActivity extends AppCompatActivity {
             }
             binding.videoView.setLayoutParams(layoutParams);
         });
+        // 视频删除按钮
         binding.videoCloseButton.setOnClickListener(view -> {
             removeVideo();
             refresh();
         });
+        // 发步按钮
         binding.post.setOnClickListener(view -> {
             if (binding.title.getText().toString().isEmpty()) {
                 Alert.info(this, R.string.title_required);
@@ -242,6 +247,7 @@ public class EditActivity extends AppCompatActivity {
                     }))
                     .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> post(false)).create().show();
         });
+        // 保存草稿按钮
         binding.saveDraft.setOnClickListener(view -> {
             if (binding.title.getText().toString().isEmpty()) {
                 Alert.info(this, R.string.title_required);
@@ -300,6 +306,7 @@ public class EditActivity extends AppCompatActivity {
         binding.videoView.setMediaController(mMediaController);
     }
 
+    // 刷新九宫格和下方按钮
     private void refresh() {
         if (mAudioUri != null) {
             binding.imageGroup.setVisibility(View.GONE);

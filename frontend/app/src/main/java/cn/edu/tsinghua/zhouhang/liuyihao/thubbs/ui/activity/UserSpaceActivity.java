@@ -1,14 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,6 +9,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +41,7 @@ public class UserSpaceActivity extends AppCompatActivity {
     private ActivityUserSpaceBinding binding;
     private int mUserId = 0;
     private User mUser;
+    private boolean firstStart = true;
 
     private ActivityResultLauncher<Intent> mEditProfileLauncher;
 
@@ -87,14 +87,19 @@ public class UserSpaceActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final NavController navController = Navigation.findNavController(this, R.id.fragment_tweets_container);
-        Bundle bundle = new Bundle();
-        bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_USER);
-        bundle.putInt(Constant.EXTRA_USER_ID, mUserId);
-        navController.setGraph(R.navigation.tweets_navigation, bundle);
+        // 只加载一次Container（不能放在onCreate里面，此时Container还没创建）
+        if (firstStart) {
+            final NavController navController = Navigation.findNavController(this, R.id.fragment_tweets_container);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constant.TWEETS_TYPE, Constant.TWEETS_USER);
+            bundle.putInt(Constant.EXTRA_USER_ID, mUserId);
+            navController.setGraph(R.navigation.tweets_navigation, bundle);
+            firstStart = false;
+        }
     }
 
     private void initLauncher() {
+        // 编辑资料Activity
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 State.getState().refreshMyProfile(this, null);
@@ -105,11 +110,14 @@ public class UserSpaceActivity extends AppCompatActivity {
 
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.user_space);
+        // 自己
         if (mUserId == State.getState().userId) {
             binding.editProfileButton.setVisibility(View.VISIBLE);
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
-        } else {
+        }
+        // 其他人
+        else {
             binding.editProfileButton.setVisibility(View.GONE);
             binding.followButton.setVisibility(View.VISIBLE);
             binding.blackButton.setVisibility(View.VISIBLE);
@@ -117,7 +125,9 @@ public class UserSpaceActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+        // 返回
         findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
+        // 关注按钮
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {
                 mUser.isFollow = false;
@@ -129,6 +139,7 @@ public class UserSpaceActivity extends AppCompatActivity {
                 binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
             }
         });
+        // 屏蔽按钮
         binding.blackButton.setOnClickListener(view ->
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.question_black)
@@ -136,9 +147,8 @@ public class UserSpaceActivity extends AppCompatActivity {
                         }))
                         .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
                         .create().show());
-        binding.editProfileButton.setOnClickListener(view -> {
-            mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class));
-        });
+        // 编辑资料按钮
+        binding.editProfileButton.setOnClickListener(view -> mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class)));
     }
 
     private void refresh() {
@@ -181,8 +191,7 @@ public class UserSpaceActivity extends AppCompatActivity {
                         if (errCode == 0) {
                             User user = JSONUtil.createUserFromJSON(data);
                             if (user == null) {
-                                msg.what = APIConstant.REQUEST_ERROR;
-                                msg.obj = getResources().getString(R.string.server_error);
+                                msg.what = APIConstant.SERVER_ERROR;
                             } else {
                                 mUser = user;
                                 msg.what = APIConstant.REQUEST_OK;
@@ -203,6 +212,4 @@ public class UserSpaceActivity extends AppCompatActivity {
             System.err.println("Bad request format.");
         }
     }
-
-
 }

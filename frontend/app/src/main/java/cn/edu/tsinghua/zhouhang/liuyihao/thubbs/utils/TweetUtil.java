@@ -40,23 +40,29 @@ public class TweetUtil {
         binding.title.setText(tweet.getTitle());
         binding.contentText.setText(tweet.getContent());
         binding.lastModified.setText(tweet.getLastModified());
+        // 位置
         if (tweet.getLocation() != null && !Objects.equals(tweet.getLocation(), "null")) {
             binding.locationLayout.setVisibility(View.VISIBLE);
             binding.locationText.setText(tweet.getLocation());
         }
+        // 多媒体资源
         switch (tweet.getType()) {
             case Tweet.TYPE_TEXT:
                 break;
             case Tweet.TYPE_IMAGE:
                 if (tweet.getImageCount() == 0) {
                     Alert.error(context, R.string.unknown_error);
-                } else if (tweet.getImageCount() == 1) {
+                }
+                // 单张图片
+                else if (tweet.getImageCount() == 1) {
                     binding.imageView.setVisibility(View.VISIBLE);
                     Glide.with(context)
                             .load(tweet.getImageAt(0))
                             .placeholder(R.drawable.ic_loading_spinner_black_24dp)
                             .into(binding.imageView);
-                } else if (tweet.getImageCount() <= Constant.MAX_IMAGE_COUNT) {
+                }
+                // 九宫格
+                else if (tweet.getImageCount() <= Constant.MAX_IMAGE_COUNT) {
                     if (tweet.getImageList() == null) {
                         Alert.error(context, R.string.unknown_error);
                     } else {
@@ -74,6 +80,7 @@ public class TweetUtil {
                     Alert.error(context, R.string.unknown_error);
                 } else {
                     binding.audioPlayButton.setVisibility(View.VISIBLE);
+                    // 音频播放
                     binding.audioPlayButton.setOnClickListener(view -> {
                         if (mediaResource.mediaPlayer == null) {
                             mediaResource.initPlayer(context, tweet.getAudioUrl());
@@ -88,6 +95,7 @@ public class TweetUtil {
                     Alert.error(context, R.string.unknown_error);
                 } else {
                     binding.videoView.setVisibility(View.VISIBLE);
+                    // 视频大小调整
                     binding.videoView.setOnPreparedListener(mediaPlayer -> {
                         DisplayMetrics dm = new DisplayMetrics();
                         DisplayManager displayManager = (DisplayManager) context.getSystemService(
@@ -108,17 +116,21 @@ public class TweetUtil {
                         }
                         binding.videoView.setLayoutParams(layoutParams);
                     });
+                    // 视频错误
                     binding.videoView.setOnErrorListener((mediaPlayer, i, i1) -> {
                         Alert.error(context, R.string.network_error);
                         mediaResource.loaded = false;
                         binding.videoPlayButton.setVisibility(View.VISIBLE);
                         return true;
                     });
+                    // 视频播放完毕
                     binding.videoView.setOnCompletionListener(mediaPlayer -> binding.videoPlayButton.setVisibility(View.VISIBLE));
+                    // 点击视频暂停
                     binding.videoView.setOnClickListener(view -> {
                         binding.videoView.pause();
                         binding.videoPlayButton.setVisibility(View.VISIBLE);
                     });
+                    // 点击视频播放按钮播放
                     binding.videoPlayButton.setVisibility(View.VISIBLE);
                     binding.videoPlayButton.setOnClickListener(view -> {
                         if (!mediaResource.loaded) {
@@ -130,20 +142,15 @@ public class TweetUtil {
                     });
                 }
         }
+        // 评论和点赞
         binding.commentButtonText.setText(String.valueOf(tweet.getCommentCount()));
         binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
-        if (tweet.isFollow) {
-            binding.followButton.setText(R.string.button_unfollow);
-            binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
-        } else {
-            binding.followButton.setText(R.string.follow);
-            binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
-        }
         if (tweet.isLike) {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
         } else {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
+        // 关注和屏蔽
         if (tweetsType == Constant.TWEETS_USER) {
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
@@ -153,10 +160,18 @@ public class TweetUtil {
                 binding.followButton.setText("我自己");
                 binding.blackButton.setVisibility(View.GONE);
             } else {
+                if (tweet.isFollow) {
+                    binding.followButton.setText(R.string.button_unfollow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+                } else {
+                    binding.followButton.setText(R.string.follow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
+                }
                 binding.blackButton.setVisibility(View.VISIBLE);
             }
         }
         /* 监听器 */
+        // 多媒体资源
         mediaResource.registerMediaResourceListener(new MediaResource.MediaResourceListener() {
             @Override
             public void onInit() {
@@ -168,6 +183,7 @@ public class TweetUtil {
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             }
         });
+        // 关注和屏蔽
         if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserID()) {
             binding.followButton.setOnClickListener(view -> {
                 if (tweet.isFollow) {
@@ -189,6 +205,7 @@ public class TweetUtil {
             binding.followButton.setOnClickListener(null);
             binding.blackButton.setOnClickListener(null);
         }
+        // 九宫格
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {
@@ -207,11 +224,13 @@ public class TweetUtil {
 
             }
         });
+        // 单张图片
         binding.imageView.setOnClickListener(view -> {
             Intent intent = new Intent(context, ImagePreviewActivity.class);
             intent.putExtra(Constant.EXTRA_IMAGE_URL, tweet.getImageAt(0));
             context.startActivity(intent);
         });
+        // 点赞按钮
         binding.likeButton.setOnClickListener(view -> {
             if (tweet.isLike) {
                 tweet.isLike = false;
@@ -224,6 +243,7 @@ public class TweetUtil {
             }
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });
+        // 头像
         binding.authorHeadshot.setOnClickListener(view -> {
             if (tweetsType != Constant.TWEETS_USER) {
                 Intent intent = new Intent(context, UserSpaceActivity.class);
@@ -232,5 +252,4 @@ public class TweetUtil {
             }
         });
     }
-
 }
