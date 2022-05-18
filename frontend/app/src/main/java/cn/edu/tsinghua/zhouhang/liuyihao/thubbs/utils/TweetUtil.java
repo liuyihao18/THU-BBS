@@ -25,7 +25,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 public class TweetUtil {
 
     public static void bind(Context context, TweetItemBinding binding, Tweet tweet, MediaResource mediaResource,
-                            View.OnClickListener onClickFollowButtonListener,
                             View.OnClickListener onClickBlackButtonListener) {
         /* 初始化 */
         mediaResource.loaded = false;
@@ -156,9 +155,6 @@ public class TweetUtil {
             }
         });
         binding.followButton.setOnClickListener(view -> {
-            if (onClickFollowButtonListener != null) {
-                onClickBlackButtonListener.onClick(view);
-            }
             if (tweet.isFollow) {
                 tweet.isFollow = false;
                 binding.followButton.setText(R.string.follow);

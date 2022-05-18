@@ -72,7 +72,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         public void refresh() {
-            TweetUtil.bind(mContext, binding, mTweet, mediaResource, null,
+            TweetUtil.bind(mContext, binding, mTweet, mediaResource,
                     view -> {
                         int index = mTweetList.indexOf(mTweet);
                         if (index < 0) {
