@@ -7,6 +7,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,11 +92,11 @@ public class UserSpaceActivity extends AppCompatActivity {
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.user_space);
         if (mUserId == State.getState().userId) {
-            binding.settingButton.setVisibility(View.VISIBLE);
+            binding.editProfileButton.setVisibility(View.VISIBLE);
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
         } else {
-            binding.settingButton.setVisibility(View.GONE);
+            binding.editProfileButton.setVisibility(View.GONE);
             binding.followButton.setVisibility(View.VISIBLE);
             binding.blackButton.setVisibility(View.VISIBLE);
         }
@@ -103,8 +104,26 @@ public class UserSpaceActivity extends AppCompatActivity {
 
     private void initListener() {
         findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
+            onBackPressed();
         });
+        binding.followButton.setOnClickListener(view -> {
+            if (mUser.isFollow) {
+                mUser.isFollow = false;
+                binding.followButton.setText(R.string.follow);
+                binding.followButton.setBackgroundColor(getColor(R.color.pink));
+            } else {
+                mUser.isFollow = true;
+                binding.followButton.setText(R.string.button_unfollow);
+                binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
+            }
+        });
+        binding.blackButton.setOnClickListener(view ->
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_black)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                        .create().show());
     }
 
     private void refresh() {

@@ -170,7 +170,7 @@
                 tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <Button
-                android:id="@+id/setting_button"
+                android:id="@+id/edit_profile_button"
                 android:layout_width="@dimen/userspace_button_width"
                 android:layout_height="@dimen/userspace_button_height"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"

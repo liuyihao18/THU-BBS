@@ -2,6 +2,8 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
+import static cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI.type;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -21,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,25 +56,36 @@ public class TweetsFragment extends Fragment {
     private FragmentTweetsBinding binding;
     private int mType;
     private int mUserId = 0;
-    private ActivityResultLauncher<Intent> mLoginLauncher;
     private ActivityResultLauncher<Intent> mEditLauncher;
     private ActivityResultLauncher<Intent> mDetailLauncher;
     private TweetListAdapter mAdapter;
     private OnDetailReturnListener onDetailReturnListener;
+    private int mBlock = -1;
+    private boolean firstTypeSelect = true;
+    private boolean firstOrderSelect = true;
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
-                if (msg.arg2 < 0) {
+                if (msg.arg2 < 0) { // 加载
                     mAdapter.notifyItemRangeInserted(msg.arg1, mTweetList.size() - msg.arg1);
-                } else {
+                    if (mTweetList.size() - msg.arg1 > 0) {
+                        String loadStr = getString(R.string.continue_load);
+                        Alert.info(getContext(), String.format(loadStr, mTweetList.size() - msg.arg1));
+                    } else {
+                        Alert.info(getContext(), R.string.no_new_load);
+                    }
+                } else { // 刷新
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
+                    String loadStr = getString(R.string.initial_load);
+                    Alert.info(getContext(), String.format(loadStr, mTweetList.size()));
+                    binding.recyclerView.smoothScrollBy(0, 0);
                 }
-                binding.recyclerView.smoothScrollToPosition(msg.arg1);
                 refresh();
+                binding.swipeRefreshLayout.setRefreshing(false);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
@@ -93,58 +109,6 @@ public class TweetsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentTweetsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        /* 测试数据开始
-        mTweetList.add(new Tweet(
-                1, 1, Tweet.TYPE_TEXT, "Title", "Hello, world!", null,
-                "2022-05-15", 99, 99, null, null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        mTweetList.add(new Tweet(
-                2, 1, Tweet.TYPE_TEXT, "Title", "这是有位置信息的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 12, 35, null, null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        ArrayList<String> imageList = new ArrayList<>();
-        imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
-        mTweetList.add(new Tweet(
-                3, 1, Tweet.TYPE_IMAGE, "Title", "这是单张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 16, 33, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        imageList.add(Static.Image.getImageUrl("R-C.png"));
-        mTweetList.add(new Tweet(
-                4, 1, Tweet.TYPE_IMAGE, "Title", "这是多张图片的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 18, 45, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        imageList.clear();
-        for (int i = 0; i < 9; i++) {
-            imageList.add(Static.Image.getImageUrl("BingWallpaper.jpg"));
-        }
-        mTweetList.add(new Tweet(
-                5, 1, Tweet.TYPE_IMAGE, "Title", "这是九宫格~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 66, 66, new ArrayList<>(imageList), null, null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, true
-        ));
-        mTweetList.add(new Tweet(
-                6, 1, Tweet.TYPE_AUDIO, "Title", "这是有音频的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 10, 40, null,
-                Static.Audio.getAudioUrl("jump.mp3"), null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        mTweetList.add(new Tweet(
-                7, 1, Tweet.TYPE_AUDIO, "Title", "还是音频的~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 6, 23, null,
-                Static.Audio.getAudioUrl("success.mp3"), null,
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-        mTweetList.add(new Tweet(
-                8, 1, Tweet.TYPE_VIDEO, "Title", "开始有视频了~", "(116.12°E, 24.5°N)",
-                "2022-05-15", 12, 33, null,
-                null, Static.Video.getVideoUrl("test.mp4"),
-                "かみ", Static.HeadShot.getHeadShotUrl("default_headshot.jpg"), false, false
-        ));
-         测试数据结束 */
         initLauncher();
         initAdapter();
         init();
@@ -164,7 +128,6 @@ public class TweetsFragment extends Fragment {
     }
 
     private void initLauncher() {
-        mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> init());
         mEditLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 getTweetList(true);
@@ -191,14 +154,17 @@ public class TweetsFragment extends Fragment {
 
     private void initView() {
         if (State.getState().isLogin) {
-            binding.recyclerView.setVisibility(View.GONE);
+            binding.swipeRefreshLayout.setVisibility(View.VISIBLE);
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.loginRequiredLayout.setVisibility(View.GONE);
+            if (mType == Constant.TWEETS_USER) {
+                binding.menu.setVisibility(View.GONE);
+            }
             getTweetList(true);
             binding.noTweetLayout.setVisibility(View.VISIBLE);
         } else {
-            binding.recyclerView.setVisibility(View.GONE);
+            binding.swipeRefreshLayout.setVisibility(View.GONE);
             binding.loginRequiredLayout.setVisibility(View.VISIBLE);
             binding.noTweetLayout.setVisibility(View.GONE);
         }
@@ -211,17 +177,22 @@ public class TweetsFragment extends Fragment {
             });
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    // TODO: 进行搜索
-                    Alert.info(getContext(), R.string.is_searching);
+                    if (!binding.search.getText().toString().isEmpty()) {
+                        Alert.info(getContext(), R.string.is_searching);
+                    }
+                    getTweetList(true);
                 }
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;
             });
-            binding.typeSpinner.setSelection(0, true);
             binding.typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Alert.info(getContext(), getResources().getStringArray(R.array.type_array)[i]);
+                    if (firstTypeSelect) {
+                        firstTypeSelect = false;
+                    } else {
+                        getTweetList(true);
+                    }
                 }
 
                 @Override
@@ -229,15 +200,55 @@ public class TweetsFragment extends Fragment {
 
                 }
             });
-        } else {
-            binding.loginButton.setOnClickListener(view -> {
-                mLoginLauncher.launch(new Intent(getActivity(), LoginActivity.class));
+            binding.orderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (firstOrderSelect) {
+                        firstOrderSelect = false;
+                    } else {
+                        getTweetList(true);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
             });
+            binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+                getTweetList(true);
+            });
+
+            binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        if (!recyclerView.canScrollVertically(1)) { // 下拉加载
+                            binding.swipeRefreshLayout.setRefreshing(true);
+                            getTweetList(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
+        } else {
+            binding.loginButton.setOnClickListener(view -> State.getState()
+                    .setOnLoginListener(this::init)
+                    .login(getContext()));
         }
     }
 
     private void initAdapter() {
         mAdapter = new TweetListAdapter(getContext(), mTweetList, this);
+    }
+
+    public int getType() {
+        return mType;
     }
 
     public TweetsFragment setOnDetailReturnListener(OnDetailReturnListener onDetailReturnListener) {
@@ -251,10 +262,8 @@ public class TweetsFragment extends Fragment {
 
     public void refresh() {
         if (mTweetList.size() > 0) {
-            binding.recyclerView.setVisibility(View.VISIBLE);
             binding.noTweetLayout.setVisibility(View.GONE);
         } else {
-            binding.recyclerView.setVisibility(View.GONE);
             binding.noTweetLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -266,10 +275,11 @@ public class TweetsFragment extends Fragment {
         try {
             JSONObject data = new JSONObject();
             if (isRefresh) {
-                data.put(TweetAPI.block, 0);
+                mBlock = 0;
             } else {
-                data.put(TweetAPI.block, mTweetList.size());
+                mBlock++;
             }
+            data.put(TweetAPI.block, mBlock);
             data.put(TweetAPI.of, mType);
             if (mType == Constant.TWEETS_USER) {
                 data.put(TweetAPI.userId, mUserId);

@@ -2,8 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,25 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnExternalPreviewEventListener;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.lib.GlideEngine;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
@@ -51,11 +38,16 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
             RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) binding.getRoot().getLayoutParams();
             layoutParams.bottomMargin = mContext.getResources().getDimensionPixelOffset(R.dimen.activity_vertical_margin);
             binding.getRoot().setLayoutParams(layoutParams);
+            initView();
             initListener();
         }
 
+        private void initView() {
+
+        }
+
         private void initListener() {
-            binding.contentText.setOnClickListener(view -> {
+            View.OnClickListener onClickListener = view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
@@ -66,19 +58,9 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     }
                     refresh();
                 }).goDetail(intent);
-            });
-            binding.commentButton.setOnClickListener(view -> {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.setAction(Constant.DETAIL_HAVE_DATA);
-                intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-                mParent.setOnDetailReturnListener((result) -> {
-                    Intent resultIntent = result.getData();
-                    if (resultIntent != null) {
-                        mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
-                    }
-                    refresh();
-                }).goDetail(intent);
-            });
+            };
+            binding.contentLayout.setOnClickListener(onClickListener);
+            binding.commentButton.setOnClickListener(onClickListener);
         }
 
         public TweetViewHolder setTweet(Tweet tweet) {
@@ -87,7 +69,16 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         public void refresh() {
-            TweetUtil.bind(mContext, binding, mTweet, mediaResource);
+            TweetUtil.bind(mContext, binding, mTweet, mParent.getType(), mediaResource,
+                    view -> {
+                        int index = mTweetList.indexOf(mTweet);
+                        if (index < 0) {
+                            Alert.error(mContext, R.string.unknown_error);
+                        } else {
+                            mTweetList.remove(index);
+                            notifyItemRemoved(index);
+                        }
+                    });
         }
     }
 

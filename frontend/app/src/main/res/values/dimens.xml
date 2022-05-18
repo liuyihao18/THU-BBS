@@ -38,7 +38,7 @@
     <dimen name="author_headshot_size">48dp</dimen>
     <dimen name="follow_button_width">66dp</dimen>
     <dimen name="follow_button_height">40dp</dimen>
-    <dimen name="content_text_vertical_padding">4dp</dimen>
+    <dimen name="content_text_vertical_padding">8dp</dimen>
     <dimen name="content_text_horizontal_padding">8dp</dimen>
     <dimen name="tweet_horizontal_margin">4dp</dimen>
 

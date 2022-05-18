@@ -99,15 +99,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initListener() {
         findViewById(R.id.back_button).setOnClickListener(view -> {
-            Intent intent = new Intent();
-            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-            setResult(RESULT_OK, intent);
-            finish();
+            onBackPressed();
         });
     }
 
     private void bindTweet() {
-        TweetUtil.bind(this, tweetItemBinding, mTweet, mediaResource);
+        TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource, view -> finish());
     }
 
     void bindComment() {

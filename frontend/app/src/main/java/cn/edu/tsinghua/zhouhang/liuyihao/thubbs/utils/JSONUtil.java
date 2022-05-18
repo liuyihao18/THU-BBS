@@ -27,7 +27,7 @@ public class JSONUtil {
             int tweetCount = data.getInt(UserAPI.tweetCount);
             int followCount = data.getInt(UserAPI.followCount);
             int followerCount = data.getInt(UserAPI.followerCount);
-            return new User(nickname, headshot, description,
+            return new User(nickname, headshot, description, false,
                     tweetCount, followCount, followerCount);
         } catch (JSONException je) {
             return null;

@@ -1,11 +1,13 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
+
 public class Constant {
     public static final String SHARED_PREFERENCES = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.prefFile";
 
     public static final String JWT = "jwt";
     public static final String USER_ID = "userid";
-    public static final String HEADSHOT = "headshot";
+    public static final String DEFAULT_HEADSHOT = Static.HeadShot.getHeadShotUrl("default_headshot.jpg");
     public static final String TMP_DIR = "tmp";
 
     /* Permission */
@@ -23,6 +25,7 @@ public class Constant {
     public static final int TWEETS_ALL = 1; // 全部推送
     public static final int TWEETS_FOLLOW = 2; // 关注的人的推送
     public static final int TWEETS_USER = 3; // 用户的推送
+    public static final int TWEETS_DETAIL = 4; // 用户的推送
 
     /* Intent Constant */
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";

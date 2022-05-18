@@ -2,14 +2,14 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.hardware.display.DisplayManager;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -24,7 +24,8 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
 public class TweetUtil {
 
-    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, MediaResource mediaResource) {
+    public static void bind(Context context, TweetItemBinding binding, Tweet tweet, int tweetsType,
+                            MediaResource mediaResource, View.OnClickListener onClickBlackButtonListener) {
         /* 初始化 */
         mediaResource.loaded = false;
         binding.locationLayout.setVisibility(View.GONE);
@@ -89,7 +90,9 @@ public class TweetUtil {
                     binding.videoView.setVisibility(View.VISIBLE);
                     binding.videoView.setOnPreparedListener(mediaPlayer -> {
                         DisplayMetrics dm = new DisplayMetrics();
-                        context.getDisplay().getRealMetrics(dm);
+                        DisplayManager displayManager = (DisplayManager) context.getSystemService(
+                                Context.DISPLAY_SERVICE);
+                        displayManager.getDisplay(Display.DEFAULT_DISPLAY).getRealMetrics(dm);
                         int maxWidth = dm.widthPixels - 4 * context.getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
                         int maxHeight = context.getResources().getDimensionPixelSize(R.dimen.max_video_height);
                         int videoWith = mediaPlayer.getVideoWidth();
@@ -141,6 +144,18 @@ public class TweetUtil {
         } else {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
+        if (tweetsType == Constant.TWEETS_USER) {
+            binding.followButton.setVisibility(View.GONE);
+            binding.blackButton.setVisibility(View.GONE);
+        } else {
+            binding.followButton.setVisibility(View.VISIBLE);
+            if (State.getState().userId == tweet.getUserID()) {
+                binding.followButton.setText("我自己");
+                binding.blackButton.setVisibility(View.GONE);
+            } else {
+                binding.blackButton.setVisibility(View.VISIBLE);
+            }
+        }
         /* 监听器 */
         mediaResource.registerMediaResourceListener(new MediaResource.MediaResourceListener() {
             @Override
@@ -153,17 +168,27 @@ public class TweetUtil {
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             }
         });
-        binding.followButton.setOnClickListener(view -> {
-            if (tweet.isFollow) {
-                tweet.isFollow = false;
-                binding.followButton.setText(R.string.follow);
-                binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
-            } else {
-                tweet.isFollow = true;
-                binding.followButton.setText(R.string.button_unfollow);
-                binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
-            }
-        });
+        if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserID()) {
+            binding.followButton.setOnClickListener(view -> {
+                if (tweet.isFollow) {
+                    tweet.isFollow = false;
+                    binding.followButton.setText(R.string.follow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
+                } else {
+                    tweet.isFollow = true;
+                    binding.followButton.setText(R.string.button_unfollow);
+                    binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+                }
+            });
+            binding.blackButton.setOnClickListener(view -> {
+                if (onClickBlackButtonListener != null) {
+                    onClickBlackButtonListener.onClick(view);
+                }
+            });
+        } else {
+            binding.followButton.setOnClickListener(null);
+            binding.blackButton.setOnClickListener(null);
+        }
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override
             public void onClickImage(MyImageView myImageView, int index) {
@@ -200,11 +225,12 @@ public class TweetUtil {
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });
         binding.authorHeadshot.setOnClickListener(view -> {
-            Intent intent = new Intent(context, UserSpaceActivity.class);
-            intent.putExtra(Constant.EXTRA_USER_ID, tweet.getUserID());
-            context.startActivity(intent);
+            if (tweetsType != Constant.TWEETS_USER) {
+                Intent intent = new Intent(context, UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, tweet.getUserID());
+                context.startActivity(intent);
+            }
         });
     }
-
 
 }

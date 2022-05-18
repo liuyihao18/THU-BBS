@@ -1,11 +1,14 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
+                if (State.getState().onLoginListener != null) {
+                    State.getState().onLoginListener.onLogin();
+                }
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -58,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
             State.getState().userId = preferences.getInt(Constant.USER_ID, 0);
             State.getState().isLogin = true;
         }
+        State.getState().mLoginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                getMyProfile();
+            }
+        });
         getMyProfile();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

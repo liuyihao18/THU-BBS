@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.display.DisplayManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
@@ -202,7 +204,9 @@ public class EditActivity extends AppCompatActivity {
         });
         binding.videoView.setOnPreparedListener(mediaPlayer -> {
             DisplayMetrics dm = new DisplayMetrics();
-            getDisplay().getRealMetrics(dm);
+            DisplayManager displayManager = (DisplayManager) getSystemService(
+                    Context.DISPLAY_SERVICE);
+            displayManager.getDisplay(Display.DEFAULT_DISPLAY).getRealMetrics(dm);
             int maxWidth = dm.widthPixels - 2 * getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
             int maxHeight = getResources().getDimensionPixelSize(R.dimen.max_video_height);
             int videoWith = mediaPlayer.getVideoWidth();
@@ -607,42 +611,39 @@ public class EditActivity extends AppCompatActivity {
                     for (int i = 0; i < Math.min(mImageUriList.size(), Constant.MAX_IMAGE_COUNT); i++) {
                         path = Util.getPathFromUri(this, Uri.parse(mImageUriList.get(i)));
                         if (path == null) {
-                            Alert.error(this, R.string.unknown_error);
-                            return;
+                            file = new File(mImageUriList.get(i));
                         } else {
                             file = new File(path);
-                            builder.addFormDataPart(TweetAPI.image + i,
-                                    file.getName(),
-                                    RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                            );
                         }
+                        builder.addFormDataPart(TweetAPI.image + i,
+                                file.getName(),
+                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                        );
                     }
                     break;
                 case Tweet.TYPE_AUDIO:
                     path = Util.getPathFromUri(this, Uri.parse(mAudioUri));
                     if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
+                        file = new File(mAudioUri);
                     } else {
                         file = new File(path);
-                        builder.addFormDataPart(TweetAPI.audio,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
                     }
+                    builder.addFormDataPart(TweetAPI.audio,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
                     break;
                 case Tweet.TYPE_VIDEO:
                     path = Util.getPathFromUri(this, Uri.parse(mVideoUri));
                     if (path == null) {
-                        Alert.error(this, R.string.unknown_error);
-                        return;
+                        file = new File(mVideoUri);
                     } else {
                         file = new File(path);
-                        builder.addFormDataPart(TweetAPI.video,
-                                file.getName(),
-                                RequestBody.create(file, MediaType.parse("multipart/form-data"))
-                        );
                     }
+                    builder.addFormDataPart(TweetAPI.video,
+                            file.getName(),
+                            RequestBody.create(file, MediaType.parse("multipart/form-data"))
+                    );
                     break;
             }
         }
