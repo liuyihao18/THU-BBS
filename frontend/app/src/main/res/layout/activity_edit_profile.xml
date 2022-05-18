@@ -119,16 +119,28 @@
         <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
             android:id="@+id/headshot"
             android:layout_width="@dimen/image_height"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/image_height"
             android:layout_marginEnd="172dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_add_image_gray_24dp"
             tools:ignore="ImageContrastCheck" />
+
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="@dimen/button_size_medium"
+            android:layout_height="@dimen/button_size_medium"
+            android:layout_marginTop="@dimen/image_padding"
+            android:layout_marginEnd="@dimen/image_padding"
+            android:contentDescription="@string/button_close"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/headshot"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

@@ -2,13 +2,27 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.LoginActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class State {
     private static final State mState = new State();
@@ -52,5 +66,61 @@ public class State {
                     "description: " + user.description;
         }
         return result;
+    }
+
+    public void refreshMyProfile(Context context, @Nullable Handler handler) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put(UserAPI.userid, State.getState().userId);
+            UserAPI.getProfile(data, new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Message msg = new Message();
+                    msg.what = APIConstant.NETWORK_ERROR;
+                    if (handler != null) {
+                        handler.sendMessage(msg);
+                    }
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    ResponseBody body = response.body();
+                    Message msg = new Message();
+                    if (body == null) {
+                        msg.what = APIConstant.SERVER_ERROR;
+                        if (handler != null) {
+                            handler.sendMessage(msg);
+                        }
+                        return;
+                    }
+                    try {
+                        JSONObject data = new JSONObject(body.string());
+                        int errCode = data.getInt(APIConstant.ERR_CODE);
+                        if (errCode == 0) {
+                            User user = JSONUtil.createUserFromJSON(data);
+                            if (user == null) {
+                                msg.what = APIConstant.REQUEST_ERROR;
+                                msg.obj = context.getString(R.string.server_error);
+                            } else {
+                                getState().user = user;
+                                msg.what = APIConstant.REQUEST_OK;
+                            }
+                        } else {
+                            msg.what = APIConstant.REQUEST_ERROR;
+                            msg.obj = data.getString(APIConstant.ERR_MSG);
+                        }
+                        if (handler != null) {
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException je) {
+                        System.err.println("Bad response format.");
+                    } finally {
+                        body.close();
+                    }
+                }
+            });
+        } catch (JSONException je) {
+            System.err.println("Bad request format.");
+        }
     }
 }

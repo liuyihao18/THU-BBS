@@ -10,6 +10,7 @@ import android.os.Message;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.CharsetEncoder;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
@@ -95,53 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void getMyProfile() {
-        try {
-            JSONObject data = new JSONObject();
-            data.put(UserAPI.userid, State.getState().userId);
-            UserAPI.getProfile(data, new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Message msg = new Message();
-                    msg.what = APIConstant.NETWORK_ERROR;
-                    handler.sendMessage(msg);
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    Message msg = new Message();
-                    if (body == null) {
-                        msg.what = APIConstant.SERVER_ERROR;
-                        handler.sendMessage(msg);
-                        return;
-                    }
-                    try {
-                        JSONObject data = new JSONObject(body.string());
-                        int errCode = data.getInt(APIConstant.ERR_CODE);
-                        if (errCode == 0) {
-                            User user = JSONUtil.createUserFromJSON(data);
-                            if (user == null) {
-                                msg.what = APIConstant.REQUEST_ERROR;
-                                msg.obj = getResources().getString(R.string.server_error);
-                            } else {
-                                State.getState().user = user;
-                                msg.what = APIConstant.REQUEST_OK;
-                            }
-                        } else {
-                            msg.what = APIConstant.REQUEST_ERROR;
-                            msg.obj = data.getString(APIConstant.ERR_MSG);
-                        }
-                        handler.sendMessage(msg);
-                    } catch (JSONException je) {
-                        System.err.println("Bad response format.");
-                    } finally {
-                        body.close();
-                    }
-                }
-            });
-        } catch (JSONException je) {
-            System.err.println("Bad request format.");
-        }
+    public void getMyProfile() {
+        State.getState().refreshMyProfile(this, handler);
     }
 }

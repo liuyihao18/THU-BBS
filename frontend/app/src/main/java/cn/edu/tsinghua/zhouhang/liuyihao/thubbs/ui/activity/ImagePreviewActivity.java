@@ -24,9 +24,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(getColor(R.color.background_dark));
         Intent intent = getIntent();
         String imageUrl = intent.getStringExtra(Constant.EXTRA_IMAGE_URL);
-        binding.backButton.setOnClickListener(view -> {
-            finish();
-        });
+        binding.backButton.setOnClickListener(view -> onBackPressed());
         binding.imageView.setImageUrl(imageUrl);
     }
 }

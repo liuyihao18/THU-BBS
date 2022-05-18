@@ -98,9 +98,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            onBackPressed();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
     }
 
     private void bindTweet() {

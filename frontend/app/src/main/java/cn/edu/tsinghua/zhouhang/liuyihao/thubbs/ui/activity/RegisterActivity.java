@@ -74,9 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            onBackPressed();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
         binding.cancelButton.setOnClickListener(view -> finish());
         binding.okButton.setOnClickListener(view -> {
             String email = binding.emailInput.getText().toString();

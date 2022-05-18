@@ -240,9 +240,7 @@ public class EditActivity extends AppCompatActivity {
                     .setTitle(R.string.question_post)
                     .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                     }))
-                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                        post(false);
-                    }).create().show();
+                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> post(false)).create().show();
         });
         binding.saveDraft.setOnClickListener(view -> {
             if (binding.title.getText().toString().isEmpty()) {
@@ -666,13 +664,19 @@ public class EditActivity extends AppCompatActivity {
                 }
                 try {
                     JSONObject data = new JSONObject(body.string());
-                    if (isDraft) {
-                        msg.what = DRAFT_OK;
-                        if (mTweetId <= 0) {
-                            mTweetId = data.getInt(TweetAPI.tweetId);
+                    int errCode = data.getInt(APIConstant.ERR_CODE);
+                    if (errCode == 0) {
+                        if (isDraft) {
+                            msg.what = DRAFT_OK;
+                            if (mTweetId <= 0) {
+                                mTweetId = data.getInt(TweetAPI.tweetId);
+                            }
+                        } else {
+                            msg.what = POST_OK;
                         }
                     } else {
-                        msg.what = POST_OK;
+                        msg.what = APIConstant.REQUEST_ERROR;
+                        msg.obj = data.getString(APIConstant.ERR_MSG);
                     }
                     handler.sendMessage(msg);
                 } catch (JSONException je) {
