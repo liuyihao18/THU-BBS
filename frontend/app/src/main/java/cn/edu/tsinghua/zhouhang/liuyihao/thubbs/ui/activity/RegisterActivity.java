@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,10 +61,22 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+        initView();
         initListener();
     }
 
+    private void initView() {
+        ((TextView) findViewById(R.id.header_title)).setText(R.string.register_name);
+    }
+
     private void initListener() {
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+            onBackPressed();
+        });
         binding.cancelButton.setOnClickListener(view -> finish());
         binding.okButton.setOnClickListener(view -> {
             String email = binding.emailInput.getText().toString();

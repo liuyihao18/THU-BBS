@@ -91,6 +91,8 @@
 
     <!-- 用户 -->
     <string name="nickname">用户名</string>
+    <string name="description">个人简介</string>
+    <string name="headshot">头像</string>
     <string name="tweet">动态</string>
     <string name="follower">粉丝</string>
     <string name="edit_profile">编辑资料</string>

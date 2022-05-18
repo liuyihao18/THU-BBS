@@ -92,11 +92,11 @@ public class UserSpaceActivity extends AppCompatActivity {
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.user_space);
         if (mUserId == State.getState().userId) {
-            binding.settingButton.setVisibility(View.VISIBLE);
+            binding.editProfileButton.setVisibility(View.VISIBLE);
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
         } else {
-            binding.settingButton.setVisibility(View.GONE);
+            binding.editProfileButton.setVisibility(View.GONE);
             binding.followButton.setVisibility(View.VISIBLE);
             binding.blackButton.setVisibility(View.VISIBLE);
         }
@@ -104,7 +104,7 @@ public class UserSpaceActivity extends AppCompatActivity {
 
     private void initListener() {
         findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
+            onBackPressed();
         });
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {

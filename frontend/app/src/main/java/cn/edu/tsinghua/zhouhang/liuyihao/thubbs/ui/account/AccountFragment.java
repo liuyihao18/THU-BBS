@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +20,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
@@ -25,14 +28,24 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
+    private ActivityResultLauncher<Intent> mEditProfileLauncher;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        initLauncher();
         initView();
         initListener();
         return root;
+    }
+
+    private void initLauncher() {
+        mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                refresh();
+            }
+        });
     }
 
     private void initView() {
@@ -69,6 +82,13 @@ public class AccountFragment extends Fragment {
                         refresh();
                     }).
                     create().show();
+        });
+        binding.editProfileButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                mEditProfileLauncher.launch(new Intent(getContext(), EditProfileActivity.class));
+            } else {
+                State.getState().login(getContext());
+            }
         });
     }
 

@@ -162,7 +162,7 @@
         app:layout_constraintTop_toBottomOf="@+id/account_2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/setting_button"
+            android:id="@+id/edit_profile_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small">

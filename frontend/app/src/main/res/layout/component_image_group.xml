@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -25,7 +26,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button1"
@@ -36,7 +38,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,7 +58,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button2"
@@ -66,7 +70,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,7 +88,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button3"
@@ -94,7 +100,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -120,7 +127,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button4"
@@ -149,7 +157,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button5"
@@ -178,7 +187,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button6"
@@ -215,7 +225,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button7"
@@ -226,7 +237,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -244,7 +256,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button8"
@@ -255,7 +268,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -273,7 +287,8 @@
                 android:contentDescription="@null"
                 android:padding="@dimen/image_padding"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_add_image_gray_24dp" />
+                app:srcCompat="@drawable/ic_add_image_gray_24dp"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageView
                 android:id="@+id/close_button9"
@@ -284,7 +299,8 @@
                 android:contentDescription="@string/button_close"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:ignore="ImageContrastCheck" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>

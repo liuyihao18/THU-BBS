@@ -2,14 +2,14 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.hardware.display.DisplayManager;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -90,7 +90,9 @@ public class TweetUtil {
                     binding.videoView.setVisibility(View.VISIBLE);
                     binding.videoView.setOnPreparedListener(mediaPlayer -> {
                         DisplayMetrics dm = new DisplayMetrics();
-                        context.getDisplay().getRealMetrics(dm);
+                        DisplayManager displayManager = (DisplayManager) context.getSystemService(
+                                Context.DISPLAY_SERVICE);
+                        displayManager.getDisplay(Display.DEFAULT_DISPLAY).getRealMetrics(dm);
                         int maxWidth = dm.widthPixels - 4 * context.getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin);
                         int maxHeight = context.getResources().getDimensionPixelSize(R.dimen.max_video_height);
                         int videoWith = mediaPlayer.getVideoWidth();
@@ -183,7 +185,9 @@ public class TweetUtil {
                     onClickBlackButtonListener.onClick(view);
                 }
             });
-            binding.blackButton.setVisibility(View.VISIBLE);
+        } else {
+            binding.followButton.setOnClickListener(null);
+            binding.blackButton.setOnClickListener(null);
         }
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
             @Override

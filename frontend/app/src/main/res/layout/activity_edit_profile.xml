@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.EditProfileActivity">
+
+    <include
+        layout="@layout/component_header"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nickname_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <TextView
+            android:id="@+id/nickname_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/nickname"
+            android:text="@string/nickname"
+            android:textSize="@dimen/textSize_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/nickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:autofillHints=""
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/nickname_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/nickname_label"
+            tools:ignore="DuplicateSpeakableTextCheck,TouchTargetSizeCheck" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/description_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nickname_layout">
+
+        <TextView
+            android:id="@+id/description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:labelFor="@id/description"
+            android:text="@string/description"
+            android:textSize="@dimen/textSize_large"
+            app:layout_constraintEnd_toStartOf="@id/description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:autofillHints=""
+            android:background="@drawable/my_boarder_1dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:minLines="5"
+            android:paddingStart="@dimen/content_text_horizontal_padding"
+            android:paddingTop="@dimen/content_text_vertical_padding"
+            android:paddingEnd="@dimen/content_text_horizontal_padding"
+            android:paddingBottom="@dimen/content_text_vertical_padding"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="DuplicateSpeakableTextCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headshot_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_layout">
+
+        <TextView
+            android:id="@+id/headshot_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:labelFor="@id/description"
+            android:text="@string/headshot"
+            android:textSize="@dimen/textSize_large"
+            app:layout_constraintEnd_toStartOf="@id/headshot"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView
+            android:id="@+id/headshot"
+            android:layout_width="@dimen/image_height"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="172dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_add_image_gray_24dp"
+            tools:ignore="ImageContrastCheck" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/button_ok"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headshot_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>
