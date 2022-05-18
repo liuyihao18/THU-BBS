@@ -15,6 +15,7 @@ public class UserAPI {
     public static final String tweetCount = "tweet_count";
     public static final String followCount = "follow_count";
     public static final String followerCount = "follower_count";
+    public static final String isFollow = "is_follow";
 
     private static final String prefix = "/user";
 
