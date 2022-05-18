@@ -52,7 +52,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         }
 
         private void initListener() {
-            binding.contentLayout.setOnClickListener(view -> {
+            View.OnClickListener onClickListener = view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
@@ -63,19 +63,9 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     }
                     refresh();
                 }).goDetail(intent);
-            });
-            binding.commentButton.setOnClickListener(view -> {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.setAction(Constant.DETAIL_HAVE_DATA);
-                intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-                mParent.setOnDetailReturnListener((result) -> {
-                    Intent resultIntent = result.getData();
-                    if (resultIntent != null) {
-                        mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
-                    }
-                    refresh();
-                }).goDetail(intent);
-            });
+            };
+            binding.contentLayout.setOnClickListener(onClickListener);
+            binding.commentButton.setOnClickListener(onClickListener);
         }
 
         public TweetViewHolder setTweet(Tweet tweet) {
