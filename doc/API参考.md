@@ -77,10 +77,10 @@ ret:
   "nickname": string,
   "headshot": url,
   "description": string,
-  "is_follow": boolean,
   "tweet_count": int,
   "follow_count": int, /* 关注 */
   "follower_count": int, /* 粉丝 */
+  "is_follow": boolean /* 是否关注,如果是自己返回已关注 */
 }
 /* 失败情形 */
 {
@@ -385,7 +385,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/edit_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/edit_tweet', methods=['POST'])
 
 @login_required
 
@@ -501,7 +501,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/get_draft_list', methods=['POST'])
 
 @login_required
 
@@ -509,7 +509,7 @@ params:
 
 ```json
 {
-  "start": int /* 按照修改时间反向排序 */
+  "block": int /* 按照修改时间反向排序 */
 }
 ```
 
@@ -540,7 +540,7 @@ ret:
 
 > 因为太难处理网络url和本地uri的转化（总不能上传的时候混合一起上传），所以草稿只保存文字吧
 
-@bp_user.route('/user-api/v1/tweet/get_single_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/get_single_tweet', methods=['POST'])
 
 @login_required
 
@@ -581,7 +581,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/like_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/like_tweet', methods=['POST'])
 
 @login_required
 
@@ -607,7 +607,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/comment_tweet', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/comment_tweet', methods=['POST'])
 
 @login_required
 
@@ -634,7 +634,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/tweet/delete_comment', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/tweet/delete_comment', methods=['POST'])
 
 @login_required
 
