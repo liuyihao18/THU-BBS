@@ -2,17 +2,9 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -22,21 +14,30 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentTweetsBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
@@ -51,8 +52,10 @@ public class TweetsFragment extends Fragment {
     private int mUserId = 0;
     private ActivityResultLauncher<Intent> mEditLauncher;
     private ActivityResultLauncher<Intent> mDetailLauncher;
+    private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private TweetListAdapter mAdapter;
     private OnDetailReturnListener onDetailReturnListener;
+    private OnUserSpaceReturnListener onUserSpaceReturnListener;
     private int mBlock = -1;
     private boolean firstTypeSelect = true;
     private boolean firstOrderSelect = true;
@@ -100,6 +103,10 @@ public class TweetsFragment extends Fragment {
         void onDetailReturn(ActivityResult result);
     }
 
+    interface OnUserSpaceReturnListener {
+        void onUserSpaceReturn(ActivityResult result);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -132,6 +139,11 @@ public class TweetsFragment extends Fragment {
         mDetailLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (onDetailReturnListener != null) {
                 onDetailReturnListener.onDetailReturn(result);
+            }
+        });
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (onUserSpaceReturnListener != null) {
+                onUserSpaceReturnListener.onUserSpaceReturn(result);
             }
         });
     }
@@ -274,6 +286,20 @@ public class TweetsFragment extends Fragment {
      */
     public void goDetail(Intent intent) {
         mDetailLauncher.launch(intent);
+    }
+
+    public TweetsFragment setOnOnUserSpaceReturnListener(OnUserSpaceReturnListener onUserSpaceReturnListener) {
+        this.onUserSpaceReturnListener = onUserSpaceReturnListener;
+        return this;
+    }
+
+    /**
+     * 前往UserSpace页面
+     *
+     * @param intent 前往Detail页面的intent
+     */
+    public void goUserSpace(Intent intent) {
+        mUserSpaceLauncher.launch(intent);
     }
 
     /**

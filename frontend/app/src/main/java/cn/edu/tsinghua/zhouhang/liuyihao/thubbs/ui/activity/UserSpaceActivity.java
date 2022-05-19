@@ -145,7 +145,10 @@ public class UserSpaceActivity extends AppCompatActivity {
                         .setTitle(R.string.question_black)
                         .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                         }))
-                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> finish())
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                            setResult(RESULT_OK);
+                            finish();
+                        })
                         .create().show());
         // 编辑资料按钮
         binding.editProfileButton.setOnClickListener(view -> mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class)));

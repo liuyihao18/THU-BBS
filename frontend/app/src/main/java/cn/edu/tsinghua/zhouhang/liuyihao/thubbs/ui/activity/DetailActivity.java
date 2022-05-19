@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding binding;
     private TweetItemBinding tweetItemBinding;
     private final MediaResource mediaResource = new MediaResource();
+    private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private Tweet mTweet;
 
     private final LinkedList<Comment> mCommentList = new LinkedList<>();
@@ -47,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         // 获取数据
         Intent intent = getIntent();
         String action = intent.getAction();
+        initLauncher();
         initView();
         // 携带数据打开的
         if (action.equals(Constant.DETAIL_HAVE_DATA)) {
@@ -86,6 +90,15 @@ public class DetailActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private void initLauncher() {
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+    }
+
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.detail);
         if (State.getState().user != null) {
@@ -103,16 +116,23 @@ public class DetailActivity extends AppCompatActivity {
 
     private void bindTweet() {
         // 绑定动态
-        TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource, view ->
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.question_black)
-                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                        }))
-                        .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                            setResult(RESULT_OK);
-                            finish();
-                        })
-                        .create().show());
+        TweetUtil.bind(this, tweetItemBinding, mTweet, Constant.TWEETS_DETAIL, mediaResource,
+                // 屏蔽用户
+                view ->
+                        new AlertDialog.Builder(this)
+                                .setTitle(R.string.question_black)
+                                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                                }))
+                                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                                    setResult(RESULT_OK);
+                                    finish();
+                                }).create().show(),
+                // 级联屏蔽返回
+                view -> {
+                    Intent intent = new Intent(this, UserSpaceActivity.class);
+                    intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());
+                    mUserSpaceLauncher.launch(intent);
+                });
     }
 
     void bindComment() {

@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
@@ -51,7 +54,16 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        mParent.notifyRefresh();
+                        // 级联返回
+                        if (mParent.getType() == Constant.TWEETS_USER) {
+                            Activity activity = mParent.getActivity();
+                            if (activity != null) {
+                                activity.setResult(RESULT_OK);
+                                activity.finish();
+                            }
+                        } else {
+                            mParent.notifyRefresh();
+                        }
                     }
                     // 正常返回
                     else {
@@ -85,7 +97,21 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                             mTweetList.remove(index);
                             notifyItemRemoved(index);
                         }
-                    });
+                    },
+                    // 这里级联屏蔽
+                    view -> {
+                        if (mParent.getType() != Constant.TWEETS_USER) {
+                            Intent intent = new Intent(mContext, UserSpaceActivity.class);
+                            intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());
+                            mParent.setOnOnUserSpaceReturnListener(result -> {
+                                // 屏蔽用户返回
+                                if (result.getResultCode() == Activity.RESULT_OK) {
+                                    mParent.notifyRefresh();
+                                }
+                            }).goUserSpace(intent);
+                        }
+                    }
+            );
         }
     }
 
