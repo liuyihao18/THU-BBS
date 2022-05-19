@@ -5,19 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.notifications.launchedActivities.LikeActivity">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activity_like_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/like_swipe_refresh_layout"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_like_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/no_notification_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/activity_like_list">
-
+        app:layout_constraintTop_toBottomOf="@id/like_swipe_refresh_layout">
         <TextView
             android:id="@+id/no_notification_text"
             android:layout_width="wrap_content"

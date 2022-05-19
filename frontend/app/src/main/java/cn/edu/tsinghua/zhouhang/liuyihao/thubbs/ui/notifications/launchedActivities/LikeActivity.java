@@ -76,6 +76,7 @@ public class LikeActivity extends AppCompatActivity {
                 break;
             }
         }
+        binding.likeSwipeRefreshLayout.setRefreshing(false);
         return true;
     });
 
@@ -107,6 +108,7 @@ public class LikeActivity extends AppCompatActivity {
         mAdapter = new LikeListAdapter(this, likeItemContents);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.likeSwipeRefreshLayout.setOnRefreshListener(()->getLikeNotificationList(true));
     }
 
     public void refresh() {
@@ -118,6 +120,9 @@ public class LikeActivity extends AppCompatActivity {
     }
 
     public void getLikeNotificationList(boolean isRefresh) {
+        if(!binding.likeSwipeRefreshLayout.isRefreshing()) {
+            binding.likeSwipeRefreshLayout.setRefreshing(true);
+        }
         try{
             JSONObject data = new JSONObject();
             if(isRefresh) {

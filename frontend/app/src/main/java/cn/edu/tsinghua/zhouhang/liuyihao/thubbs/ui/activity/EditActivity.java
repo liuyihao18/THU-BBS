@@ -658,6 +658,7 @@ public class EditActivity extends AppCompatActivity {
                 Message msg = new Message();
                 msg.what = APIConstant.NETWORK_ERROR;
                 handler.sendMessage(msg);
+                e.printStackTrace();
             }
 
             @Override

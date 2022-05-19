@@ -120,7 +120,7 @@ public class JSONUtil {
             int userid = data.getInt(NotificationAPI.userid);
             int notification_id = data.getInt(NotificationAPI.notification_id);
             String tweet_content = data.getString(NotificationAPI.tweet_content);
-            String headshot = data.getString(NotificationAPI.headshot);
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(NotificationAPI.headshot));
             String like_user_name = data.getString(NotificationAPI.like_user_name);
             return new LikeItemContent(
                     headshot,
