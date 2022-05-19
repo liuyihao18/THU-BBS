@@ -48,6 +48,10 @@ public class TweetAPI {
         BaseRequest.post(getUrl("/create_tweet"), body, callback);
     }
 
+    public static void editTweet(MultipartBody body, Callback callback) {
+        BaseRequest.post(getUrl("/edit_tweet"), body, callback);
+    }
+
     public static void getTweetList(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_tweet_list"), data, callback);
     }

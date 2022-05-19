@@ -147,12 +147,18 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.question_cancel_edit)
-                .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
-                }))
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> super.onBackPressed())
-                .create().show();
+        if (binding.title.getText().toString().isEmpty() &&
+                binding.content.getText().toString().isEmpty() &&
+                mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
+            super.onBackPressed();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.question_cancel_edit)
+                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                    }))
+                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> super.onBackPressed())
+                    .create().show();
+        }
     }
 
     private void initView() {
@@ -230,15 +236,10 @@ public class EditActivity extends AppCompatActivity {
             removeVideo();
             refresh();
         });
-        // 发步按钮
+        // 发布按钮
         binding.post.setOnClickListener(view -> {
             if (binding.title.getText().toString().isEmpty()) {
                 Alert.info(this, R.string.title_required);
-                return;
-            }
-            if (binding.content.getText().toString().isEmpty() &&
-                    mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
-                Alert.info(this, R.string.post_required);
                 return;
             }
             new AlertDialog.Builder(this)
@@ -251,11 +252,6 @@ public class EditActivity extends AppCompatActivity {
         binding.saveDraft.setOnClickListener(view -> {
             if (binding.title.getText().toString().isEmpty()) {
                 Alert.info(this, R.string.title_required);
-                return;
-            }
-            if (binding.content.getText().toString().isEmpty() &&
-                    mAudioUri == null && mVideoUri == null && mImageUriList.size() == 0) {
-                Alert.info(this, R.string.post_required);
                 return;
             }
             post(true);
@@ -694,7 +690,7 @@ public class EditActivity extends AppCompatActivity {
             }
         };
         if (mTweetId > 0) {
-            // TODO: editTweet
+            TweetAPI.editTweet(builder.build(), callback);
         } else {
             TweetAPI.createTweet(builder.build(), callback);
         }

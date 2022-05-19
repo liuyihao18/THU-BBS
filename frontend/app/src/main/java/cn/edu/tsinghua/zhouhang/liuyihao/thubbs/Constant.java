@@ -33,8 +33,6 @@ public class Constant {
 
     /* Intent Constant */
     // Action
-    public static final String DETAIL_HAVE_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_HAVE_DATA";
-    public static final String DETAIL_NO_DATA = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.DETAIL_NO_DATA";
     public static final String EDIT_FROM_DRAFT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_DRAFT";
     public static final String EDIT_FROM_BLANK = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_BLANK";
     // Extra
