@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 
@@ -86,6 +88,30 @@ public class JSONUtil {
                     likeCount, imageList, audioUrl, videoUrl, nickName, headshot, isFollow, isLike);
         } catch (JSONException je) {
             je.printStackTrace();
+            return null;
+        }
+    }
+
+    public static LikeItemContent createLikeFromJSON(@NonNull JSONObject data) {
+        try{
+            int tweet_id = data.getInt(NotificationAPI.tweet_id);
+            String like_time = data.getString(NotificationAPI.like_time);
+            int userid = data.getInt(NotificationAPI.userid);
+            int notification_id = data.getInt(NotificationAPI.notification_id);
+            String tweet_content = data.getString(NotificationAPI.tweet_content);
+            String headshot = data.getString(NotificationAPI.headshot);
+            String like_user_name = data.getString(NotificationAPI.like_user_name);
+            return new LikeItemContent(
+                    headshot,
+                    like_user_name,
+                    like_time,
+                    tweet_id,
+                    tweet_content,
+                    userid,
+                    notification_id
+            );
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
             return null;
         }
     }

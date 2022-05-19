@@ -419,6 +419,40 @@ ret:
 }
 ```
 
+@bp_user.route('/user-api/v1/tweet/get_tweet_text', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+    "tweet_id": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0,
+  "tweet_content": string
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
+
+
+
+
+
+
+
 - [x] @bp_user.route('/user-api/v1/tweet/edit_tweet', methods=['POST'])
 
 @login_required
@@ -732,7 +766,7 @@ ret:
 
 ## 通知
 
-@bp_user.route('/user-api/v1/notification/get_message_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/notification/get_message_list', methods=['POST'])
 
 @login_required
 
@@ -740,7 +774,7 @@ params:
 
 ```json
 {
-  "start": int
+  "block": int
 }
 ```
 
@@ -765,7 +799,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/notification/get_like_notification_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/notification/get_like_notification_list', methods=['POST'])
 
 @login_required
 
@@ -773,7 +807,7 @@ params:
 
 ```json
 {
-  "start": int
+  "block": int
 }
 ```
 
@@ -781,6 +815,7 @@ ret:
 
 ```json
 /* 成功情形 */
+/* 注意返回的tweet_id可能已经被删除 */
 {
   "errCode": 0,
   "notification_list": [
@@ -788,7 +823,10 @@ ret:
       "notification_id": int,
       "userid": int,
       "tweet_id": int,
-      "like_time": string
+      "like_time": string,
+      "tweet_content": string,
+      "headshot": string,
+      "like_user_name": string
     }
   ]
 }
@@ -799,7 +837,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/notification/delete_like_notification', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/notification/delete_like_notification', methods=['POST'])
 
 @login_required
 
@@ -825,7 +863,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/notification/get_comment_notification_list', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/notification/get_comment_notification_list', methods=['POST'])
 
 @login_required
 
@@ -841,6 +879,7 @@ ret:
 
 ```json
 /* 成功情形 */
+/* 注意返回的tweet_id可能已经被删除 */
 {
   "errCode": 0,
   "notification_list": [
