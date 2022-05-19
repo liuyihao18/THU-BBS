@@ -126,22 +126,17 @@ public class DetailActivity extends AppCompatActivity {
         initLauncher();
         initView();
         initListener();
-        // 携带数据打开的
-        if (action.equals(Constant.DETAIL_HAVE_DATA)) {
-            mTweet = (Tweet) intent.getSerializableExtra(Constant.EXTRA_TWEET);
-            bindTweet();
-            getCommentList();
+        mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, 0);
+        if (mTweetId == 0) {
+            Alert.error(this, R.string.unknown_error);
+            finish();
         }
-        // 不携带数据打开的
-        else if (action.equals(Constant.DETAIL_NO_DATA)) {
-            mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, 0);
-            if (mTweetId == 0) {
-                Alert.error(this, R.string.unknown_error);
-                onBackPressed();
-            } else {
-                getSingleTweet();
-            }
-        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSingleTweet();
     }
 
     @Override

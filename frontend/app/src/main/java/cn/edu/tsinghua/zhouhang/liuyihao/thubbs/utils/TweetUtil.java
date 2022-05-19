@@ -3,39 +3,24 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-
 import com.bumptech.glide.Glide;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.Objects;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class TweetUtil {
 
@@ -54,7 +39,12 @@ public class TweetUtil {
         binding.authorHeadshot.setImageUrl(tweet.getHeadshot());
         binding.authorName.setText(tweet.getNickname());
         binding.title.setText(tweet.getTitle());
-        binding.contentText.setText(tweet.getContent());
+        if (tweet.getContent().isEmpty()) {
+            binding.contentText.setVisibility(View.GONE);
+        } else {
+            binding.contentText.setVisibility(View.VISIBLE);
+            binding.contentText.setText(tweet.getContent());
+        }
         binding.lastModified.setText(tweet.getLastModified());
         // 位置
         if (tweet.getLocation() != null && !Objects.equals(tweet.getLocation(), "null")) {

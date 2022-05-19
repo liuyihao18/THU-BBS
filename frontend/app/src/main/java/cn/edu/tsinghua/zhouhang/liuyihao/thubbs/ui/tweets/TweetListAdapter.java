@@ -49,7 +49,6 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         private void initListener() {
             View.OnClickListener onClickListener = view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.setAction(Constant.DETAIL_NO_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET_ID, mTweet.getTweetID());
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
