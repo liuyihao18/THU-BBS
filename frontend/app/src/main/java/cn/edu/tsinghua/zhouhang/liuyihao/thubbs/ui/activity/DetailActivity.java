@@ -92,6 +92,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initLauncher() {
         mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            // 级联返回（从个人主页返回详情）
             if (result.getResultCode() == RESULT_OK) {
                 setResult(RESULT_OK);
                 finish();
@@ -127,7 +128,7 @@ public class DetailActivity extends AppCompatActivity {
                                     setResult(RESULT_OK);
                                     finish();
                                 }).create().show(),
-                // 级联屏蔽返回
+                // 级联返回（从个人主页返回详情）
                 view -> {
                     Intent intent = new Intent(this, UserSpaceActivity.class);
                     intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());

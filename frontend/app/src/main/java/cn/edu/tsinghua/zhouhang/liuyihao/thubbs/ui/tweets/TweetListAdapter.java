@@ -54,14 +54,16 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        // 级联返回
+                        // 级联返回（从详情返回个人主页）
                         if (mParent.getType() == Constant.TWEETS_USER) {
                             Activity activity = mParent.getActivity();
                             if (activity != null) {
                                 activity.setResult(RESULT_OK);
                                 activity.finish();
                             }
-                        } else {
+                        }
+                        // 级联返回（从详情返回广场）
+                        else {
                             mParent.notifyRefresh();
                         }
                     }
@@ -98,13 +100,13 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                             notifyItemRemoved(index);
                         }
                     },
-                    // 这里级联屏蔽
+                    // 点击头像
                     view -> {
                         if (mParent.getType() != Constant.TWEETS_USER) {
                             Intent intent = new Intent(mContext, UserSpaceActivity.class);
                             intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());
                             mParent.setOnOnUserSpaceReturnListener(result -> {
-                                // 屏蔽用户返回
+                                // 级联返回（从个人主页返回广场）
                                 if (result.getResultCode() == Activity.RESULT_OK) {
                                     mParent.notifyRefresh();
                                 }
