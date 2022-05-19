@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -130,7 +131,10 @@ public class LikeActivity extends AppCompatActivity {
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if (!recyclerView.canScrollVertically(1)) {
+                        if(!recyclerView.canScrollVertically(-1)) {
+                            getLikeNotificationList(true);
+                        }
+                        else if (!recyclerView.canScrollVertically(1)) {
                             getLikeNotificationList(false);
                         }
                     }
@@ -144,7 +148,7 @@ public class LikeActivity extends AppCompatActivity {
         }
     }
 
-    public void refresh() {
+    private void refresh() {
         if(likeItemContents.size() > 0) {
             binding.noNotificationLayout.setVisibility(View.GONE);
         } else{
@@ -152,12 +156,13 @@ public class LikeActivity extends AppCompatActivity {
         }
     }
 
-    public void getLikeNotificationList(boolean isRefresh) {
+    private void getLikeNotificationList(boolean isRefresh) {
         if(!binding.likeSwipeRefreshLayout.isRefreshing()) {
             binding.likeSwipeRefreshLayout.setRefreshing(true);
         }
         try{
             JSONObject data = new JSONObject();
+            Log.d("isRefresh", String.valueOf(isRefresh));
             if(isRefresh) {
                 mBlock = 0;
             } else{

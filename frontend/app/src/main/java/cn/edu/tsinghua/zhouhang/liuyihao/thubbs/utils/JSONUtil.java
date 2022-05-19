@@ -17,6 +17,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
@@ -130,6 +131,32 @@ public class JSONUtil {
                     tweet_content,
                     userid,
                     notification_id
+            );
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+            return null;
+        }
+    }
+
+    public static CommentItemContent createCommentNotificationFromJson(@NonNull JSONObject data) {
+        try{
+            int tweet_id = data.getInt(NotificationAPI.tweet_id);
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(NotificationAPI.headshot));
+            int userid = data.getInt(NotificationAPI.userid);
+            int notification_id = data.getInt(NotificationAPI.notification_id);
+            String content = data.getString(NotificationAPI.content);
+            String comment_user_name = data.getString(NotificationAPI.comment_user_name);
+            String comment_time = data.getString(NotificationAPI.comment_time);
+            String tweet_content = data.getString(NotificationAPI.tweet_content);
+            return new CommentItemContent(
+                    headshot,
+                    comment_user_name,
+                    comment_time,
+                    tweet_id,
+                    content,
+                    userid,
+                    notification_id,
+                    tweet_content
             );
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();

@@ -116,6 +116,7 @@
     <string name="like">赞同</string>
     <string name="comment">评论</string>
     <string name="like_your_tweet">%s赞了你的动态</string>
+    <string name="comment_your_tweet">%s评论了你的动态</string>
     <string name="new_like_notification">wow，又有%d条新通知</string>
     <string name="no_more_notification">没有新的通知</string>
     <string name="load_some_notification">已经为您加载了%d条通知</string>
