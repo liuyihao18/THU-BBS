@@ -12,6 +12,9 @@ public class NotificationAPI {
     public static final String like_time = "like_time";
     public static final String tweet_content = "tweet_content";
     public static final String like_user_name = "like_user_name";
+    public static final String comment_time = "comment_time";
+    public static final String content = "content";
+    public static final String comment_user_name = "comment_user_name";
     public static final String headshot = "headshot";
 
     private static final String prefix = "/notification";
