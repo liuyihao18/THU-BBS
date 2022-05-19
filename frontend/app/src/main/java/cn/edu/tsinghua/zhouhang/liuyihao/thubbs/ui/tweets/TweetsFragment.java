@@ -2,7 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -59,6 +57,7 @@ public class TweetsFragment extends Fragment {
     private int mBlock = -1;
     private boolean firstTypeSelect = true;
     private boolean firstOrderSelect = true;
+    private boolean isLoading = false;
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
@@ -96,6 +95,7 @@ public class TweetsFragment extends Fragment {
                 Alert.error(getContext(), R.string.server_error);
                 break;
         }
+        isLoading = false;
         return true;
     });
 
@@ -319,6 +319,11 @@ public class TweetsFragment extends Fragment {
     private void getTweetList(boolean isRefresh) {
         if (mType == Constant.TWEETS_EMPTY) {
             return;
+        }
+        if (isLoading) {
+            return;
+        } else {
+            isLoading = true;
         }
         if (!binding.swipeRefreshLayout.isRefreshing()) {
             binding.swipeRefreshLayout.setRefreshing(true);
