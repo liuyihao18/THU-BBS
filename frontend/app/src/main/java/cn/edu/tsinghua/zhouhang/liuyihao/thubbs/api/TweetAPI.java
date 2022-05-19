@@ -1,7 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 
-import com.google.android.exoplayer2.C;
-
 import org.json.JSONObject;
 
 import okhttp3.Callback;
@@ -52,6 +50,10 @@ public class TweetAPI {
 
     public static void getTweetList(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_tweet_list"), data, callback);
+    }
+
+    public static void getSingleTweet(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/get_single_tweet"), data, callback);
     }
 
     public static void likeTweet(JSONObject data, Callback callback) {

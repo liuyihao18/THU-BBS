@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Queue;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
@@ -37,6 +38,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.ThreadUtil;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
@@ -56,18 +58,32 @@ public class DetailActivity extends AppCompatActivity {
     private Tweet mTweet;
     private boolean isLoading = false;
     private final LinkedList<Comment> mCommentList = new LinkedList<>();
+    private final Queue<OnGetCommentSuccessListener> mOnGetCommentSuccessCallback = new LinkedList<>();
+
+    interface OnGetCommentSuccessListener {
+        void onGetCommentSuccess();
+    }
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case GET_COMMENT_LIST_OK:
                 // 刷新
                 bindComment();
+                // 延迟回调
+                ThreadUtil.delay(Constant.DELAY_TIME, () -> {
+                    if (!mOnGetCommentSuccessCallback.isEmpty()) {
+                        mOnGetCommentSuccessCallback.remove().onGetCommentSuccess();
+                    }
+                });
                 break;
             case COMMENT_OK:
                 Alert.info(this, R.string.comment_success);
                 binding.comment.setText(null);
                 getCommentList();
-                binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                mOnGetCommentSuccessCallback.add(() -> binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN));
+                break;
+            case DELETE_COMMENT_OK:
+                Alert.info(this, R.string.delete_comment_success);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -119,6 +135,7 @@ public class DetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+        setResult(RESULT_CANCELED, intent);
         super.onBackPressed();
     }
 
@@ -178,6 +195,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     void bindComment() {
+        binding.commentGroup.removeAllViews();
         for (int i = binding.commentGroup.getChildCount(); i < mCommentList.size(); i++) {
             Comment comment = mCommentList.get(i);
             CommentItemBinding commentItemBinding = CommentItemBinding.inflate(getLayoutInflater(), binding.commentGroup, false);

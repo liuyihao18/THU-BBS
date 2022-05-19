@@ -53,7 +53,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == RESULT_OK) {
                         // 级联返回（从详情返回个人主页）
                         if (mParent.getType() == Constant.TWEETS_USER) {
                             Activity activity = mParent.getActivity();
