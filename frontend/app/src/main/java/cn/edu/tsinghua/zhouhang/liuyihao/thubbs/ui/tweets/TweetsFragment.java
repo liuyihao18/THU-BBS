@@ -2,7 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
@@ -59,6 +57,7 @@ public class TweetsFragment extends Fragment {
     private int mBlock = -1;
     private boolean firstTypeSelect = true;
     private boolean firstOrderSelect = true;
+    private boolean isLoading = false;
 
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
@@ -69,22 +68,20 @@ public class TweetsFragment extends Fragment {
                 if (msg.arg2 < 0) {
                     mAdapter.notifyItemRangeInserted(msg.arg1, mTweetList.size() - msg.arg1);
                     if (mTweetList.size() - msg.arg1 > 0) {
-                        String loadStr = getString(R.string.continue_load);
+                        String loadStr = getString(R.string.continue_load_tweet);
                         Alert.info(getContext(), String.format(loadStr, mTweetList.size() - msg.arg1));
                     } else {
-                        Alert.info(getContext(), R.string.no_new_load);
+                        Alert.info(getContext(), R.string.no_new_load_tweet);
                     }
                 }
                 // 刷新
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
-                    String loadStr = getString(R.string.initial_load);
+                    String loadStr = getString(R.string.initial_load_tweet);
                     Alert.info(getContext(), String.format(loadStr, mTweetList.size()));
-                    binding.recyclerView.smoothScrollBy(0, 0);
                 }
                 refresh();
-                binding.swipeRefreshLayout.setRefreshing(false);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
@@ -96,6 +93,8 @@ public class TweetsFragment extends Fragment {
                 Alert.error(getContext(), R.string.server_error);
                 break;
         }
+        isLoading = false;
+        binding.swipeRefreshLayout.setRefreshing(false);
         return true;
     });
 
@@ -116,6 +115,7 @@ public class TweetsFragment extends Fragment {
         initAdapter();
         initType();
         init();
+        getTweetList(true);
         return root;
     }
 
@@ -177,7 +177,6 @@ public class TweetsFragment extends Fragment {
             // 初始获取数据
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            getTweetList(true);
         }
         // 未登录
         else {
@@ -244,7 +243,6 @@ public class TweetsFragment extends Fragment {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if (!recyclerView.canScrollVertically(1)) { // 已致底部
-                            binding.swipeRefreshLayout.setRefreshing(true);
                             getTweetList(false);
                         }
                     }
@@ -320,6 +318,14 @@ public class TweetsFragment extends Fragment {
     private void getTweetList(boolean isRefresh) {
         if (mType == Constant.TWEETS_EMPTY) {
             return;
+        }
+        if (isLoading) {
+            return;
+        } else {
+            isLoading = true;
+        }
+        if (!binding.swipeRefreshLayout.isRefreshing()) {
+            binding.swipeRefreshLayout.setRefreshing(true);
         }
         try {
             JSONObject data = new JSONObject();

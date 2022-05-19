@@ -12,6 +12,7 @@ public class Constant {
     public static final String DEFAULT_HEADSHOT = Static.HeadShot.getHeadShotUrl("default_headshot.jpg");
     public static final String TMP_DIR = "tmp";
     public static final int LOGIN_OK = 0;
+    public static final int DELAY_TIME = 50;
 
     /* 权限 */
     public static final int LOCATION_PERMISSION = 0;

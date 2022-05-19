@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 
@@ -87,7 +89,26 @@ public class JSONUtil {
             return new Tweet(tweetId, userId, type, title, content, location, lastModified, commentCount,
                     likeCount, imageList, audioUrl, videoUrl, nickName, headshot, isFollow, isLike);
         } catch (JSONException je) {
-            je.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 从数据创建评论
+     *
+     * @param data 服务器返回的JSON
+     * @return 成功返回动态，失败返回空
+     */
+    public static Comment createCommentFromJSON(@NotNull JSONObject data) {
+        try {
+            int commentId = data.getInt(TweetAPI.commentId);
+            int userId = data.getInt(TweetAPI.userId);
+            String content = data.getString(TweetAPI.content);
+            String nickname = data.getString(TweetAPI.nickname);
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(TweetAPI.headshot));
+            String commentTime = data.getString(TweetAPI.commentTime);
+            return new Comment(commentId, userId, nickname, headshot, content, commentTime);
+        } catch (JSONException je) {
             return null;
         }
     }

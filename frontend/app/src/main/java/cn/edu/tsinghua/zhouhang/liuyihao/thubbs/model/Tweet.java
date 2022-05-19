@@ -21,9 +21,9 @@ public class Tweet implements Serializable {
     private final ArrayList<String> imageList;
     private final String audioUrl;
     private final String videoUrl;
-    private final int commentCount;
     private final String nickname;
     private final String headshot;
+    public int commentCount;
     public int likeCount;
     public boolean isFollow;
     public boolean isLike;

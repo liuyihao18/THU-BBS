@@ -3,24 +3,39 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Objects;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class TweetUtil {
 
@@ -159,6 +174,7 @@ public class TweetUtil {
             binding.followButton.setVisibility(View.VISIBLE);
             if (State.getState().userId == tweet.getUserID()) {
                 binding.followButton.setText("我自己");
+                binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
                 binding.blackButton.setVisibility(View.GONE);
             } else {
                 if (tweet.isFollow) {
@@ -188,13 +204,17 @@ public class TweetUtil {
         if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserID()) {
             binding.followButton.setOnClickListener(view -> {
                 if (tweet.isFollow) {
-                    tweet.isFollow = false;
-                    binding.followButton.setText(R.string.follow);
-                    binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
+                    NoMoreWantToDoAPI.unfollow(context, tweet.getUserID(), () -> {
+                        tweet.isFollow = false;
+                        binding.followButton.setText(R.string.follow);
+                        binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
+                    });
                 } else {
-                    tweet.isFollow = true;
-                    binding.followButton.setText(R.string.button_unfollow);
-                    binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+                    NoMoreWantToDoAPI.follow(context, tweet.getUserID(), () -> {
+                        tweet.isFollow = true;
+                        binding.followButton.setText(R.string.button_unfollow);
+                        binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
+                    });
                 }
             });
             binding.blackButton.setOnClickListener(view -> {
@@ -237,10 +257,12 @@ public class TweetUtil {
                 tweet.isLike = false;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
                 tweet.likeCount--;
+                NoMoreWantToDoAPI.cancelLikeTweet(context, tweet.getTweetID(), null);
             } else {
                 tweet.isLike = true;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
                 tweet.likeCount++;
+                NoMoreWantToDoAPI.likeTweet(context, tweet.getTweetID(), null);
             }
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });
@@ -251,4 +273,5 @@ public class TweetUtil {
             }
         });
     }
+
 }

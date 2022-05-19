@@ -127,6 +127,9 @@ public class ImageGroup extends ConstraintLayout {
      * 刷新图片的显示
      */
     public void refresh() {
+        if (getContext() == null) {
+            return;
+        }
         if (mImageUriList == null) {
             Alert.error(getContext(), R.string.unknown_error);
             return;

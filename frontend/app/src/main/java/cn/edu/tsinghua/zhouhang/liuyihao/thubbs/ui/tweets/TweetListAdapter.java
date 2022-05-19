@@ -49,11 +49,11 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         private void initListener() {
             View.OnClickListener onClickListener = view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.setAction(Constant.DETAIL_HAVE_DATA);
-                intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+                intent.setAction(Constant.DETAIL_NO_DATA);
+                intent.putExtra(Constant.EXTRA_TWEET_ID, mTweet.getTweetID());
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == RESULT_OK) {
                         // 级联返回（从详情返回个人主页）
                         if (mParent.getType() == Constant.TWEETS_USER) {
                             Activity activity = mParent.getActivity();

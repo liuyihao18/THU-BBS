@@ -27,11 +27,13 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserSpaceBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -130,13 +132,17 @@ public class UserSpaceActivity extends AppCompatActivity {
         // 关注按钮
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {
-                mUser.isFollow = false;
-                binding.followButton.setText(R.string.follow);
-                binding.followButton.setBackgroundColor(getColor(R.color.pink));
+                NoMoreWantToDoAPI.unfollow(this, mUserId, () -> {
+                    mUser.isFollow = false;
+                    binding.followButton.setText(R.string.follow);
+                    binding.followButton.setBackgroundColor(getColor(R.color.pink));
+                });
             } else {
-                mUser.isFollow = true;
-                binding.followButton.setText(R.string.button_unfollow);
-                binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
+                NoMoreWantToDoAPI.follow(this, mUserId, () -> {
+                    mUser.isFollow = true;
+                    binding.followButton.setText(R.string.button_unfollow);
+                    binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
+                });
             }
         });
         // 屏蔽按钮
@@ -165,6 +171,13 @@ public class UserSpaceActivity extends AppCompatActivity {
         binding.tweetCount.setText(String.valueOf(mUser.tweetCount));
         binding.followCount.setText(String.valueOf(mUser.followCount));
         binding.followerCount.setText(String.valueOf(mUser.followerCount));
+        if (mUser.isFollow) {
+            binding.followButton.setText(R.string.button_unfollow);
+            binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
+        } else {
+            binding.followButton.setText(R.string.follow);
+            binding.followButton.setBackgroundColor(getColor(R.color.pink));
+        }
     }
 
     private void getProfile() {

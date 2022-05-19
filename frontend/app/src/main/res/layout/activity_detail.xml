@@ -11,93 +11,120 @@
         layout="@layout/component_header"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/tweet"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/comment_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@color/white"
-                app:layout_constraintTop_toBottomOf="@+id/tweet">
-
-                <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView
-                    android:id="@+id/comment_headshot"
-                    android:layout_width="@dimen/author_headshot_size"
-                    android:layout_height="@dimen/author_headshot_size"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_account_circle_black_24dp" />
-
-                <EditText
-                    android:id="@+id/comment"
-                    android:layout_width="0dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/tweet"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/activity_vertical_margin"
-                    android:layout_marginEnd="@dimen/activity_vertical_margin"
-                    android:autofillHints=""
-                    android:background="@drawable/my_boarder_1dp"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="@string/comment_hint"
-                    android:inputType="textMultiLine"
-                    android:minLines="3"
-                    android:paddingStart="@dimen/content_text_horizontal_padding"
-                    android:paddingTop="@dimen/content_text_vertical_padding"
-                    android:paddingEnd="@dimen/content_text_horizontal_padding"
-                    android:paddingBottom="@dimen/content_text_vertical_padding"
-                    android:scrollbars="vertical"
-                    app:layout_constraintBottom_toBottomOf="@id/send_button"
-                    app:layout_constraintEnd_toStartOf="@+id/send_button"
-                    app:layout_constraintStart_toEndOf="@id/comment_headshot"
-                    app:layout_constraintTop_toTopOf="@id/comment_headshot"
-                    tools:ignore="TextContrastCheck" />
+                    android:background="@color/white"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/send_button"
-                    android:layout_width="@dimen/follow_button_width"
-                    android:layout_height="@dimen/follow_button_height"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:padding="0dp"
-                    android:text="@string/button_send"
-                    android:textSize="@dimen/textSize_small"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/comment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:background="@color/white"
+                    app:layout_constraintTop_toBottomOf="@+id/tweet">
+
+                    <cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView
+                        android:id="@+id/comment_headshot"
+                        android:layout_width="@dimen/author_headshot_size"
+                        android:layout_height="@dimen/author_headshot_size"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_account_circle_black_24dp" />
+
+                    <EditText
+                        android:id="@+id/comment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/activity_vertical_margin"
+                        android:layout_marginEnd="@dimen/activity_vertical_margin"
+                        android:autofillHints=""
+                        android:background="@drawable/my_boarder_1dp"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="@string/comment_hint"
+                        android:inputType="textMultiLine"
+                        android:minLines="3"
+                        android:paddingStart="@dimen/content_text_horizontal_padding"
+                        android:paddingTop="@dimen/content_text_vertical_padding"
+                        android:paddingEnd="@dimen/content_text_horizontal_padding"
+                        android:paddingBottom="@dimen/content_text_vertical_padding"
+                        android:scrollbars="vertical"
+                        app:layout_constraintBottom_toBottomOf="@id/send_button"
+                        app:layout_constraintEnd_toStartOf="@+id/send_button"
+                        app:layout_constraintStart_toEndOf="@id/comment_headshot"
+                        app:layout_constraintTop_toTopOf="@id/comment_headshot"
+                        tools:ignore="TextContrastCheck" />
+
+                    <Button
+                        android:id="@+id/send_button"
+                        android:layout_width="@dimen/follow_button_width"
+                        android:layout_height="@dimen/follow_button_height"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:padding="0dp"
+                        android:text="@string/button_send"
+                        android:textSize="@dimen/textSize_small"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/scroll_view_padding_bottom"
+                    app:layout_constraintTop_toBottomOf="@id/comment_layout" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/no_comment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
+                    app:layout_constraintTop_toBottomOf="@id/comment_group">
+
+                    <TextView
+                        android:id="@+id/no_tweet_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_comment_hint"
+                        android:textSize="@dimen/textSize_big"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/comment_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/scroll_view_padding_bottom"
-                app:layout_constraintTop_toBottomOf="@id/comment_layout" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

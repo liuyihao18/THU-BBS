@@ -31,6 +31,9 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     public void setImageUrl(String url) {
+        if (getContext() == null) {
+            return;
+        }
         Glide.with(getContext())
                 .load(url)
                 .placeholder(R.drawable.ic_loading_spinner_black_24dp)
