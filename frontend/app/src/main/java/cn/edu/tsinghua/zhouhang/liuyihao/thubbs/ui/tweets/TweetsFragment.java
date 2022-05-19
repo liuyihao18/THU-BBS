@@ -244,7 +244,6 @@ public class TweetsFragment extends Fragment {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if (!recyclerView.canScrollVertically(1)) { // 已致底部
-                            binding.swipeRefreshLayout.setRefreshing(true);
                             getTweetList(false);
                         }
                     }
@@ -320,6 +319,9 @@ public class TweetsFragment extends Fragment {
     private void getTweetList(boolean isRefresh) {
         if (mType == Constant.TWEETS_EMPTY) {
             return;
+        }
+        if (!binding.swipeRefreshLayout.isRefreshing()) {
+            binding.swipeRefreshLayout.setRefreshing(true);
         }
         try {
             JSONObject data = new JSONObject();
