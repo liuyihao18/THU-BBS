@@ -49,15 +49,17 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 intent.setAction(Constant.DETAIL_HAVE_DATA);
                 intent.putExtra(Constant.EXTRA_TWEET, mTweet);
                 mParent.setOnDetailReturnListener((result) -> {
-                    // 屏蔽用户
+                    // 屏蔽用户返回
                     if (result.getResultCode() == Activity.RESULT_OK) {
+                        mParent.notifyRefresh();
+                    }
+                    // 正常返回
+                    else {
                         Intent resultIntent = result.getData();
                         if (resultIntent != null) {
                             mTweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
                         }
                         refresh();
-                    } else {
-                        mParent.getTweetList(true);
                     }
                 }).goDetail(intent);
             };

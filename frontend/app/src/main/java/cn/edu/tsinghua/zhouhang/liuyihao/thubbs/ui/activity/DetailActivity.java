@@ -83,7 +83,6 @@ public class DetailActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent();
         intent.putExtra(Constant.EXTRA_TWEET, mTweet);
-        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
@@ -110,8 +109,7 @@ public class DetailActivity extends AppCompatActivity {
                         .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                         }))
                         .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                            Intent intent = new Intent();
-                            intent.putExtra(Constant.EXTRA_TWEET, mTweet);
+                            setResult(RESULT_OK);
                             finish();
                         })
                         .create().show());
