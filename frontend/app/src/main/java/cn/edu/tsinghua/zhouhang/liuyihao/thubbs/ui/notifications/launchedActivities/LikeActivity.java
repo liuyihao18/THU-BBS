@@ -20,7 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
@@ -90,7 +92,9 @@ public class LikeActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        initView();
         initRecyclerView();
+        getLikeNotificationList(true);
     }
 
     @Override
@@ -103,12 +107,41 @@ public class LikeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void initView() {
+        if (State.getState().isLogin) {
+            binding.likeSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            binding.noNotificationLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            binding.likeSwipeRefreshLayout.setVisibility(View.GONE);
+            binding.noNotificationLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initRecyclerView() {
         RecyclerView recyclerView = binding.activityLikeList;
         mAdapter = new LikeListAdapter(this, likeItemContents);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.likeSwipeRefreshLayout.setOnRefreshListener(()->getLikeNotificationList(true));
+        if(State.getState().isLogin) {
+            binding.likeSwipeRefreshLayout.setOnRefreshListener(() -> getLikeNotificationList(true));
+            binding.activityLikeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        if (!recyclerView.canScrollVertically(1)) {
+                            getLikeNotificationList(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
+        }
     }
 
     public void refresh() {
