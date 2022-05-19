@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,6 +38,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -52,36 +54,20 @@ public class DetailActivity extends AppCompatActivity {
     private final MediaResource mediaResource = new MediaResource();
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private Tweet mTweet;
-    private int mBlock = -1;
     private boolean isLoading = false;
     private final LinkedList<Comment> mCommentList = new LinkedList<>();
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
             case GET_COMMENT_LIST_OK:
-                // 加载
-                if (msg.arg2 < 0) {
-                    if (mCommentList.size() - msg.arg1 > 0) {
-                        String loadStr = getString(R.string.continue_load_comment);
-                        Alert.info(this, String.format(loadStr, mCommentList.size() - msg.arg1));
-                    } else {
-                        Alert.info(this, R.string.no_new_load_comment);
-                    }
-                    bindComment(false);
-                }
                 // 刷新
-                else {
-                    String loadStr = getString(R.string.initial_load_comment);
-                    Alert.info(this, String.format(loadStr, mCommentList.size()));
-                    binding.scrollView.smoothScrollBy(0, 0);
-                    bindComment(true);
-                }
-                refresh();
+                bindComment();
                 break;
             case COMMENT_OK:
                 Alert.info(this, R.string.comment_success);
                 binding.comment.setText(null);
-                getCommentList(true);
+                getCommentList();
+                binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -121,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
         if (action.equals(Constant.DETAIL_HAVE_DATA)) {
             mTweet = (Tweet) intent.getSerializableExtra(Constant.EXTRA_TWEET);
             bindTweet();
-            getCommentList(true);
+            getCommentList();
         }
         // 不携带数据打开的
         else if (action.equals(Constant.DETAIL_NO_DATA)) {
@@ -162,7 +148,12 @@ public class DetailActivity extends AppCompatActivity {
         // 返回
         findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
         // 发送评论按钮
-        binding.sendButton.setOnClickListener(view -> commentTweet());
+        binding.sendButton.setOnClickListener(view -> {
+            commentTweet();
+            Util.HideKeyBoard(this, view);
+        });
+        // 下拉刷新
+        binding.swipeRefreshLayout.setOnRefreshListener(this::getCommentList);
     }
 
     private void bindTweet() {
@@ -186,24 +177,29 @@ public class DetailActivity extends AppCompatActivity {
                 });
     }
 
-    void bindComment(boolean isRefresh) {
-        if (isRefresh) {
-            binding.commentGroup.removeAllViews();
-        }
+    void bindComment() {
         for (int i = binding.commentGroup.getChildCount(); i < mCommentList.size(); i++) {
+            Comment comment = mCommentList.get(i);
             CommentItemBinding commentItemBinding = CommentItemBinding.inflate(getLayoutInflater(), binding.commentGroup, false);
-            commentItemBinding.headshot.setImageUrl(mCommentList.get(i).getHeadshot());
-            commentItemBinding.nickname.setText(mCommentList.get(i).getNickname());
-            commentItemBinding.commentTime.setText(mCommentList.get(i).getCommentTime());
-            commentItemBinding.content.setText(mCommentList.get(i).getContent());
-            if (mCommentList.get(i).getUserId() == State.getState().userId) {
+            commentItemBinding.headshot.setImageUrl(comment.getHeadshot());
+            commentItemBinding.nickname.setText(comment.getNickname());
+            commentItemBinding.commentTime.setText(comment.getCommentTime());
+            commentItemBinding.content.setText(comment.getContent());
+            if (comment.getUserId() == State.getState().userId) {
                 commentItemBinding.closeButton.setVisibility(View.VISIBLE);
-                int finalII = i;
-                commentItemBinding.closeButton.setOnClickListener(view -> {
-                    deleteComment(mCommentList.get(finalII).getCommentId());
-                    mCommentList.remove(finalII);
-                    binding.commentGroup.removeViewAt(finalII);
-                });
+                commentItemBinding.closeButton.setOnClickListener(view -> new AlertDialog.Builder(this)
+                        .setTitle(R.string.question_delete_comment)
+                        .setNegativeButton(R.string.button_cancel, ((dialogInterface, ii) -> {
+                        }))
+                        .setPositiveButton(R.string.button_ok, (dialogInterface, ii) -> {
+                            int index = mCommentList.indexOf(comment);
+                            if (index >= 0) {
+                                deleteComment(comment.getCommentId());
+                                mCommentList.remove(index);
+                                binding.commentGroup.removeViewAt(index);
+                            }
+                        })
+                        .create().show());
             } else {
                 commentItemBinding.closeButton.setVisibility(View.GONE);
             }
@@ -220,18 +216,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 动态刷新“评论”或“暂时没有更多评论”
-     */
-    public void refresh() {
-        if (mCommentList.size() > 0) {
-            binding.noCommentLayout.setVisibility(View.GONE);
-        } else {
-            binding.noCommentLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void getCommentList(boolean isRefresh) {
+    private void getCommentList() {
         if (isLoading) {
             return;
         } else {
@@ -243,12 +228,6 @@ public class DetailActivity extends AppCompatActivity {
         try {
             JSONObject data = new JSONObject();
             data.put(TweetAPI.tweetId, mTweet.getTweetID());
-            if (isRefresh) {
-                mBlock = 0;
-            } else {
-                mBlock++;
-            }
-            data.put(TweetAPI.block, mBlock);
             TweetAPI.getTweetCommentList(data, new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -271,14 +250,7 @@ public class DetailActivity extends AppCompatActivity {
                         int errCode = data.getInt(APIConstant.ERR_CODE);
                         if (errCode == 0) {
                             msg.what = GET_COMMENT_LIST_OK;
-                            if (isRefresh) {
-                                msg.arg1 = 0;
-                                msg.arg2 = mCommentList.size();
-                                mCommentList.clear();
-                            } else {
-                                msg.arg1 = mCommentList.size();
-                                msg.arg2 = -1;
-                            }
+                            mCommentList.clear();
                             JSONArray tweetList = data.getJSONArray(TweetAPI.commentList);
                             for (int i = 0; i < tweetList.length(); i++) {
                                 Comment comment = JSONUtil.createCommentFromJSON(tweetList.getJSONObject(i));

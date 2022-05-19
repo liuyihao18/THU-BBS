@@ -80,7 +80,7 @@ public class TweetsFragment extends Fragment {
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
                     String loadStr = getString(R.string.initial_load_tweet);
                     Alert.info(getContext(), String.format(loadStr, mTweetList.size()));
-                    binding.recyclerView.smoothScrollBy(0, 0);
+                    binding.recyclerView.smoothScrollToPosition(0);
                 }
                 refresh();
                 break;
