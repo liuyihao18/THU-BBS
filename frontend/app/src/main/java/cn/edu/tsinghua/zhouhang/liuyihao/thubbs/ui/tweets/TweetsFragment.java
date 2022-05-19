@@ -242,7 +242,9 @@ public class TweetsFragment extends Fragment {
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if (!recyclerView.canScrollVertically(1)) { // 已致底部
+                        if (!recyclerView.canScrollVertically(-1)) {
+                            getTweetList(true);
+                        } else if (!recyclerView.canScrollVertically(1)) { // 已致底部
                             getTweetList(false);
                         }
                     }
