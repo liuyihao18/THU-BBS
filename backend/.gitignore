@@ -1,0 +1,8 @@
+*.yaml
+Dockerfile
+.env
+__pycache__/
+migrations/
+*.conf
+static/
+!template.config.yaml
