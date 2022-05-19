@@ -68,22 +68,21 @@ public class TweetsFragment extends Fragment {
                 if (msg.arg2 < 0) {
                     mAdapter.notifyItemRangeInserted(msg.arg1, mTweetList.size() - msg.arg1);
                     if (mTweetList.size() - msg.arg1 > 0) {
-                        String loadStr = getString(R.string.continue_load);
+                        String loadStr = getString(R.string.continue_load_tweet);
                         Alert.info(getContext(), String.format(loadStr, mTweetList.size() - msg.arg1));
                     } else {
-                        Alert.info(getContext(), R.string.no_new_load);
+                        Alert.info(getContext(), R.string.no_new_load_tweet);
                     }
                 }
                 // 刷新
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mTweetList.size());
-                    String loadStr = getString(R.string.initial_load);
+                    String loadStr = getString(R.string.initial_load_tweet);
                     Alert.info(getContext(), String.format(loadStr, mTweetList.size()));
                     binding.recyclerView.smoothScrollBy(0, 0);
                 }
                 refresh();
-                binding.swipeRefreshLayout.setRefreshing(false);
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
@@ -96,6 +95,7 @@ public class TweetsFragment extends Fragment {
                 break;
         }
         isLoading = false;
+        binding.swipeRefreshLayout.setRefreshing(false);
         return true;
     });
 
@@ -116,6 +116,7 @@ public class TweetsFragment extends Fragment {
         initAdapter();
         initType();
         init();
+        getTweetList(true);
         return root;
     }
 
@@ -177,7 +178,6 @@ public class TweetsFragment extends Fragment {
             // 初始获取数据
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            getTweetList(true);
         }
         // 未登录
         else {

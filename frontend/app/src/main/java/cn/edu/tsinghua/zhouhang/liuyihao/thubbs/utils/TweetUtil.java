@@ -257,7 +257,7 @@ public class TweetUtil {
                 tweet.isLike = false;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
                 tweet.likeCount--;
-                // TODO: cancel like tweet
+                NoMoreWantToDoAPI.cancelLikeTweet(context, tweet.getTweetID(), null);
             } else {
                 tweet.isLike = true;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);

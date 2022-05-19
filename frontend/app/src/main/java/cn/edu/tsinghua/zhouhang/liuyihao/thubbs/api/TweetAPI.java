@@ -35,6 +35,10 @@ public class TweetAPI {
     public static final String headshot = "headshot";
     public static final String isFollow = "is_follow";
     public static final String isLike = "is_like";
+    public static final String commentId = "comment_id";
+    public static final String commentTime = "comment_time";
+    public static final String commentList = "comment_list";
+    public static final String comment = "comment";
 
     private static final String prefix = "/tweet";
 
@@ -57,4 +61,17 @@ public class TweetAPI {
     public static void cancelLikeTweet(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/cancel_like_tweet"), data, callback);
     }
+
+    public static void getTweetCommentList(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/get_tweet_comment_list"), data, callback);
+    }
+
+    public static void commentTweet(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/comment_tweet"), data, callback);
+    }
+
+    public static void deleteComment(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/delete_comment"), data, callback);
+    }
+
 }

@@ -45,6 +45,10 @@ public class NoMoreWantToDoAPI {
         doCMD(context, tweet_id, CMD_LIKE_TWEET, onCMDSuccessListener);
     }
 
+    public static void cancelLikeTweet(Context context, int tweed_id, OnCMDSuccessListener onCMDSuccessListener) {
+        doCMD(context, tweed_id, CMD_CANCEL_LIKE_TWEET, onCMDSuccessListener);
+    }
+
     private static void doCMD(Context context, int id, int cmd, OnCMDSuccessListener onCMDSuccessListener) {
         Handler handler = new Handler(Looper.myLooper(), msg -> {
             switch (msg.what) {
@@ -71,6 +75,7 @@ public class NoMoreWantToDoAPI {
                     data.put(RelationAPI.followId, id);
                     break;
                 case CMD_LIKE_TWEET:
+                case CMD_CANCEL_LIKE_TWEET:
                     data.put(TweetAPI.tweetId, id);
                     break;
             }
@@ -121,6 +126,9 @@ public class NoMoreWantToDoAPI {
                     break;
                 case CMD_LIKE_TWEET:
                     TweetAPI.likeTweet(data, callback);
+                    break;
+                case CMD_CANCEL_LIKE_TWEET:
+                    TweetAPI.cancelLikeTweet(data, callback);
                     break;
             }
         } catch (JSONException je) {
