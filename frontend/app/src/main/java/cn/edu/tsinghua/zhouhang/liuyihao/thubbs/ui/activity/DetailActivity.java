@@ -47,16 +47,17 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class DetailActivity extends AppCompatActivity {
-    private final int GET_COMMENT_LIST_OK = 1;
-    private final int COMMENT_OK = 2;
-    private final int DELETE_COMMENT_OK = 3;
+    private final int GET_SINGLE_TWEET_OK = 1;
+    private final int GET_COMMENT_LIST_OK = 2;
+    private final int COMMENT_OK = 3;
+    private final int DELETE_COMMENT_OK = 4;
 
     private ActivityDetailBinding binding;
     private TweetItemBinding tweetItemBinding;
     private final MediaResource mediaResource = new MediaResource();
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private Tweet mTweet;
-    private boolean isLoading = false;
+    private int mTweetId = 0;
     private final LinkedList<Comment> mCommentList = new LinkedList<>();
     private final Queue<OnGetCommentSuccessListener> mOnGetCommentSuccessCallback = new LinkedList<>();
 
@@ -66,6 +67,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
+            case GET_SINGLE_TWEET_OK:
+                bindTweet();
+                getCommentList();
+                break;
             case GET_COMMENT_LIST_OK:
                 // 刷新
                 bindComment();
@@ -79,6 +84,9 @@ public class DetailActivity extends AppCompatActivity {
             case COMMENT_OK:
                 Alert.info(this, R.string.comment_success);
                 binding.comment.setText(null);
+                // 评论 + 1
+                mTweet.commentCount++;
+                tweetItemBinding.commentButtonText.setText(String.valueOf(mTweet.getCommentCount()));
                 getCommentList();
                 mOnGetCommentSuccessCallback.add(() -> binding.scrollView.fullScroll(ScrollView.FOCUS_DOWN));
                 break;
@@ -95,7 +103,6 @@ public class DetailActivity extends AppCompatActivity {
                 Alert.error(this, R.string.server_error);
                 break;
         }
-        isLoading = false;
         binding.swipeRefreshLayout.setRefreshing(false);
         return true;
     });
@@ -127,7 +134,13 @@ public class DetailActivity extends AppCompatActivity {
         }
         // 不携带数据打开的
         else if (action.equals(Constant.DETAIL_NO_DATA)) {
-            // TODO: 获取动态数据
+            mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, 0);
+            if (mTweetId == 0) {
+                Alert.error(this, R.string.unknown_error);
+                onBackPressed();
+            } else {
+                getSingleTweet();
+            }
         }
     }
 
@@ -215,6 +228,9 @@ public class DetailActivity extends AppCompatActivity {
                                 deleteComment(comment.getCommentId());
                                 mCommentList.remove(index);
                                 binding.commentGroup.removeViewAt(index);
+                                // 评论 - 1
+                                mTweet.commentCount--;
+                                tweetItemBinding.commentButtonText.setText(String.valueOf(mTweet.getCommentCount()));
                             }
                         })
                         .create().show());
@@ -234,12 +250,57 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void getCommentList() {
-        if (isLoading) {
-            return;
-        } else {
-            isLoading = true;
+    private void getSingleTweet() {
+        if (!binding.swipeRefreshLayout.isRefreshing()) {
+            binding.swipeRefreshLayout.setRefreshing(true);
         }
+        try {
+            JSONObject data = new JSONObject();
+            data.put(TweetAPI.tweetId, mTweetId);
+            TweetAPI.getSingleTweet(data, new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Message msg = new Message();
+                    msg.what = APIConstant.NETWORK_ERROR;
+                    handler.sendMessage(msg);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    ResponseBody body = response.body();
+                    Message msg = new Message();
+                    if (body == null) {
+                        msg.what = APIConstant.SERVER_ERROR;
+                        handler.sendMessage(msg);
+                        return;
+                    }
+                    try {
+                        JSONObject data = new JSONObject(body.string());
+                        int errCode = data.getInt(APIConstant.ERR_CODE);
+                        if (errCode == 0) {
+                            msg.what = GET_SINGLE_TWEET_OK;
+                            mTweet = JSONUtil.createTweetFromJSON(data);
+                            if (mTweet == null) {
+                                msg.what = APIConstant.SERVER_ERROR;
+                            }
+                        } else {
+                            msg.what = APIConstant.REQUEST_ERROR;
+                            msg.obj = data.getString(APIConstant.ERR_MSG);
+                        }
+                        handler.sendMessage(msg);
+                    } catch (JSONException je) {
+                        System.err.println("Bad response format.");
+                    } finally {
+                        body.close();
+                    }
+                }
+            });
+        } catch (JSONException je) {
+            System.err.println("Bad request format.");
+        }
+    }
+
+    private void getCommentList() {
         if (!binding.swipeRefreshLayout.isRefreshing()) {
             binding.swipeRefreshLayout.setRefreshing(true);
         }
