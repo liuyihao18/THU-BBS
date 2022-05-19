@@ -27,6 +27,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserSpaceBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
@@ -131,13 +132,13 @@ public class UserSpaceActivity extends AppCompatActivity {
         // 关注按钮
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {
-                TweetUtil.unfollow(this, mUserId, () -> {
+                NoMoreWantToDoAPI.unfollow(this, mUserId, () -> {
                     mUser.isFollow = false;
                     binding.followButton.setText(R.string.follow);
                     binding.followButton.setBackgroundColor(getColor(R.color.pink));
                 });
             } else {
-                TweetUtil.follow(this, mUserId, () -> {
+                NoMoreWantToDoAPI.follow(this, mUserId, () -> {
                     mUser.isFollow = true;
                     binding.followButton.setText(R.string.button_unfollow);
                     binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
