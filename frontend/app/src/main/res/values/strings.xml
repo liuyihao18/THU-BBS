@@ -23,6 +23,7 @@
     <string name="button_unfollow">已关注</string>
     <string name="button_send">发送</string>
     <string name="button_setting">编辑资料</string>
+    <string name="button_white">取消屏蔽</string>
 
     <!-- 提示 -->
     <string name="title_hint">标题</string>

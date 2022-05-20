@@ -1,11 +1,12 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
-public class UserItemContent {
+public class UserListItem {
     private final int userId;
     private final String nickname;
     private final String headshot;
+    public boolean isFollow = true;
 
-    public UserItemContent(int userId, String nickname, String headshot) {
+    public UserListItem(int userId, String nickname, String headshot) {
         this.userId = userId;
         this.nickname = nickname;
         this.headshot = headshot;

@@ -148,6 +148,10 @@ public class TweetsFragment extends Fragment {
         });
     }
 
+    private void initAdapter() {
+        mAdapter = new TweetListAdapter(getContext(), mTweetList, this);
+    }
+
     private void initType() {
         // 首先确认类型
         Bundle bundle = getArguments();
@@ -174,7 +178,7 @@ public class TweetsFragment extends Fragment {
                 binding.menu.setVisibility(View.GONE);
                 binding.fab.setVisibility(View.GONE);
             }
-            // 初始获取数据
+            // 设置recycleView
             binding.recyclerView.setAdapter(mAdapter);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -264,10 +268,6 @@ public class TweetsFragment extends Fragment {
                             .setOnLoginListener(this::init)
                             .login(getContext()));
         }
-    }
-
-    private void initAdapter() {
-        mAdapter = new TweetListAdapter(getContext(), mTweetList, this);
     }
 
     public int getType() {
