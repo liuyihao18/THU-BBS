@@ -198,10 +198,7 @@ public class TweetsFragment extends Fragment {
             // 搜索按钮
             binding.search.setOnEditorActionListener((textView, i, keyEvent) -> {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    if (!binding.search.getText().toString().isEmpty()) {
-                        Alert.info(getContext(), R.string.is_searching);
-                        getTweetList(true);
-                    }
+                    getTweetList(true);
                 }
                 Util.HideKeyBoard(getActivity(), textView);
                 return true;
