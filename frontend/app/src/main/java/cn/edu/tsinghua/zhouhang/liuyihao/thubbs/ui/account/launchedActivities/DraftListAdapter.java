@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -11,8 +12,10 @@ import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.DraftItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.DraftViewHolder> {
     private final LinkedList<Draft> mDraftList;
@@ -31,6 +34,23 @@ public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.Draf
 
         private void initListener() {
 
+            binding.closeButton.setOnClickListener(view -> new AlertDialog.Builder(mContext)
+                    .setTitle(R.string.question_delete_draft)
+                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                    }))
+                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                        int index = mDraftList.indexOf(mDraft);
+                        if (index < 0) {
+                            Alert.error(mContext, R.string.unknown_error);
+                        } else {
+                            NoErrorAPI.deleteTweet(mContext, mDraft.getTweetId(), () -> {
+                                Alert.info(mContext, R.string.delete_draft_success);
+                                mDraftList.remove(index);
+                                notifyItemRemoved(index);
+                            });
+                        }
+                    }).
+                    create().show());
         }
 
         public DraftViewHolder setDraft(Draft draft) {
@@ -52,7 +72,6 @@ public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.Draf
             } else {
                 binding.contentText.setText(mDraft.getContent());
             }
-
         }
     }
 

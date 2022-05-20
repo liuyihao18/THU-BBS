@@ -41,7 +41,9 @@
     <string name="question_post">确定发布？</string>
     <string name="question_logout">确定退出登录？</string>
     <string name="question_black">确定屏蔽该用户？</string>
+    <string name="question_white">确定取消屏蔽？</string>
     <string name="question_delete_comment">确定删除评论？</string>
+    <string name="question_delete_draft">确定删除草稿？</string>
 
     <!-- 登录/注册 -->
     <string name="login_name">登录</string>
@@ -79,6 +81,7 @@
     <string name="no_new_load_comment">没有更多的评论了~</string>
     <string name="comment_success">评论成功</string>
     <string name="delete_comment_success">删除评论成功</string>
+    <string name="delete_draft_success">删除草稿成功</string>
 
     <!-- 编辑 -->
     <string name="edit_name">编辑</string>

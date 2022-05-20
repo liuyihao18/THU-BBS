@@ -31,6 +31,7 @@ public class NoErrorAPI {
     private static final int CMD_WHITE = 4;
     private static final int CMD_LIKE_TWEET = 5;
     private static final int CMD_CANCEL_LIKE_TWEET = 6;
+    private static final int CMD_DELETE_TWEET = 7;
 
     public static void follow(Context context, int userid, OnSuccessListener onSuccessListener) {
         doCMD(context, userid, CMD_FOLLOW, onSuccessListener);
@@ -54,6 +55,10 @@ public class NoErrorAPI {
 
     public static void white(Context context, int white_id, OnSuccessListener onSuccessListener) {
         doCMD(context, white_id, CMD_WHITE, onSuccessListener);
+    }
+
+    public static void deleteTweet(Context context, int tweet_id, OnSuccessListener onSuccessListener) {
+        doCMD(context, tweet_id, CMD_DELETE_TWEET, onSuccessListener);
     }
 
     private static void doCMD(Context context, int id, int cmd, OnSuccessListener onSuccessListener) {
@@ -83,6 +88,7 @@ public class NoErrorAPI {
                     break;
                 case CMD_LIKE_TWEET:
                 case CMD_CANCEL_LIKE_TWEET:
+                case CMD_DELETE_TWEET:
                     data.put(TweetAPI.tweetId, id);
                     break;
                 case CMD_BLACK:
@@ -144,6 +150,9 @@ public class NoErrorAPI {
                     break;
                 case CMD_CANCEL_LIKE_TWEET:
                     TweetAPI.cancelLikeTweet(data, callback);
+                    break;
+                case CMD_DELETE_TWEET:
+                    TweetAPI.deleteTweet(data, callback);
                     break;
             }
         } catch (JSONException je) {

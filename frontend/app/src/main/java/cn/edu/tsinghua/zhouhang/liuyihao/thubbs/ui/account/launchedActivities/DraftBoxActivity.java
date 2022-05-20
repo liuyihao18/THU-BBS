@@ -30,6 +30,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityDraftBoxBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import okhttp3.Call;
@@ -134,6 +135,12 @@ public class DraftBoxActivity extends AppCompatActivity implements GoEditInterfa
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
             }
+        });
+        // 添加按钮
+        binding.fab.setOnClickListener(view -> {
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.setAction(Constant.EDIT_FROM_BLANK);
+            mEditLauncher.launch(intent);
         });
     }
 

@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -92,18 +93,23 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                 case Constant.BLACK_LIST:
                     binding.button.setText(R.string.button_white);
                     binding.button.setBackgroundColor(mContext.getColor(R.color.button_disabled));
-                    binding.button.setOnClickListener(view -> {
-                        int index = mUserList.indexOf(mUserListItem);
-                        if (index < 0) {
-                            Alert.error(mContext, R.string.unknown_error);
-                        } else {
-                            NoErrorAPI.white(mContext, mUserListItem.getUserId(), () -> {
-                                Alert.info(mContext, R.string.white_success);
-                                mUserList.remove(index);
-                                notifyItemRemoved(index);
-                            });
-                        }
-                    });
+                    binding.button.setOnClickListener(view -> new AlertDialog.Builder(mContext)
+                            .setTitle(R.string.question_white)
+                            .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                            }))
+                            .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                                int index = mUserList.indexOf(mUserListItem);
+                                if (index < 0) {
+                                    Alert.error(mContext, R.string.unknown_error);
+                                } else {
+                                    NoErrorAPI.white(mContext, mUserListItem.getUserId(), () -> {
+                                        Alert.info(mContext, R.string.white_success);
+                                        mUserList.remove(index);
+                                        notifyItemRemoved(index);
+                                    });
+                                }
+                            }).
+                            create().show());
                     break;
             }
         }

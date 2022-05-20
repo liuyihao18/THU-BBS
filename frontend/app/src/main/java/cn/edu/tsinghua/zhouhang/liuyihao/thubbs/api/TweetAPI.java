@@ -76,6 +76,11 @@ public class TweetAPI {
         BaseRequest.post(getUrl("/get_tweet_comment_list"), data, callback);
     }
 
+    public static void deleteTweet(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/delete_tweet"), data, callback);
+    }
+
+
     public static void commentTweet(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/comment_tweet"), data, callback);
     }
