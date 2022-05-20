@@ -22,7 +22,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListItemViewHolder> {
     private final LinkedList<UserListItem> mUserList;
-    private final int mType;
+    private final int mListType;
     private final Context mContext;
     private final GoUserSpaceInterface mParent;
 
@@ -62,7 +62,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                 }
                 binding.description.setText(description);
             }
-            switch (mType) {
+            switch (mListType) {
                 case Constant.FOLLOW_LIST:
                     if (mUserListItem.isFollow) {
                         binding.button.setText(R.string.button_unfollow);
@@ -88,7 +88,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                     });
                     break;
                 case Constant.FAN_LIST:
-                    binding.button.setVisibility(View.GONE);
+                    binding.button.setText(R.string.follower);
                     break;
                 case Constant.BLACK_LIST:
                     binding.button.setText(R.string.button_white);
@@ -110,10 +110,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         }
     }
 
-    public UserListAdapter(Context context, LinkedList<UserListItem> userList, int type, GoUserSpaceInterface parent) {
+    public UserListAdapter(Context context, LinkedList<UserListItem> userList, int listType, GoUserSpaceInterface parent) {
         mContext = context;
         mUserList = userList;
-        mType = type;
+        mListType = listType;
         mParent = parent;
     }
 

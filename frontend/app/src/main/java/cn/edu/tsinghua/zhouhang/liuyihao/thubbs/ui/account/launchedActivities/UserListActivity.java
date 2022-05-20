@@ -98,7 +98,9 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
 
     private void initLauncher() {
         mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            getUserList(true);
+            if (mListType != Constant.FAN_LIST) {
+                getUserList(true);
+            }
             if (onUserSpaceReturnListener != null) {
                 onUserSpaceReturnListener.onUserSpaceReturn(result);
             }
