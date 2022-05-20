@@ -79,10 +79,10 @@ public class UserSpaceActivity extends AppCompatActivity {
             Alert.error(this, R.string.unknown_error);
             finish();
         }
-        getProfile();
         initLauncher();
         initView();
         initListener();
+        getProfile();
     }
 
     @Override
@@ -160,6 +160,14 @@ public class UserSpaceActivity extends AppCompatActivity {
                         .create().show());
         // 编辑资料按钮
         binding.editProfileButton.setOnClickListener(view -> mEditProfileLauncher.launch(new Intent(this, EditProfileActivity.class)));
+        // 头像
+        binding.headshot.setOnClickListener(view -> {
+            if (mUser != null) {
+                Intent intent = new Intent(this, ImagePreviewActivity.class);
+                intent.putExtra(Constant.EXTRA_IMAGE_URL, mUser.headshot);
+                startActivity(intent);
+            }
+        });
     }
 
     private void refresh() {
