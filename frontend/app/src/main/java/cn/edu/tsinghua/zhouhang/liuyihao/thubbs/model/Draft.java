@@ -1,6 +1,8 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
-public class Draft {
+import java.io.Serializable;
+
+public class Draft implements Serializable {
     private final int tweetId;
     private final String title;
     private final String content;

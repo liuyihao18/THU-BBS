@@ -45,6 +45,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityEditBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.ImageGroup;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
@@ -109,7 +110,11 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String action = intent.getAction();
         if (action.equals(Constant.EDIT_FROM_DRAFT)) {
-            // TODO: 加载草稿
+            Draft draft = (Draft) intent.getSerializableExtra(Constant.EXTRA_DRAFT);
+            mTweetId = draft.getTweetId();
+            binding.title.setText(draft.getTitle());
+            binding.content.setText(draft.getContent());
+            mLocation = draft.getLocation();
         }
         initView();
         initController();

@@ -46,8 +46,8 @@ public class Constant {
     // Extra
     public static final String EXTRA_EMAIL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.constant.EXTRA_EMAIL";
     public static final String EXTRA_TWEET = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET";
+    public static final String EXTRA_DRAFT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_DRAFT";
     public static final String EXTRA_TWEET_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_ID";
-    public static final String EXTRA_TWEET_CONTENT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_TWEET_CONTENT";
     public static final String EXTRA_IMAGE_URL = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_IMAGE_URL";
     public static final String EXTRA_USER_ID = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EXTRA_USER_ID";
 }

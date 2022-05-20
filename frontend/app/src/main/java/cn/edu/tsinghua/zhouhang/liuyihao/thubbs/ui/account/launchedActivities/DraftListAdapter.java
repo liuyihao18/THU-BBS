@@ -2,6 +2,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.DraftItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
 public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.DraftViewHolder> {
@@ -33,7 +36,12 @@ public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.Draf
         }
 
         private void initListener() {
-
+            binding.getRoot().setOnClickListener(view -> {
+                Intent intent = new Intent(mContext, EditActivity.class);
+                intent.setAction(Constant.EDIT_FROM_DRAFT);
+                intent.putExtra(Constant.EXTRA_DRAFT, mDraft);
+                mParent.goEdit(intent);
+            });
             binding.closeButton.setOnClickListener(view -> new AlertDialog.Builder(mContext)
                     .setTitle(R.string.question_delete_draft)
                     .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
