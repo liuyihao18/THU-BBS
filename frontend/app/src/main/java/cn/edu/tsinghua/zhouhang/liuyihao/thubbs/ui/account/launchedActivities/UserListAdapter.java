@@ -52,7 +52,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
         public void refresh() {
             binding.headshot.setImageUrl(mUserListItem.getHeadshot());
             binding.nickname.setText(mUserListItem.getNickname());
-            binding.description.setText(R.string.description_empty);
+            if (mUserListItem.getDescription().isEmpty()) {
+                binding.description.setText(R.string.description_empty);
+            } else {
+                String description = mUserListItem.getDescription();
+                if (description.length() > Constant.MAX_DIGEST_LENGTH) {
+                    description = description.substring(0, Constant.MAX_DIGEST_LENGTH);
+                    description += "...";
+                }
+                binding.description.setText(description);
+            }
             switch (mType) {
                 case Constant.FOLLOW_LIST:
                     if (mUserListItem.isFollow) {
