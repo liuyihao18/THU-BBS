@@ -31,6 +31,7 @@ public class RelationAPI {
         BaseRequest.post(getUrl("/unfollow"), data, callback);
     }
 
+<<<<<<< HEAD
     public static void black(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/black"), data, callback);
     }
@@ -39,6 +40,8 @@ public class RelationAPI {
         BaseRequest.post(getUrl("/white"), data, callback);
     }
 
+=======
+>>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
     public static void getFollowList(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_follow_list"), data, callback);
     }

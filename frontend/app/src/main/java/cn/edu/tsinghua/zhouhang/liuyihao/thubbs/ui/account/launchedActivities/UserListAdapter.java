@@ -13,7 +13,11 @@ import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+<<<<<<< HEAD
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
+=======
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
+>>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.UserListItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
@@ -64,13 +68,21 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                     }
                     binding.button.setOnClickListener(view -> {
                         if (mUserListItem.isFollow) {
+<<<<<<< HEAD
                             NoErrorAPI.unfollow(mContext, mUserListItem.getUserId(), () -> {
+=======
+                            NoMoreWantToDoAPI.unfollow(mContext, mUserListItem.getUserId(), () -> {
+>>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
                                 mUserListItem.isFollow = false;
                                 binding.button.setText(R.string.follow);
                                 binding.button.setBackgroundColor(mContext.getColor(R.color.pink));
                             });
                         } else {
+<<<<<<< HEAD
                             NoErrorAPI.follow(mContext, mUserListItem.getUserId(), () -> {
+=======
+                            NoMoreWantToDoAPI.follow(mContext, mUserListItem.getUserId(), () -> {
+>>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
                                 mUserListItem.isFollow = true;
                                 binding.button.setText(R.string.button_unfollow);
                                 binding.button.setBackgroundColor(mContext.getColor(R.color.button_disabled));
@@ -89,11 +101,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                         if (index < 0) {
                             Alert.error(mContext, R.string.unknown_error);
                         } else {
+<<<<<<< HEAD
                             NoErrorAPI.white(mContext, mUserListItem.getUserId(), () -> {
                                 Alert.info(mContext, R.string.white_success);
                                 mUserList.remove(index);
                                 notifyItemRemoved(index);
                             });
+=======
+                            mUserList.remove(index);
+                            notifyItemRemoved(index);
+>>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
                         }
                     });
                     break;
