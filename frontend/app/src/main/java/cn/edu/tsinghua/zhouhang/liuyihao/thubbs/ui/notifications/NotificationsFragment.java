@@ -58,6 +58,9 @@ public class NotificationsFragment extends Fragment {
     private int mBlock = 0;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        if (getContext() == null) {
+            return true;
+        }
         switch (msg.what){
             case APIConstant.REQUEST_OK:
                 // 加载

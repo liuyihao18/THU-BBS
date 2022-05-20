@@ -62,6 +62,9 @@ public class TweetsFragment extends Fragment {
     private final LinkedList<Tweet> mTweetList = new LinkedList<>();
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        if (getContext() == null) {
+            return true;
+        }
         switch (msg.what) {
             case APIConstant.REQUEST_OK:
                 // 加载

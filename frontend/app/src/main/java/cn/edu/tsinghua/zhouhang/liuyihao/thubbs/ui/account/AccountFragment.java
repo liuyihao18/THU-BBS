@@ -38,6 +38,9 @@ public class AccountFragment extends Fragment {
     private ActivityResultLauncher<Intent> mDraftBoxLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
+        if (getContext() == null) {
+            return true;
+        }
         switch (msg.what) {
             case Constant.LOGIN_OK:
                 refresh();
