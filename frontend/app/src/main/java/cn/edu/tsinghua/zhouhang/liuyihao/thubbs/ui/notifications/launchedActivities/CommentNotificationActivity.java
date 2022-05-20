@@ -139,7 +139,8 @@ public class CommentNotificationActivity extends AppCompatActivity {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if(!recyclerView.canScrollVertically(-1)) {
-                            getCommentNotificationList(true);
+                            //getCommentNotificationList(true);
+                            return;
                         }
                         else if (!recyclerView.canScrollVertically(1)) {
                             getCommentNotificationList(false);
