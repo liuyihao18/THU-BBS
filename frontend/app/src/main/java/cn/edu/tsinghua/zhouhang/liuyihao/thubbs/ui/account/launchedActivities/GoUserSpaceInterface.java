@@ -14,7 +14,7 @@ public interface GoUserSpaceInterface {
      *
      * @param onUserSpaceReturnListener 回调接口
      */
-    void registerGoUserSpaceListener(OnUserSpaceReturnListener onUserSpaceReturnListener);
+    void registerOnUserSpaceReturnListener(OnUserSpaceReturnListener onUserSpaceReturnListener);
 
     /**
      * 前往用户空间的接口

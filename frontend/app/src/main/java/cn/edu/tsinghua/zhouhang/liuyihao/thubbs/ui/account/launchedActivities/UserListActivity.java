@@ -29,7 +29,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserListBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets.TweetListAdapter;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import okhttp3.Call;
@@ -127,6 +126,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
     }
 
     private void initListener() {
+        findViewById(R.id.back_button).setOnClickListener(view -> onBackPressed());
         // 下拉刷新
         binding.swipeRefreshLayout.setOnRefreshListener(() -> getUserList(true));
         // 上划加载
@@ -249,7 +249,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
     }
 
     @Override
-    public void registerGoUserSpaceListener(OnUserSpaceReturnListener onUserSpaceReturnListener) {
+    public void registerOnUserSpaceReturnListener(OnUserSpaceReturnListener onUserSpaceReturnListener) {
         this.onUserSpaceReturnListener = onUserSpaceReturnListener;
     }
 

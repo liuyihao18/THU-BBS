@@ -106,7 +106,7 @@
     <string name="follower">粉丝</string>
     <string name="follower_list">粉丝列表</string>
     <string name="edit_profile">编辑资料</string>
-    <string name="draft">草稿箱</string>
+    <string name="draft_box">草稿箱</string>
     <string name="blacklist">黑名单</string>
     <string name="edit_password">修改密码</string>
     <string name="quit">退出登录</string>

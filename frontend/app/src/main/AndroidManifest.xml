@@ -25,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
         <activity
+            android:name=".ui.account.launchedActivities.DraftBoxActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.account.launchedActivities.UserListActivity"
             android:exported="false" />
         <activity

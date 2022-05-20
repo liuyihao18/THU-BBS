@@ -21,6 +21,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.DraftBoxActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditPasswordActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.UserListActivity;
@@ -34,6 +35,7 @@ public class AccountFragment extends Fragment {
     private ActivityResultLauncher<Intent> mEditPasswordLauncher;
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private ActivityResultLauncher<Intent> mUserListLauncher;
+    private ActivityResultLauncher<Intent> mDraftBoxLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
@@ -76,12 +78,9 @@ public class AccountFragment extends Fragment {
                 refresh();
             }
         });
-        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            State.getState().refreshMyProfile(handler);
-        });
-        mUserListLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            State.getState().refreshMyProfile(handler);
-        });
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> State.getState().refreshMyProfile(handler));
+        mUserListLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> State.getState().refreshMyProfile(handler));
+        mDraftBoxLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> State.getState().refreshMyProfile(handler));
     }
 
     private void initView() {
@@ -172,6 +171,17 @@ public class AccountFragment extends Fragment {
                 Intent intent = new Intent(getContext(), UserListActivity.class);
                 intent.putExtra(Constant.USER_LIST_TYPE, Constant.BLACK_LIST);
                 mUserListLauncher.launch(intent);
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 草稿箱
+        binding.draftButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), DraftBoxActivity.class);
+                intent.putExtra(Constant.USER_LIST_TYPE, Constant.BLACK_LIST);
+                mDraftBoxLauncher.launch(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
