@@ -2,6 +2,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 
 import org.json.JSONObject;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 
 public class NotificationAPI {
@@ -35,5 +36,9 @@ public class NotificationAPI {
 
     public static void get_message_list(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_message_list"), data, callback);
+    }
+
+    public static void delete_like_notification(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/delete_like_notification"), data, callback);
     }
 }

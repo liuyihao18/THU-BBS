@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +14,32 @@ import org.w3c.dom.Text;
 
 import java.util.LinkedList;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.CommentItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.NotificationCommentItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.NotificationLikeItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 
 public class CommentListAdapter extends
         RecyclerView.Adapter<CommentListAdapter.CommentViewHolder> {
     private final LinkedList<CommentItemContent> mCommentItemList;
     private final Context mContext;
+    private final GoUserSpaceInterface mParent;
     class CommentViewHolder extends RecyclerView.ViewHolder{
         NotificationCommentItemBinding binding;
         CommentItemContent commentItemContent;
         public CommentViewHolder(NotificationCommentItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            binding.commentHeadshot.setOnClickListener(view -> {
+                Intent intent = new Intent(mContext, UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, commentItemContent.getCommentUserID());
+                mParent.goUserSpace(intent);
+            });
         }
 
         public CommentViewHolder setContent(CommentItemContent content) {
@@ -49,9 +59,12 @@ public class CommentListAdapter extends
         }
     };
 
-    public CommentListAdapter(Context context, LinkedList<CommentItemContent> commentItemContents) {
+    public CommentListAdapter(Context context,
+                              LinkedList<CommentItemContent> commentItemContents,
+                              GoUserSpaceInterface parent) {
         mCommentItemList = commentItemContents;
         mContext = context;
+        mParent = parent;
     }
 
 

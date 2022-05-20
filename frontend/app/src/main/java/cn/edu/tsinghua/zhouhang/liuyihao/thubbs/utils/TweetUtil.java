@@ -160,7 +160,9 @@ public class TweetUtil {
         if (tweetsType == Constant.TWEETS_USER) {
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
-            binding.closeButton.setVisibility(View.VISIBLE);
+            if(State.getState().userId == tweet.getUserId()) {
+                binding.closeButton.setVisibility(View.VISIBLE);
+            }
         } else {
             binding.followButton.setVisibility(View.VISIBLE);
             if (State.getState().userId == tweet.getUserId()) {

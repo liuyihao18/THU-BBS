@@ -1,11 +1,14 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +32,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityCommentNotificationBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import okhttp3.Call;
@@ -36,15 +40,17 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class CommentNotificationActivity extends AppCompatActivity {
+public class CommentNotificationActivity extends AppCompatActivity implements GoUserSpaceInterface {
 
     private ActivityCommentNotificationBinding binding;
 
-    private LinkedList<CommentItemContent> commentItemContents = new LinkedList<CommentItemContent>();
+    private final LinkedList<CommentItemContent> commentItemContents = new LinkedList<CommentItemContent>();
 
     private CommentListAdapter mAdapter;
 
     private int mBlock = 0;
+    private OnUserSpaceReturnListener onUserSpaceReturnListener;
+    private ActivityResultLauncher<Intent> mUserSpaceLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what){
@@ -92,6 +98,7 @@ public class CommentNotificationActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        initLauncher();
         initView();
         initRecyclerView();
         getCommentNotificationList(true);
@@ -99,10 +106,9 @@ public class CommentNotificationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -126,9 +132,18 @@ public class CommentNotificationActivity extends AppCompatActivity {
         }
     }
 
+    public void initLauncher() {
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            getCommentNotificationList(true);
+            if(onUserSpaceReturnListener != null) {
+                onUserSpaceReturnListener.onUserSpaceReturn(result);
+            }
+        });
+    }
+
     private void initRecyclerView() {
         RecyclerView recyclerView = binding.commentNotificationList;
-        mAdapter = new CommentListAdapter(this, commentItemContents);
+        mAdapter = new CommentListAdapter(this, commentItemContents, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if(State.getState().isLogin) {
@@ -138,11 +153,8 @@ public class CommentNotificationActivity extends AppCompatActivity {
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if(!recyclerView.canScrollVertically(-1)) {
-                            //getCommentNotificationList(true);
-                            return;
-                        }
-                        else if (!recyclerView.canScrollVertically(1)) {
+                        if (recyclerView.canScrollVertically(-1) &&
+                                !recyclerView.canScrollVertically(1)) {
                             getCommentNotificationList(false);
                         }
                     }
@@ -225,5 +237,15 @@ public class CommentNotificationActivity extends AppCompatActivity {
         } catch (JSONException jsonException) {
             System.err.println("Bad request err");
         }
+    }
+
+    @Override
+    public void registerOnUserSpaceReturnListener(OnUserSpaceReturnListener onUserSpaceReturnListener) {
+        this.onUserSpaceReturnListener = onUserSpaceReturnListener;
+    }
+
+    @Override
+    public void goUserSpace(Intent intent) {
+        mUserSpaceLauncher.launch(intent);
     }
 }

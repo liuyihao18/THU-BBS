@@ -31,6 +31,7 @@
     <dimen name="footer_height">48dp</dimen>
     <dimen name="margin_middle">32dp</dimen>
     <dimen name="margin_small">16dp</dimen>
+    <dimen name="margin_tiny">8dp</dimen>
     <dimen name="button_icon_text_margin">2dp</dimen>
     <dimen name="scroll_view_padding_bottom">8dp</dimen>
 
