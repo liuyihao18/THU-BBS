@@ -1,11 +1,17 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,6 +36,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
 import okhttp3.Call;
@@ -37,12 +44,12 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class LikeActivity extends AppCompatActivity {
+public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterface {
 
     private ActivityLikeBinding binding;
-
-    private LinkedList<LikeItemContent> likeItemContents = new LinkedList<LikeItemContent>();
-
+    private ActivityResultLauncher<Intent> mUserSpaceLauncher;
+    private OnUserSpaceReturnListener onUserSpaceReturnListener;
+    private final LinkedList<LikeItemContent> likeItemContents = new LinkedList<LikeItemContent>();
     private LikeListAdapter mAdapter;
 
     private int mBlock = 0;
@@ -93,6 +100,7 @@ public class LikeActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        initLauncher();
         initView();
         initRecyclerView();
         getLikeNotificationList(true);
@@ -108,6 +116,15 @@ public class LikeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void initLauncher() {
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            getLikeNotificationList(true);
+            if(onUserSpaceReturnListener != null) {
+                onUserSpaceReturnListener.onUserSpaceReturn(result);
+            }
+        });
+    }
+
     public void initView() {
         if (State.getState().isLogin) {
             binding.likeSwipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -121,7 +138,7 @@ public class LikeActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         RecyclerView recyclerView = binding.activityLikeList;
-        mAdapter = new LikeListAdapter(this, likeItemContents);
+        mAdapter = new LikeListAdapter(this, likeItemContents, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if(State.getState().isLogin) {
@@ -132,7 +149,7 @@ public class LikeActivity extends AppCompatActivity {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if(!recyclerView.canScrollVertically(-1)) {
-                            getLikeNotificationList(true);
+                            //getLikeNotificationList(true);
                         }
                         else if (!recyclerView.canScrollVertically(1)) {
                             getLikeNotificationList(false);
@@ -223,5 +240,15 @@ public class LikeActivity extends AppCompatActivity {
         } catch (JSONException jsonException) {
             System.err.println("Bad request err");
         }
+    }
+
+    @Override
+    public void registerOnUserSpaceReturnListener(OnUserSpaceReturnListener onUserSpaceReturnListener) {
+        this.onUserSpaceReturnListener = onUserSpaceReturnListener;
+    }
+
+    @Override
+    public void goUserSpace(Intent intent) {
+        mUserSpaceLauncher.launch(intent);
     }
 }
