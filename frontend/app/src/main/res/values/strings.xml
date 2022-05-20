@@ -23,6 +23,7 @@
     <string name="button_unfollow">已关注</string>
     <string name="button_send">发送</string>
     <string name="button_setting">编辑资料</string>
+    <string name="button_white">取消屏蔽</string>
 
     <!-- 提示 -->
     <string name="title_hint">标题</string>
@@ -105,7 +106,7 @@
     <string name="follower">粉丝</string>
     <string name="follower_list">粉丝列表</string>
     <string name="edit_profile">编辑资料</string>
-    <string name="draft">草稿箱</string>
+    <string name="draft_box">草稿箱</string>
     <string name="blacklist">黑名单</string>
     <string name="edit_password">修改密码</string>
     <string name="quit">退出登录</string>
@@ -118,6 +119,8 @@
     <string name="again_password">再次输入</string>
     <string name="again_login_required">登录已失效，请重新登录</string>
     <string name="again_password_error">两次输入的密码不一致</string>
+    <string name="black_success">屏蔽成功</string>
+    <string name="white_success">取消屏蔽成功</string>
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>

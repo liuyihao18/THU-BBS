@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
@@ -23,6 +24,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.mMessage;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 
 public class JSONUtil {
     /**
@@ -115,8 +117,26 @@ public class JSONUtil {
         }
     }
 
+    /**
+     * 从数据创建用户列表项
+     *
+     * @param data 服务器返沪的JSON
+     * @return 成功返回用户列表项，失败返回空
+     */
+    public static UserListItem createUserListItemFromJSON(@NonNull JSONObject data) {
+        try {
+            int userId = data.getInt(RelationAPI.userId);
+            String nickname = data.getString(RelationAPI.nickname);
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(RelationAPI.headshot));
+            String description = data.getString(RelationAPI.description);
+            return new UserListItem(userId, nickname, headshot, description);
+        } catch (JSONException je) {
+            return null;
+        }
+    }
+
     public static LikeItemContent createLikeFromJSON(@NonNull JSONObject data) {
-        try{
+        try {
             int tweet_id = data.getInt(NotificationAPI.tweet_id);
             String like_time = data.getString(NotificationAPI.like_time);
             int userid = data.getInt(NotificationAPI.userid);
@@ -140,7 +160,7 @@ public class JSONUtil {
     }
 
     public static CommentItemContent createCommentNotificationFromJson(@NonNull JSONObject data) {
-        try{
+        try {
             int tweet_id = data.getInt(NotificationAPI.tweet_id);
             String headshot = Static.HeadShot.getHeadShotUrl(data.getString(NotificationAPI.headshot));
             int userid = data.getInt(NotificationAPI.userid);

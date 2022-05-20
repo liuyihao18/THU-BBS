@@ -62,7 +62,6 @@ public class State {
     /**
      * 通用刷新用户信息接口
      *
-     * @param context 上下文
      * @param handler 消息处理句柄
      *                有可能发出以下信息：
      *                1. 成功：msg.what = Constant.LOGIN_OK = 0, msg.obj = null
