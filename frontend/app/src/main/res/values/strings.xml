@@ -65,7 +65,6 @@
     <!-- 推文 -->
     <string name="menu_search_description">搜索</string>
     <string name="is_searching">搜索中</string>
-    <string name="follow">关注</string>
     <string name="share">分享</string>
     <string name="detail">详情</string>
     <string name="follow_success">关注成功</string>
@@ -101,7 +100,10 @@
     <string name="description">个人简介</string>
     <string name="headshot">头像</string>
     <string name="tweet">动态</string>
+    <string name="follow">关注</string>
+    <string name="follow_list">关注列表</string>
     <string name="follower">粉丝</string>
+    <string name="follower_list">粉丝列表</string>
     <string name="edit_profile">编辑资料</string>
     <string name="draft">草稿箱</string>
     <string name="blacklist">黑名单</string>

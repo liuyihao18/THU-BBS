@@ -31,6 +31,13 @@ public class Constant {
     public static final int TWEETS_USER = 3; // 用户的推送
     public static final int TWEETS_DETAIL = 4; // 用户的推送
 
+    /* 用户列表相关常量 */
+    public static final String USER_LIST_TYPE = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.USER_LIST_TYPE";
+    public static final int EMPTY_LIST = 0; // 空
+    public static final int FOLLOW_LIST = 1; // 关注列表
+    public static final int FAN_LIST = 2; // 粉丝列表
+    public static final int BLACK_LIST = 3; // 黑名单
+
     /* Intent Constant */
     // Action
     public static final String EDIT_FROM_DRAFT = "cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant.EDIT_FROM_DRAFT";

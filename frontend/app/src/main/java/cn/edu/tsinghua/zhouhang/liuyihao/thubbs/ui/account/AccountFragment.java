@@ -23,6 +23,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditPasswordActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserListActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
@@ -31,6 +32,8 @@ public class AccountFragment extends Fragment {
     private FragmentAccountBinding binding;
     private ActivityResultLauncher<Intent> mEditProfileLauncher;
     private ActivityResultLauncher<Intent> mEditPasswordLauncher;
+    private ActivityResultLauncher<Intent> mUserSpaceLauncher;
+    private ActivityResultLauncher<Intent> mUserListLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
@@ -73,6 +76,12 @@ public class AccountFragment extends Fragment {
                 refresh();
             }
         });
+        mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            State.getState().refreshMyProfile(handler);
+        });
+        mUserListLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            State.getState().refreshMyProfile(handler);
+        });
     }
 
     private void initView() {
@@ -85,7 +94,7 @@ public class AccountFragment extends Fragment {
             if (State.getState().isLogin) {
                 Intent intent = new Intent(getContext(), UserSpaceActivity.class);
                 intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
-                startActivity(intent);
+                mUserSpaceLauncher.launch(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
@@ -119,6 +128,50 @@ public class AccountFragment extends Fragment {
         binding.editPasswordButton.setOnClickListener(view -> {
             if (State.getState().isLogin) {
                 mEditPasswordLauncher.launch(new Intent(getContext(), EditPasswordActivity.class));
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 动态
+        binding.tweetButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), UserSpaceActivity.class);
+                intent.putExtra(Constant.EXTRA_USER_ID, State.getState().userId);
+                mUserSpaceLauncher.launch(intent);
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 关注
+        binding.followButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), UserListActivity.class);
+                intent.putExtra(Constant.USER_LIST_TYPE, Constant.FOLLOW_LIST);
+                startActivity(intent);
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 粉丝
+        binding.followerButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), UserListActivity.class);
+                intent.putExtra(Constant.USER_LIST_TYPE, Constant.FAN_LIST);
+                startActivity(intent);
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 黑名单
+        binding.blacklistButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                Intent intent = new Intent(getContext(), UserListActivity.class);
+                intent.putExtra(Constant.USER_LIST_TYPE, Constant.BLACK_LIST);
+                startActivity(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
