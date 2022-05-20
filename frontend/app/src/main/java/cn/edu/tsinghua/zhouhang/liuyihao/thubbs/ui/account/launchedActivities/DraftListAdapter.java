@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
 
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.DraftItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
 
@@ -37,6 +39,19 @@ public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.Draf
         }
 
         public void refresh() {
+            binding.authorHeadshot.setImageUrl(State.getState().user.headshot);
+            binding.authorName.setText(State.getState().user.nickname);
+            binding.lastModified.setText(mDraft.getLastModified());
+            if (mDraft.getTitle().isEmpty()) {
+                binding.title.setText(R.string.no_title);
+            } else {
+                binding.title.setText(mDraft.getTitle());
+            }
+            if (mDraft.getContent().isEmpty()) {
+                binding.contentText.setText(R.string.no_content);
+            } else {
+                binding.contentText.setText(mDraft.getContent());
+            }
 
         }
     }

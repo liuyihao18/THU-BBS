@@ -95,6 +95,8 @@
     <string name="post_required">写些有趣的东西吧~</string>
     <string name="title_required">填下标题吧~</string>
     <string name="draft_success">保存草稿成功</string>
+    <string name="no_title">无标题</string>
+    <string name="no_content">无正文内容</string>
 
     <!-- 用户 -->
     <string name="nickname">用户名</string>

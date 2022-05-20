@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -107,6 +108,8 @@ public class DraftBoxActivity extends AppCompatActivity implements GoEditInterfa
 
     private void initView() {
         ((TextView) findViewById(R.id.header_title)).setText(R.string.draft_box);
+        binding.recyclerView.setAdapter(mAdapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void initListener() {
