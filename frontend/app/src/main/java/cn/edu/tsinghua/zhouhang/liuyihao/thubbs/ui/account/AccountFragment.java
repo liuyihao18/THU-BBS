@@ -21,6 +21,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditPasswordActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
@@ -29,6 +30,7 @@ public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     private ActivityResultLauncher<Intent> mEditProfileLauncher;
+    private ActivityResultLauncher<Intent> mEditPasswordLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
@@ -61,7 +63,14 @@ public class AccountFragment extends Fragment {
     private void initLauncher() {
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                State.getState().refreshMyProfile(getContext(), handler);
+                State.getState().refreshMyProfile(handler);
+            }
+        });
+        mEditPasswordLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                logout();
+                Alert.info(getContext(), R.string.again_login_required);
+                refresh();
             }
         });
     }
@@ -92,17 +101,7 @@ public class AccountFragment extends Fragment {
                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                 }))
                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                    State.getState().jwt = null;
-                    State.getState().userId = 0;
-                    State.getState().isLogin = false;
-                    Activity activity = getActivity();
-                    if (activity == null) {
-                        Alert.error(getContext(), R.string.unknown_error);
-                        return;
-                    }
-                    SharedPreferences preferences = activity.getSharedPreferences(Constant.SHARED_PREFERENCES, Activity.MODE_PRIVATE);
-                    preferences.edit().remove(Constant.JWT).apply();
-                    preferences.edit().remove(Constant.USER_ID).apply();
+                    logout();
                     Alert.info(getContext(), R.string.logout_success);
                     refresh();
                 }).
@@ -111,6 +110,15 @@ public class AccountFragment extends Fragment {
         binding.editProfileButton.setOnClickListener(view -> {
             if (State.getState().isLogin) {
                 mEditProfileLauncher.launch(new Intent(getContext(), EditProfileActivity.class));
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
+        // 修改密码
+        binding.editPasswordButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                mEditPasswordLauncher.launch(new Intent(getContext(), EditPasswordActivity.class));
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
@@ -135,7 +143,7 @@ public class AccountFragment extends Fragment {
             binding.accountUserName.setVisibility(View.GONE);
             binding.loginButton.setVisibility(View.VISIBLE);
             if (State.getState().isLogin) {
-                State.getState().refreshMyProfile(getContext(), handler);
+                State.getState().refreshMyProfile(handler);
             }
         }
     }
@@ -144,5 +152,19 @@ public class AccountFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void logout() {
+        State.getState().jwt = null;
+        State.getState().userId = 0;
+        State.getState().isLogin = false;
+        Activity activity = getActivity();
+        if (activity == null) {
+            Alert.error(getContext(), R.string.unknown_error);
+            return;
+        }
+        SharedPreferences preferences = activity.getSharedPreferences(Constant.SHARED_PREFERENCES, Activity.MODE_PRIVATE);
+        preferences.edit().remove(Constant.JWT).apply();
+        preferences.edit().remove(Constant.USER_ID).apply();
     }
 }

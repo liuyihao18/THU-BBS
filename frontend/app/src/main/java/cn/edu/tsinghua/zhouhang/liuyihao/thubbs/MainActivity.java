@@ -75,6 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMyProfile() {
-        State.getState().refreshMyProfile(this, handler);
+        State.getState().refreshMyProfile(handler);
     }
 }

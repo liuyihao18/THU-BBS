@@ -28,6 +28,9 @@
             android:name=".ui.activity.UserListActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activity.EditPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.EditProfileActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
