@@ -15,7 +15,7 @@ import java.util.Objects;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.ImagePreviewActivity;
@@ -194,13 +194,13 @@ public class TweetUtil {
         if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserId()) {
             binding.followButton.setOnClickListener(view -> {
                 if (tweet.isFollow) {
-                    NoMoreWantToDoAPI.unfollow(context, tweet.getUserId(), () -> {
+                    NoErrorAPI.unfollow(context, tweet.getUserId(), () -> {
                         tweet.isFollow = false;
                         binding.followButton.setText(R.string.follow);
                         binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
                     });
                 } else {
-                    NoMoreWantToDoAPI.follow(context, tweet.getUserId(), () -> {
+                    NoErrorAPI.follow(context, tweet.getUserId(), () -> {
                         tweet.isFollow = true;
                         binding.followButton.setText(R.string.button_unfollow);
                         binding.followButton.setBackgroundColor(context.getColor(R.color.button_disabled));
@@ -247,12 +247,12 @@ public class TweetUtil {
                 tweet.isLike = false;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
                 tweet.likeCount--;
-                NoMoreWantToDoAPI.cancelLikeTweet(context, tweet.getTweetId(), null);
+                NoErrorAPI.cancelLikeTweet(context, tweet.getTweetId(), null);
             } else {
                 tweet.isLike = true;
                 binding.likeButtonIcon.setImageResource(R.drawable.ic_like_pink_24dp);
                 tweet.likeCount++;
-                NoMoreWantToDoAPI.likeTweet(context, tweet.getTweetId(), null);
+                NoErrorAPI.likeTweet(context, tweet.getTweetId(), null);
             }
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });

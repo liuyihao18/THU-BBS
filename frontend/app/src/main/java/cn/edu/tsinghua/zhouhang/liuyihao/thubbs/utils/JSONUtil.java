@@ -127,7 +127,8 @@ public class JSONUtil {
             int userId = data.getInt(RelationAPI.userId);
             String nickname = data.getString(RelationAPI.nickname);
             String headshot = Static.HeadShot.getHeadShotUrl(data.getString(RelationAPI.headshot));
-            return new UserListItem(userId, nickname, headshot);
+            String description = data.getString(RelationAPI.description);
+            return new UserListItem(userId, nickname, headshot, description);
         } catch (JSONException je) {
             return null;
         }

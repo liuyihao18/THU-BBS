@@ -119,6 +119,8 @@
     <string name="again_password">再次输入</string>
     <string name="again_login_required">登录已失效，请重新登录</string>
     <string name="again_password_error">两次输入的密码不一致</string>
+    <string name="black_success">屏蔽成功</string>
+    <string name="white_success">取消屏蔽成功</string>
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>

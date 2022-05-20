@@ -14,16 +14,15 @@ import java.io.IOException;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class NoMoreWantToDoAPI {
+public class NoErrorAPI {
 
-    public interface OnCMDSuccessListener {
-        void onCMDSuccess();
+    public interface OnSuccessListener {
+        void onSuccess();
     }
 
     private static final int CMD_FOLLOW = 1;
@@ -33,29 +32,37 @@ public class NoMoreWantToDoAPI {
     private static final int CMD_LIKE_TWEET = 5;
     private static final int CMD_CANCEL_LIKE_TWEET = 6;
 
-    public static void follow(Context context, int userid, OnCMDSuccessListener onCMDSuccessListener) {
-        doCMD(context, userid, CMD_FOLLOW, onCMDSuccessListener);
+    public static void follow(Context context, int userid, OnSuccessListener onSuccessListener) {
+        doCMD(context, userid, CMD_FOLLOW, onSuccessListener);
     }
 
-    public static void unfollow(Context context, int userid, OnCMDSuccessListener onCMDSuccessListener) {
-        doCMD(context, userid, CMD_UNFOLLOW, onCMDSuccessListener);
+    public static void unfollow(Context context, int userid, OnSuccessListener onSuccessListener) {
+        doCMD(context, userid, CMD_UNFOLLOW, onSuccessListener);
     }
 
-    public static void likeTweet(Context context, int tweet_id, OnCMDSuccessListener onCMDSuccessListener) {
-        doCMD(context, tweet_id, CMD_LIKE_TWEET, onCMDSuccessListener);
+    public static void likeTweet(Context context, int tweet_id, OnSuccessListener onSuccessListener) {
+        doCMD(context, tweet_id, CMD_LIKE_TWEET, onSuccessListener);
     }
 
-    public static void cancelLikeTweet(Context context, int tweed_id, OnCMDSuccessListener onCMDSuccessListener) {
-        doCMD(context, tweed_id, CMD_CANCEL_LIKE_TWEET, onCMDSuccessListener);
+    public static void cancelLikeTweet(Context context, int tweed_id, OnSuccessListener onSuccessListener) {
+        doCMD(context, tweed_id, CMD_CANCEL_LIKE_TWEET, onSuccessListener);
     }
 
-    private static void doCMD(Context context, int id, int cmd, OnCMDSuccessListener onCMDSuccessListener) {
+    public static void black(Context context, int black_id, OnSuccessListener onSuccessListener) {
+        doCMD(context, black_id, CMD_BLACK, onSuccessListener);
+    }
+
+    public static void white(Context context, int white_id, OnSuccessListener onSuccessListener) {
+        doCMD(context, white_id, CMD_WHITE, onSuccessListener);
+    }
+
+    private static void doCMD(Context context, int id, int cmd, OnSuccessListener onSuccessListener) {
         Handler handler = new Handler(Looper.myLooper(), msg -> {
             switch (msg.what) {
                 case APIConstant.REQUEST_OK:
                 case APIConstant.REQUEST_ERROR:
-                    if (onCMDSuccessListener != null) {
-                        onCMDSuccessListener.onCMDSuccess();
+                    if (onSuccessListener != null) {
+                        onSuccessListener.onSuccess();
                     }
                     break;
                 case APIConstant.NETWORK_ERROR:
@@ -77,6 +84,12 @@ public class NoMoreWantToDoAPI {
                 case CMD_LIKE_TWEET:
                 case CMD_CANCEL_LIKE_TWEET:
                     data.put(TweetAPI.tweetId, id);
+                    break;
+                case CMD_BLACK:
+                    data.put(RelationAPI.blackId, id);
+                    break;
+                case CMD_WHITE:
+                    data.put(RelationAPI.whiteId, id);
                     break;
             }
             Callback callback = new Callback() {
@@ -121,8 +134,10 @@ public class NoMoreWantToDoAPI {
                     RelationAPI.unfollow(data, callback);
                     break;
                 case CMD_BLACK:
+                    RelationAPI.black(data, callback);
                     break;
                 case CMD_WHITE:
+                    RelationAPI.white(data, callback);
                     break;
                 case CMD_LIKE_TWEET:
                     TweetAPI.likeTweet(data, callback);

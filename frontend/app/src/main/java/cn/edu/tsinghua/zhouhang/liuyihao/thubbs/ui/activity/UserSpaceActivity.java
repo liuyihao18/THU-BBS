@@ -27,13 +27,12 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoMoreWantToDoAPI;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserSpaceBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -132,13 +131,13 @@ public class UserSpaceActivity extends AppCompatActivity {
         // 关注按钮
         binding.followButton.setOnClickListener(view -> {
             if (mUser.isFollow) {
-                NoMoreWantToDoAPI.unfollow(this, mUserId, () -> {
+                NoErrorAPI.unfollow(this, mUserId, () -> {
                     mUser.isFollow = false;
                     binding.followButton.setText(R.string.follow);
                     binding.followButton.setBackgroundColor(getColor(R.color.pink));
                 });
             } else {
-                NoMoreWantToDoAPI.follow(this, mUserId, () -> {
+                NoErrorAPI.follow(this, mUserId, () -> {
                     mUser.isFollow = true;
                     binding.followButton.setText(R.string.button_unfollow);
                     binding.followButton.setBackgroundColor(getColor(R.color.button_disabled));
@@ -152,8 +151,11 @@ public class UserSpaceActivity extends AppCompatActivity {
                         .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                         }))
                         .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                            setResult(RESULT_OK);
-                            finish();
+                            NoErrorAPI.black(this, mUserId, () -> {
+                                Alert.info(this, R.string.black_success);
+                                setResult(RESULT_OK);
+                                finish();
+                            });
                         })
                         .create().show());
         // 编辑资料按钮

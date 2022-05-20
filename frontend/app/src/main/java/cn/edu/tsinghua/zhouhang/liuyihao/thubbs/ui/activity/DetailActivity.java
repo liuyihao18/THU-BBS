@@ -29,6 +29,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityDetailBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.CommentItemBinding;
@@ -194,8 +195,11 @@ public class DetailActivity extends AppCompatActivity {
                                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                                 }))
                                 .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                                    setResult(RESULT_OK);
-                                    finish();
+                                    NoErrorAPI.black(this, mTweet.getUserId(), () -> {
+                                        Alert.info(this, R.string.black_success);
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    });
                                 }).create().show(),
                 // 级联返回（从个人主页返回详情）
                 view -> {
