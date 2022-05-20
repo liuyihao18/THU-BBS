@@ -32,4 +32,8 @@ public class NotificationAPI {
     public static void get_comment_notification_list(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/get_comment_notification_list"), data, callback);
     }
+
+    public static void get_message_list(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/get_message_list"), data, callback);
+    }
 }

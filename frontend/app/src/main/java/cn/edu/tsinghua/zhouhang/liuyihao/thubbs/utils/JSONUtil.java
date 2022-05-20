@@ -22,6 +22,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.User;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.mMessage;
 
 public class JSONUtil {
     /**
@@ -157,6 +158,26 @@ public class JSONUtil {
                     userid,
                     notification_id,
                     tweet_content
+            );
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+            return null;
+        }
+    }
+
+    public static mMessage createMessageFromJson(@NonNull JSONObject data) {
+        try {
+            int message_id = data.getInt("message_id");
+            String message_time = data.getString("message_time");
+            String message_content = data.getString("content");
+            String message_title = data.getString("title");
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(NotificationAPI.headshot));
+            return new mMessage(
+                    message_title,
+                    message_content,
+                    message_time,
+                    message_id,
+                    headshot
             );
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();

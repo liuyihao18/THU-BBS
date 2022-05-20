@@ -25,23 +25,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="8dp"
-                android:paddingTop="8dp"
-                android:text="TextView" />
+                android:paddingTop="8dp" />
             <TextView
                 android:id="@+id/notification_content"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:orientation="vertical"
-                android:padding="8dp"
-                android:text="TextView" />
+                android:padding="8dp"/>
         </LinearLayout>
         <TextView
-            android:layout_width="48dp"
+            android:id="@+id/notification_time"
+            android:layout_width="96dp"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_height="match_parent"
-            android:text="05-07"
             android:textColor="@color/text_gray"
-            android:textSize="@dimen/textSize_medium" />
+            android:textSize="@dimen/textSize_medium"
+            android:layout_gravity="top"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

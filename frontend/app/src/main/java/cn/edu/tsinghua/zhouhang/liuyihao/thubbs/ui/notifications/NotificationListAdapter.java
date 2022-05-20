@@ -15,50 +15,60 @@ import android.widget.TextView;
 import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.NotificationItemBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.mMessage;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyImageView;
 
 public class NotificationListAdapter extends
-        RecyclerView.Adapter<NotificationListAdapter.MomentsViewHolder> {
+        RecyclerView.Adapter<NotificationListAdapter.MessageViewHolder> {
 
-    private final LinkedList<String> mTitleList, mContentList;
-    private final LinkedList<String> mImageList;
+    private final LinkedList<mMessage> messageList;
     private final Context mContext;
-    static class MomentsViewHolder extends RecyclerView.ViewHolder{
-        TextView notification_title, notification_content;
-        MyImageView notification_headshot;
-        public MomentsViewHolder(View view) {
-            super(view);
-            notification_title = view.findViewById(R.id.notification_title);
-            notification_content = view.findViewById(R.id.notification_content);
-            notification_headshot = view.findViewById(R.id.notification_headshot);
+    class MessageViewHolder extends RecyclerView.ViewHolder{
+        NotificationItemBinding binding;
+        mMessage message;
+        public MessageViewHolder(NotificationItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public MessageViewHolder setContent(mMessage message) {
+            this.message = message;
+            return this;
+        }
+
+        public  void refresh() {
+            binding.notificationContent.setText(message.getContent());
+            binding.notificationHeadshot.setImageUrl(message.getHeadshot());
+            binding.notificationTitle.setText(message.getTitle());
+            binding.notificationTime.setText(message.getMessageTime());
         }
     };
 
-    public NotificationListAdapter(Context context, LinkedList<String> titleList,LinkedList<String> contentList, LinkedList<String> imageList) {
-        mTitleList = titleList;
-        mContentList = contentList;
-        mImageList = imageList;
+    public NotificationListAdapter(Context context, LinkedList<mMessage> messageList) {
+        this.messageList = messageList;
         mContext = context;
     }
 
     @Override
-    public void onBindViewHolder(NotificationListAdapter.MomentsViewHolder holder, int position) {
-        holder.notification_title.setText(mTitleList.get(position));
-        holder.notification_content.setText(mContentList.get(position));
-        holder.notification_headshot.setImageUrl(mImageList.get(position));
+    public void onBindViewHolder(NotificationListAdapter.MessageViewHolder holder, int position) {
+        holder.setContent(messageList.get(position)).refresh();
     }
 
     @NonNull
     @Override
-    public NotificationListAdapter.MomentsViewHolder onCreateViewHolder(ViewGroup parent,
+    public NotificationListAdapter.MessageViewHolder onCreateViewHolder(ViewGroup parent,
                                                                    int viewType) {
-        View mItemView = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.notification_item, parent, false);
-        return new MomentsViewHolder(mItemView);
+        NotificationItemBinding binding = NotificationItemBinding.inflate(
+                LayoutInflater.from(mContext),
+                parent,
+                false
+        );
+        return new MessageViewHolder(binding);
     }
 
     @Override
     public int getItemCount() {
-        return mTitleList.size();
+        return messageList.size();
     }
 }
