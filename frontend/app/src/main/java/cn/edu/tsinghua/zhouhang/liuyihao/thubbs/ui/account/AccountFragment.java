@@ -23,7 +23,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentAccountBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditPasswordActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditProfileActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserListActivity;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.UserListActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 
@@ -149,7 +149,7 @@ public class AccountFragment extends Fragment {
             if (State.getState().isLogin) {
                 Intent intent = new Intent(getContext(), UserListActivity.class);
                 intent.putExtra(Constant.USER_LIST_TYPE, Constant.FOLLOW_LIST);
-                startActivity(intent);
+                mUserListLauncher.launch(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
@@ -160,7 +160,7 @@ public class AccountFragment extends Fragment {
             if (State.getState().isLogin) {
                 Intent intent = new Intent(getContext(), UserListActivity.class);
                 intent.putExtra(Constant.USER_LIST_TYPE, Constant.FAN_LIST);
-                startActivity(intent);
+                mUserListLauncher.launch(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());
@@ -171,7 +171,7 @@ public class AccountFragment extends Fragment {
             if (State.getState().isLogin) {
                 Intent intent = new Intent(getContext(), UserListActivity.class);
                 intent.putExtra(Constant.USER_LIST_TYPE, Constant.BLACK_LIST);
-                startActivity(intent);
+                mUserListLauncher.launch(intent);
             } else {
                 State.getState().setOnLoginListener(this::refresh)
                         .login(getContext());

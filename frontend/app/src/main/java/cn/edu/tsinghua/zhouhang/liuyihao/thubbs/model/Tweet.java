@@ -11,8 +11,8 @@ public class Tweet implements Serializable {
     public static final int TYPE_AUDIO = 2;
     public static final int TYPE_VIDEO = 3;
 
-    private final int tweetID;
-    private final int userID;
+    private final int tweetId;
+    private final int userId;
     private final int type;
     private final String title;
     private final String content;
@@ -33,8 +33,8 @@ public class Tweet implements Serializable {
                  @Nullable String location, String lastModified, int commentCount, int likeCount,
                  @Nullable ArrayList<String> imageList, @Nullable String audioUrl, @Nullable String videoUrl,
                  String nickname, String headshot, boolean isFollow, boolean isLike) {
-        this.tweetID = tweetID;
-        this.userID = userID;
+        this.tweetId = tweetID;
+        this.userId = userID;
         this.type = type;
         this.title = title;
         this.content = content;
@@ -51,12 +51,12 @@ public class Tweet implements Serializable {
         this.isLike = isLike;
     }
 
-    public int getTweetID() {
-        return tweetID;
+    public int getTweetId() {
+        return tweetId;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
     public int getType() {

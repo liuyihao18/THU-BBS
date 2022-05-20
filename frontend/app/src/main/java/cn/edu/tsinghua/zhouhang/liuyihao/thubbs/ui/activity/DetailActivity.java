@@ -200,7 +200,7 @@ public class DetailActivity extends AppCompatActivity {
                 // 级联返回（从个人主页返回详情）
                 view -> {
                     Intent intent = new Intent(this, UserSpaceActivity.class);
-                    intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());
+                    intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserId());
                     mUserSpaceLauncher.launch(intent);
                 });
     }
@@ -304,7 +304,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         try {
             JSONObject data = new JSONObject();
-            data.put(TweetAPI.tweetId, mTweet.getTweetID());
+            data.put(TweetAPI.tweetId, mTweet.getTweetId());
             TweetAPI.getTweetCommentList(data, new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -357,7 +357,7 @@ public class DetailActivity extends AppCompatActivity {
     private void commentTweet() {
         try {
             JSONObject data = new JSONObject();
-            data.put(TweetAPI.tweetId, mTweet.getTweetID());
+            data.put(TweetAPI.tweetId, mTweet.getTweetId());
             data.put(TweetAPI.comment, binding.comment.getText().toString());
             TweetAPI.commentTweet(data, new Callback() {
                 @Override

@@ -49,7 +49,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
         private void initListener() {
             View.OnClickListener onClickListener = view -> {
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra(Constant.EXTRA_TWEET_ID, mTweet.getTweetID());
+                intent.putExtra(Constant.EXTRA_TWEET_ID, mTweet.getTweetId());
                 mParent.setOnDetailReturnListener((result) -> {
                     // 屏蔽用户返回
                     if (result.getResultCode() == RESULT_OK) {
@@ -103,7 +103,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     view -> {
                         if (mParent.getType() != Constant.TWEETS_USER) {
                             Intent intent = new Intent(mContext, UserSpaceActivity.class);
-                            intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserID());
+                            intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserId());
                             mParent.setOnOnUserSpaceReturnListener(result -> {
                                 // 级联返回（从个人主页返回广场）
                                 if (result.getResultCode() == Activity.RESULT_OK) {
