@@ -6,10 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-<<<<<<< HEAD
 import androidx.recyclerview.widget.RecyclerView;
-=======
->>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,10 +93,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
         initLauncher();
         initAdapter();
         initView();
-<<<<<<< HEAD
         initListener();
-=======
->>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
         getUserList(true);
     }
 
@@ -112,13 +106,10 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
         });
     }
 
-<<<<<<< HEAD
     private void initAdapter() {
         mAdapter = new UserListAdapter(this, mUserList, mListType, this);
     }
 
-=======
->>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
     private void initView() {
         switch (mListType) {
             case Constant.FOLLOW_LIST:
@@ -135,7 +126,6 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-<<<<<<< HEAD
     private void initListener() {
         // 下拉刷新
         binding.swipeRefreshLayout.setOnRefreshListener(() -> getUserList(true));
@@ -158,10 +148,6 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
-=======
-    private void initAdapter() {
-        mAdapter = new UserListAdapter(this, mUserList, mListType, this);
->>>>>>> ecf6672fb80f7bcea741ddfccdb70db76f4cc4dd
     }
 
     private void getUserList(boolean isRefresh) {
