@@ -60,6 +60,10 @@ public class TweetAPI {
         BaseRequest.post(getUrl("/get_single_tweet"), data, callback);
     }
 
+    public static void getDraftList(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/get_draft_list"), data, callback);
+    }
+
     public static void likeTweet(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/like_tweet"), data, callback);
     }

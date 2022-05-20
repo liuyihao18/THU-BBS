@@ -40,8 +40,8 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
 
     private ActivityUserListBinding binding;
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
-    private UserListAdapter mAdapter;
     private OnUserSpaceReturnListener onUserSpaceReturnListener;
+    private UserListAdapter mAdapter;
     private int mListType;
     private int mBlock = -1;
     private boolean isLoading = false;

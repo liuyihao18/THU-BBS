@@ -19,6 +19,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
@@ -130,6 +131,26 @@ public class JSONUtil {
             String headshot = Static.HeadShot.getHeadShotUrl(data.getString(RelationAPI.headshot));
             String description = data.getString(RelationAPI.description);
             return new UserListItem(userId, nickname, headshot, description);
+        } catch (JSONException je) {
+            return null;
+        }
+    }
+
+    /**
+     * 从数据创建草稿
+     *
+     * @param data 服务器返回的JSON
+     * @return 成功返回动态，失败返回空
+     */
+    public static Draft createDraftFromJSON(@NonNull JSONObject data) {
+        try {
+            int tweetId = data.getInt(TweetAPI.tweetId);
+            // int type = data.getInt(TweetAPI.type);
+            String title = data.getString(TweetAPI.title);
+            String content = data.getString(TweetAPI.content);
+            String location = data.getString(TweetAPI.location);
+            String lastModified = data.getString(TweetAPI.lastModified);
+            return new Draft(tweetId, title, content, location, lastModified);
         } catch (JSONException je) {
             return null;
         }
