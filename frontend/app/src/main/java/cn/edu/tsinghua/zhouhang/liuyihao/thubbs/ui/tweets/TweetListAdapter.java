@@ -3,6 +3,7 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.tweets;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NoErrorAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.TweetItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
@@ -111,7 +113,26 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                                 }
                             }).goUserSpace(intent);
                         }
-                    }
+                    },
+                    // 点击删除
+                    mParent.getType() == Constant.TWEETS_USER ?
+                            view -> new AlertDialog.Builder(mContext)
+                                    .setTitle(R.string.question_delete_tweet)
+                                    .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
+                                    }))
+                                    .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
+                                        int index = mTweetList.indexOf(mTweet);
+                                        if (index < 0) {
+                                            Alert.error(mContext, R.string.unknown_error);
+                                        } else {
+                                            NoErrorAPI.deleteTweet(mContext, mTweet.getTweetId(), () -> {
+                                                Alert.info(mContext, R.string.delete_tweet_success);
+                                                mTweetList.remove(index);
+                                                notifyItemRemoved(index);
+                                            });
+                                        }
+                                    }).
+                                    create().show() : null
             );
         }
     }

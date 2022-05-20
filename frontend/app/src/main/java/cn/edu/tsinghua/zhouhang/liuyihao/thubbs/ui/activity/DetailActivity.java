@@ -206,7 +206,9 @@ public class DetailActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, UserSpaceActivity.class);
                     intent.putExtra(Constant.EXTRA_USER_ID, mTweet.getUserId());
                     mUserSpaceLauncher.launch(intent);
-                });
+                },
+                // 详情界面不能删除
+                null);
     }
 
     void bindComment() {

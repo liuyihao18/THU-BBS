@@ -26,7 +26,7 @@ public class TweetUtil {
 
     public static void bind(Context context, TweetItemBinding binding, Tweet tweet, int tweetsType,
                             MediaResource mediaResource, View.OnClickListener onClickBlackButtonListener,
-                            View.OnClickListener onClickHeadshotListener) {
+                            View.OnClickListener onClickHeadshotListener, View.OnClickListener onClickCloseButtonListener) {
         /* 初始化 */
         mediaResource.loaded = false;
         binding.locationLayout.setVisibility(View.GONE);
@@ -156,10 +156,11 @@ public class TweetUtil {
         } else {
             binding.likeButtonIcon.setImageResource(R.drawable.ic_like_24dp);
         }
-        // 关注和屏蔽
+        // 关注和屏蔽以及删除
         if (tweetsType == Constant.TWEETS_USER) {
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
+            binding.closeButton.setVisibility(View.VISIBLE);
         } else {
             binding.followButton.setVisibility(View.VISIBLE);
             if (State.getState().userId == tweet.getUserId()) {
@@ -176,6 +177,7 @@ public class TweetUtil {
                 }
                 binding.blackButton.setVisibility(View.VISIBLE);
             }
+            binding.closeButton.setVisibility(View.GONE);
         }
         /* 监听器 */
         // 多媒体资源
@@ -215,6 +217,10 @@ public class TweetUtil {
         } else {
             binding.followButton.setOnClickListener(null);
             binding.blackButton.setOnClickListener(null);
+        }
+        // 删除
+        if (tweetsType == Constant.TWEETS_USER) {
+            binding.closeButton.setOnClickListener(onClickCloseButtonListener);
         }
         // 九宫格
         binding.imageGroup.registerImageGroupListener(new ImageGroup.ImageGroupListener() {
