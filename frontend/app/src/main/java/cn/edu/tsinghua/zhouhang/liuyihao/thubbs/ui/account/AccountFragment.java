@@ -69,6 +69,7 @@ public class AccountFragment extends Fragment {
         mEditPasswordLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 logout();
+                Alert.info(getContext(), R.string.again_login_required);
                 refresh();
             }
         });

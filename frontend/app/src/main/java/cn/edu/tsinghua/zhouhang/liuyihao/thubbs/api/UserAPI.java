@@ -16,6 +16,8 @@ public class UserAPI {
     public static final String followCount = "follow_count";
     public static final String followerCount = "follower_count";
     public static final String isFollow = "is_follow";
+    public static final String oldPassword = "old_password";
+    public static final String newPassword = "new_password";
 
     private static final String prefix = "/user";
 

@@ -125,15 +125,15 @@ public class DetailActivity extends AppCompatActivity {
         }
         // 获取数据
         Intent intent = getIntent();
-        String action = intent.getAction();
-        initLauncher();
-        initView();
-        initListener();
         mTweetId = intent.getIntExtra(Constant.EXTRA_TWEET_ID, 0);
         if (mTweetId == 0) {
             Alert.error(this, R.string.unknown_error);
             finish();
         }
+        // 初始化
+        initLauncher();
+        initView();
+        initListener();
     }
 
     @Override
