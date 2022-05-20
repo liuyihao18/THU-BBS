@@ -70,7 +70,7 @@ public class State {
      *                3. 失败：msg.what = APIConstant.SERVER_ERROR, msg.obj = null
      *                4. 失败：msg.what = APIConstant.REQUEST_ERROR, msg.obj = ERR_MSG
      */
-    public void refreshMyProfile(Context context, @Nullable Handler handler) {
+    public void refreshMyProfile(@Nullable Handler handler) {
         try {
             JSONObject data = new JSONObject();
             data.put(UserAPI.userid, State.getState().userId);
@@ -101,8 +101,7 @@ public class State {
                         if (errCode == 0) {
                             User user = JSONUtil.createUserFromJSON(data);
                             if (user == null) {
-                                msg.what = APIConstant.REQUEST_ERROR;
-                                msg.obj = context.getString(R.string.server_error);
+                                msg.what = APIConstant.SERVER_ERROR;
                             } else {
                                 getState().user = user;
                                 msg.what = Constant.LOGIN_OK;

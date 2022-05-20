@@ -110,6 +110,9 @@
     <string name="user_space">个人主页</string>
     <string name="description_empty">这个人很懒，什么都没留下~</string>\
     <string name="edit_success">编辑成功</string>
+    <string name="old_password">旧密码</string>
+    <string name="new_password">新密码</string>
+    <string name="again_password">再次输入</string>
 
     <!-- 通知 -->
     <string name="notification_list">通知列表</string>

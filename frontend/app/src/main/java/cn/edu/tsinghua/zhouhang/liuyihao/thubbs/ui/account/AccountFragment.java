@@ -29,6 +29,7 @@ public class AccountFragment extends Fragment {
 
     private FragmentAccountBinding binding;
     private ActivityResultLauncher<Intent> mEditProfileLauncher;
+    private ActivityResultLauncher<Intent> mEditPasswordLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
@@ -61,8 +62,11 @@ public class AccountFragment extends Fragment {
     private void initLauncher() {
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                State.getState().refreshMyProfile(getContext(), handler);
+                State.getState().refreshMyProfile(handler);
             }
+        });
+        mEditPasswordLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+
         });
     }
 
@@ -116,6 +120,15 @@ public class AccountFragment extends Fragment {
                         .login(getContext());
             }
         });
+        // 修改密码
+        binding.editPasswordButton.setOnClickListener(view -> {
+            if (State.getState().isLogin) {
+                mEditPasswordLauncher.launch(new Intent(getContext(), EditProfileActivity.class));
+            } else {
+                State.getState().setOnLoginListener(this::refresh)
+                        .login(getContext());
+            }
+        });
     }
 
     public void refresh() {
@@ -135,7 +148,7 @@ public class AccountFragment extends Fragment {
             binding.accountUserName.setVisibility(View.GONE);
             binding.loginButton.setVisibility(View.VISIBLE);
             if (State.getState().isLogin) {
-                State.getState().refreshMyProfile(getContext(), handler);
+                State.getState().refreshMyProfile(handler);
             }
         }
     }

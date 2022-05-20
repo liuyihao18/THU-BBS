@@ -67,6 +67,9 @@ public class DetailActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
         switch (msg.what) {
+            case Constant.LOGIN_OK:
+                binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
+                break;
             case GET_SINGLE_TWEET_OK:
                 bindTweet();
                 getCommentList();
@@ -163,7 +166,7 @@ public class DetailActivity extends AppCompatActivity {
             binding.commentHeadshot.setImageUrl(State.getState().user.headshot);
         } else {
             binding.commentHeadshot.setImageUrl(Constant.DEFAULT_HEADSHOT);
-            State.getState().refreshMyProfile(this, null);
+            State.getState().refreshMyProfile(handler);
         }
         // 默认显示没有更多动态
         binding.noCommentLayout.setVisibility(View.VISIBLE);

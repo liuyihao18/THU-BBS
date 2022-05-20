@@ -38,4 +38,8 @@ public class UserAPI {
     public static void editProfile(MultipartBody body, Callback callback) {
         BaseRequest.post(getUrl("/edit_profile"), body, callback);
     }
+
+    public static void editPassword(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/edit_password"), data, callback);
+    }
 }

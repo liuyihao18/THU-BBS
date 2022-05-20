@@ -104,7 +104,7 @@ public class UserSpaceActivity extends AppCompatActivity {
         // 编辑资料Activity
         mEditProfileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                State.getState().refreshMyProfile(this, null);
+                State.getState().refreshMyProfile(null);
                 getProfile();
             }
         });
