@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
 
@@ -34,9 +35,13 @@ public class MyImageView extends androidx.appcompat.widget.AppCompatImageView {
         if (getContext() == null) {
             return;
         }
-        Glide.with(getContext())
-                .load(url)
-                .placeholder(R.drawable.ic_loading_spinner_black_24dp)
-                .into(this);
+        try {
+            Glide.with(getContext())
+                    .load(url)
+                    .placeholder(R.drawable.ic_loading_spinner_black_24dp)
+                    .into(this);
+        } catch (IllegalArgumentException iae) {
+            Util.doNothing();
+        }
     }
 }
