@@ -166,6 +166,9 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     }
 
     private void getCommentNotificationList(boolean isRefresh) {
+        if (!State.getState().isLogin) {
+            return;
+        }
         if (!binding.commentSwipeRefreshLayout.isRefreshing()) {
             binding.commentSwipeRefreshLayout.setRefreshing(true);
         }

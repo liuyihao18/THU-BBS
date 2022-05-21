@@ -164,6 +164,9 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     }
 
     private void getLikeNotificationList(boolean isRefresh) {
+        if (!State.getState().isLogin) {
+            return;
+        }
         if (!binding.likeSwipeRefreshLayout.isRefreshing()) {
             binding.likeSwipeRefreshLayout.setRefreshing(true);
         }

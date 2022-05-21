@@ -180,6 +180,9 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void getMessageList(boolean isRefresh) {
+        if (!State.getState().isLogin) {
+            return;
+        }
         if (!binding.messageSwipeRefreshLayout.isRefreshing()) {
             binding.messageSwipeRefreshLayout.setRefreshing(true);
         }
