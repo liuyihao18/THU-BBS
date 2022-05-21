@@ -32,8 +32,10 @@
     <string name="max_image_hint">最多只能添加9张图片</string>
     <string name="max_audio_hint">最多只能添加1段音频</string>
     <string name="max_video_hint">最多只能添加1段视频</string>
-    <string name="no_tweet_hint">没有更多的动态了~</string>
-    <string name="no_comment_hint">没有更多的评论了~</string>
+    <string name="no_more_tweet_hint">没有更多的动态了~</string>
+    <string name="no_more_comment_hint">没有更多的评论了~</string>
+    <string name="no_more_user_list_hint">没有更多的用户了~</string>
+    <string name="no_more_draft_hint">没有更多的草稿了~</string>
 
     <!-- 询问 -->
     <string name="question_cancel_edit">确定退出编辑？</string>

@@ -66,9 +66,8 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, likeItemContents.size());
-//                    String loadStr = getString(R.string.load_some_notification);
-//                    Alert.info(this, String.format(loadStr, likeItemContents.size()));
-//                    binding.activityLikeList.smoothScrollBy(0, 0);
+                    // String loadStr = getString(R.string.load_some_notification);
+                    // Alert.info(this, String.format(loadStr, likeItemContents.size()));
                 }
                 refresh();
                 break;
@@ -122,11 +121,10 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     public void initView() {
         if (State.getState().isLogin) {
             binding.likeSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         } else {
             binding.likeSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void initRecyclerView() {

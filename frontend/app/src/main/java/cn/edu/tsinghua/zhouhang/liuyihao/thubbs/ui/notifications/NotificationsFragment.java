@@ -139,11 +139,10 @@ public class NotificationsFragment extends Fragment {
     public void initView() {
         if (State.getState().isLogin) {
             binding.messageSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         } else {
             binding.messageSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void initRecycleView() {

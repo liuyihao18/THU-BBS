@@ -121,11 +121,10 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     public void initView() {
         if (State.getState().isLogin) {
             binding.commentSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         } else {
             binding.commentSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     public void initLauncher() {

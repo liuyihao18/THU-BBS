@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -25,11 +26,9 @@ import java.util.LinkedList;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityDraftBoxBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
@@ -62,6 +61,7 @@ public class DraftBoxActivity extends AppCompatActivity implements GoEditInterfa
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mDraftList.size());
                 }
+                refresh();
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -112,6 +112,7 @@ public class DraftBoxActivity extends AppCompatActivity implements GoEditInterfa
         ((TextView) findViewById(R.id.header_title)).setText(R.string.draft_box);
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.noDraftLayout.setVisibility(View.VISIBLE);
     }
 
     private void initListener() {
@@ -143,6 +144,14 @@ public class DraftBoxActivity extends AppCompatActivity implements GoEditInterfa
             intent.setAction(Constant.EDIT_FROM_BLANK);
             mEditLauncher.launch(intent);
         });
+    }
+
+    private void refresh() {
+        if (mDraftList.size() > 0) {
+            binding.noDraftLayout.setVisibility(View.GONE);
+        } else {
+            binding.noDraftLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getDraftList(boolean isRefresh) {

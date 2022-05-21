@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -61,6 +62,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mUserList.size());
                 }
+                refresh();
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -126,6 +128,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
         }
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.noUserLayout.setVisibility(View.VISIBLE);
     }
 
     private void initListener() {
@@ -151,6 +154,14 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+    private void refresh() {
+        if (mUserList.size() > 0) {
+            binding.noUserLayout.setVisibility(View.GONE);
+        } else {
+            binding.noUserLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getUserList(boolean isRefresh) {
