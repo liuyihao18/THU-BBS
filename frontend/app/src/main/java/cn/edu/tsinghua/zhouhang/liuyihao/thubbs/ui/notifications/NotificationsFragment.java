@@ -77,9 +77,9 @@ public class NotificationsFragment extends Fragment {
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, messageList.size());
-                    String loadStr = getString(R.string.load_some_notification);
-                    Alert.info(getContext(), String.format(loadStr, messageList.size()));
-                    binding.messages.smoothScrollBy(0, 0);
+//                    String loadStr = getString(R.string.load_some_notification);
+//                    Alert.info(getContext(), String.format(loadStr, messageList.size()));
+//                    binding.messages.smoothScrollBy(0, 0);
                 }
                 refresh();
                 break;

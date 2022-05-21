@@ -69,9 +69,9 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, commentItemContents.size());
-                    String loadStr = getString(R.string.load_some_notification);
-                    Alert.info(this, String.format(loadStr, commentItemContents.size()));
-                    binding.commentNotificationList.smoothScrollBy(0, 0);
+//                    String loadStr = getString(R.string.load_some_notification);
+//                    Alert.info(this, String.format(loadStr, commentItemContents.size()));
+//                    binding.commentNotificationList.smoothScrollBy(0, 0);
                 }
                 refresh();
                 break;
