@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.UserAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.FollowItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Comment;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
@@ -219,6 +221,30 @@ public class JSONUtil {
                     message_time,
                     message_id,
                     headshot
+            );
+        } catch (JSONException jsonException) {
+            jsonException.printStackTrace();
+            return null;
+        }
+    }
+
+    public static FollowItemContent createFollowFromJSON(@NonNull JSONObject data) {
+        try {
+            int tweet_id = data.getInt(NotificationAPI.tweet_id);
+            String notification_time = data.getString(NotificationAPI.notification_time);
+            int userid = data.getInt(NotificationAPI.userid);
+            int notification_id = data.getInt(NotificationAPI.notification_id);
+            String tweet_content = data.getString(NotificationAPI.tweet_content);
+            String headshot = Static.HeadShot.getHeadShotUrl(data.getString(NotificationAPI.headshot));
+            String followee_user_name = data.getString(NotificationAPI.followee_user_name);
+            return new FollowItemContent(
+                    headshot,
+                    followee_user_name,
+                    notification_time,
+                    tweet_id,
+                    tweet_content,
+                    userid,
+                    notification_id
             );
         } catch (JSONException jsonException) {
             jsonException.printStackTrace();
