@@ -160,7 +160,7 @@ public class TweetUtil {
         if (tweetsType == Constant.TWEETS_USER) {
             binding.followButton.setVisibility(View.GONE);
             binding.blackButton.setVisibility(View.GONE);
-            if(State.getState().userId == tweet.getUserId()) {
+            if (State.getState().userId == tweet.getUserId()) {
                 binding.closeButton.setVisibility(View.VISIBLE);
             }
         } else {
@@ -168,7 +168,11 @@ public class TweetUtil {
             if (State.getState().userId == tweet.getUserId()) {
                 binding.followButton.setText("我自己");
                 binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
-                binding.blackButton.setVisibility(View.GONE);
+                if (tweetsType == Constant.TWEETS_DETAIL) {
+                    binding.blackButton.setVisibility(View.GONE);
+                } else {
+                    binding.blackButton.setVisibility(View.VISIBLE);
+                }
             } else {
                 if (tweet.isFollow) {
                     binding.followButton.setText(R.string.button_unfollow);
@@ -178,6 +182,11 @@ public class TweetUtil {
                     binding.followButton.setBackgroundColor(context.getColor(R.color.pink));
                 }
                 binding.blackButton.setVisibility(View.VISIBLE);
+                if (tweetsType == Constant.TWEETS_DETAIL) {
+                    binding.blackButton.setImageResource(R.drawable.ic_blacklist_gray_24dp);
+                } else {
+                    binding.blackButton.setImageResource(R.drawable.ic_black_24dp);
+                }
             }
             binding.closeButton.setVisibility(View.GONE);
         }
@@ -194,7 +203,7 @@ public class TweetUtil {
                 binding.audioPlayButton.setImageResource(com.luck.picture.lib.R.drawable.ps_ic_audio_play);
             }
         });
-        // 关注和屏蔽
+        // 关注
         if (tweetsType != Constant.TWEETS_USER && State.getState().userId != tweet.getUserId()) {
             binding.followButton.setOnClickListener(view -> {
                 if (tweet.isFollow) {
@@ -211,15 +220,15 @@ public class TweetUtil {
                     });
                 }
             });
-            binding.blackButton.setOnClickListener(view -> {
-                if (onClickBlackButtonListener != null) {
-                    onClickBlackButtonListener.onClick(view);
-                }
-            });
         } else {
             binding.followButton.setOnClickListener(null);
-            binding.blackButton.setOnClickListener(null);
         }
+        // 屏蔽
+        binding.blackButton.setOnClickListener(view -> {
+            if (onClickBlackButtonListener != null) {
+                onClickBlackButtonListener.onClick(view);
+            }
+        });
         // 删除
         if (tweetsType == Constant.TWEETS_USER) {
             binding.closeButton.setOnClickListener(onClickCloseButtonListener);

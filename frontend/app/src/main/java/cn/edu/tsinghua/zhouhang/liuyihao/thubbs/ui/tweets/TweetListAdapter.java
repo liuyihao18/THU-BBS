@@ -74,7 +74,7 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                         if (resultIntent != null) {
                             Tweet tweet = (Tweet) resultIntent.getSerializableExtra(Constant.EXTRA_TWEET);
                             if (tweet != null) {
-                                mTweet = tweet;
+                                mTweet.copyFrom(tweet);
                                 refresh();
                             }
                         }
