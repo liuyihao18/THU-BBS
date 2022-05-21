@@ -11,30 +11,30 @@ public class Tweet implements Serializable {
     public static final int TYPE_AUDIO = 2;
     public static final int TYPE_VIDEO = 3;
 
-    private final int tweetId;
-    private final int userId;
-    private final int type;
-    private final String title;
-    private final String content;
-    private final String location;
-    private final String lastModified;
-    private final ArrayList<String> imageList;
-    private final String audioUrl;
-    private final String videoUrl;
-    private final String nickname;
-    private final String headshot;
+    private int tweetId;
+    private int userId;
+    private int type;
+    private String title;
+    private String content;
+    private String location;
+    private String lastModified;
+    private ArrayList<String> imageList;
+    private String audioUrl;
+    private String videoUrl;
+    private String nickname;
+    private String headshot;
     public int commentCount;
     public int likeCount;
     public boolean isFollow;
     public boolean isLike;
 
 
-    public Tweet(int tweetID, int userID, int type, String title, String content,
+    public Tweet(int tweetId, int userId, int type, String title, String content,
                  @Nullable String location, String lastModified, int commentCount, int likeCount,
                  @Nullable ArrayList<String> imageList, @Nullable String audioUrl, @Nullable String videoUrl,
                  String nickname, String headshot, boolean isFollow, boolean isLike) {
-        this.tweetId = tweetID;
-        this.userId = userID;
+        this.tweetId = tweetId;
+        this.userId = userId;
         this.type = type;
         this.title = title;
         this.content = content;
@@ -124,5 +124,24 @@ public class Tweet implements Serializable {
 
     public String getHeadshot() {
         return headshot;
+    }
+
+    public void copyFrom(Tweet tweet) {
+        this.tweetId = tweet.tweetId;
+        this.userId = tweet.userId;
+        this.type = tweet.type;
+        this.title = tweet.title;
+        this.content = tweet.content;
+        this.location = tweet.location;
+        this.lastModified = tweet.lastModified;
+        this.commentCount = tweet.commentCount;
+        this.likeCount = tweet.likeCount;
+        this.imageList = tweet.imageList;
+        this.audioUrl = tweet.audioUrl;
+        this.videoUrl = tweet.videoUrl;
+        this.nickname = tweet.nickname;
+        this.headshot = tweet.headshot;
+        this.isFollow = tweet.isFollow;
+        this.isLike = tweet.isLike;
     }
 }
