@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/button_icon_text_margin"
-            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/headshot"
             app:layout_constraintStart_toEndOf="@id/headshot" />
 
