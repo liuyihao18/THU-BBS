@@ -952,7 +952,8 @@ ret:
       "tweet_id": int,
       "followee_user_name": string,
       "headshot": string,
-      "tweet_content": string
+      "tweet_content": string,
+      "notification_time": string
     }
   ]
 }
