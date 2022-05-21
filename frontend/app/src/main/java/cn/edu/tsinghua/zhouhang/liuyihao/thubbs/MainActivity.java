@@ -58,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 获取用户信息
-        getMyProfile();
+        if (State.getState().isLogin) {
+            getMyProfile();
+        }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
     }
