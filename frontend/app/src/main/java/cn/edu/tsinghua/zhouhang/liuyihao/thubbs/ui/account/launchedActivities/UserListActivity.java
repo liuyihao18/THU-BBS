@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -31,6 +32,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserListBind
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -60,6 +62,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, mUserList.size());
                 }
+                refresh();
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -125,6 +128,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
         }
         binding.recyclerView.setAdapter(mAdapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.noUserLayout.setVisibility(View.VISIBLE);
     }
 
     private void initListener() {
@@ -138,7 +142,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (!recyclerView.canScrollVertically(-1)) {
-                        getUserList(true);
+                        Util.doNothing();
                     } else if (!recyclerView.canScrollVertically(1)) { // 已致底部
                         getUserList(false);
                     }
@@ -150,6 +154,14 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+    }
+
+    private void refresh() {
+        if (mUserList.size() > 0) {
+            binding.noUserLayout.setVisibility(View.GONE);
+        } else {
+            binding.noUserLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getUserList(boolean isRefresh) {

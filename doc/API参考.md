@@ -335,7 +335,8 @@ ret:
     {
       "userid": int,
       "nickname": string,
-      "headshot": string
+      "headshot": string,
+      "description": string
     }
   ]
 }
@@ -368,7 +369,8 @@ ret:
     {
       "userid": int,
       "nickname": string,
-      "headshot": string
+      "headshot": string,
+      "description": string
     }
   ]
 }
@@ -445,12 +447,6 @@ ret:
   "errMsg": errMsg
 }
 ```
-
-
-
-
-
-
 
 
 - [x] @bp_user.route('/user-api/v1/tweet/edit_tweet', methods=['POST'])
@@ -899,7 +895,7 @@ ret:
 }
 ```
 
-@bp_user.route('/user-api/v1/notification/delete_comment_notification', methods=['POST'])
+- [x] @bp_user.route('/user-api/v1/notification/delete_comment_notification', methods=['POST'])
 
 @login_required
 

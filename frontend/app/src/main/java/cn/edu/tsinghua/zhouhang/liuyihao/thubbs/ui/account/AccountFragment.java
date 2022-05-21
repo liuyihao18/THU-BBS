@@ -47,6 +47,7 @@ public class AccountFragment extends Fragment {
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
+                refresh();
                 break;
             case APIConstant.NETWORK_ERROR:
                 Alert.error(getContext(), R.string.network_error);
@@ -65,6 +66,9 @@ public class AccountFragment extends Fragment {
         initLauncher();
         initView();
         initListener();
+        if (State.getState().isLogin && State.getState().user == null) {
+            State.getState().refreshMyProfile(handler);
+        }
         return root;
     }
 
@@ -208,9 +212,6 @@ public class AccountFragment extends Fragment {
             binding.followerCount.setText(String.valueOf(0));
             binding.accountUserName.setVisibility(View.GONE);
             binding.loginButton.setVisibility(View.VISIBLE);
-            if (State.getState().isLogin) {
-                State.getState().refreshMyProfile(handler);
-            }
         }
     }
 

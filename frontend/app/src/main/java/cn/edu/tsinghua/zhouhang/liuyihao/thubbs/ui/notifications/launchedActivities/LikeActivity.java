@@ -1,16 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +9,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,18 +24,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -49,13 +44,13 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     private ActivityLikeBinding binding;
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private OnUserSpaceReturnListener onUserSpaceReturnListener;
-    private final LinkedList<LikeItemContent> likeItemContents = new LinkedList<LikeItemContent>();
+    private final LinkedList<LikeItemContent> likeItemContents = new LinkedList<>();
     private LikeListAdapter mAdapter;
 
     private int mBlock = 0;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
-        switch (msg.what){
+        switch (msg.what) {
             case APIConstant.REQUEST_OK:
                 // 加载
                 if (msg.arg2 < 0) {
@@ -71,17 +66,16 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, likeItemContents.size());
-//                    String loadStr = getString(R.string.load_some_notification);
-//                    Alert.info(this, String.format(loadStr, likeItemContents.size()));
-//                    binding.activityLikeList.smoothScrollBy(0, 0);
+                    // String loadStr = getString(R.string.load_some_notification);
+                    // Alert.info(this, String.format(loadStr, likeItemContents.size()));
                 }
                 refresh();
                 break;
-            case APIConstant.SERVER_ERROR:{
+            case APIConstant.SERVER_ERROR: {
                 Alert.error(this, R.string.server_error);
                 break;
             }
-            case APIConstant.NETWORK_ERROR:{
+            case APIConstant.NETWORK_ERROR: {
                 Alert.error(this, R.string.network_error);
                 break;
             }
@@ -96,7 +90,7 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
         binding = ActivityLikeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -118,7 +112,7 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     public void initLauncher() {
         mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             getLikeNotificationList(true);
-            if(onUserSpaceReturnListener != null) {
+            if (onUserSpaceReturnListener != null) {
                 onUserSpaceReturnListener.onUserSpaceReturn(result);
             }
         });
@@ -127,12 +121,10 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     public void initView() {
         if (State.getState().isLogin) {
             binding.likeSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             binding.likeSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void initRecyclerView() {
@@ -140,17 +132,16 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
         mAdapter = new LikeListAdapter(this, likeItemContents, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if(State.getState().isLogin) {
+        if (State.getState().isLogin) {
             binding.likeSwipeRefreshLayout.setOnRefreshListener(() -> getLikeNotificationList(true));
             binding.activityLikeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if(!recyclerView.canScrollVertically(-1)) {
-                            //getLikeNotificationList(true);
-                        }
-                        else if (!recyclerView.canScrollVertically(1)) {
+                        if (!recyclerView.canScrollVertically(-1)) {
+                            Util.doNothing();
+                        } else if (!recyclerView.canScrollVertically(1)) {
                             getLikeNotificationList(false);
                         }
                     }
@@ -165,23 +156,26 @@ public class LikeActivity extends AppCompatActivity implements GoUserSpaceInterf
     }
 
     private void refresh() {
-        if(likeItemContents.size() > 0) {
+        if (likeItemContents.size() > 0) {
             binding.noNotificationLayout.setVisibility(View.GONE);
-        } else{
+        } else {
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
     }
 
     private void getLikeNotificationList(boolean isRefresh) {
-        if(!binding.likeSwipeRefreshLayout.isRefreshing()) {
+        if (!State.getState().isLogin) {
+            return;
+        }
+        if (!binding.likeSwipeRefreshLayout.isRefreshing()) {
             binding.likeSwipeRefreshLayout.setRefreshing(true);
         }
-        try{
+        try {
             JSONObject data = new JSONObject();
             Log.d("isRefresh", String.valueOf(isRefresh));
-            if(isRefresh) {
+            if (isRefresh) {
                 mBlock = 0;
-            } else{
+            } else {
                 mBlock++;
             }
             data.put(NotificationAPI.block, mBlock);

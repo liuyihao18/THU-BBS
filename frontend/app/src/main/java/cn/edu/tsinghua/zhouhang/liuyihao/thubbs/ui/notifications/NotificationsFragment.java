@@ -15,7 +15,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,8 +28,6 @@ import java.util.LinkedList;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.mMessage;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities.CommentNotificationActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities.FollowNotificationActivity;
@@ -39,6 +36,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.FragmentNotificationsBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -48,7 +46,7 @@ public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
 
-    private LinkedList<mMessage> messageList = new LinkedList<mMessage>();
+    private final LinkedList<mMessage> messageList = new LinkedList<>();
 
     private ActivityResultLauncher<Intent> mLikeLauncher;
     private ActivityResultLauncher<Intent> mFollowLauncher;
@@ -61,7 +59,7 @@ public class NotificationsFragment extends Fragment {
         if (getContext() == null) {
             return true;
         }
-        switch (msg.what){
+        switch (msg.what) {
             case APIConstant.REQUEST_OK:
                 // 加载
                 if (msg.arg2 < 0) {
@@ -77,17 +75,16 @@ public class NotificationsFragment extends Fragment {
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, messageList.size());
-//                    String loadStr = getString(R.string.load_some_notification);
-//                    Alert.info(getContext(), String.format(loadStr, messageList.size()));
-//                    binding.messages.smoothScrollBy(0, 0);
+                    // String loadStr = getString(R.string.load_some_notification);
+                    // Alert.info(getContext(), String.format(loadStr, messageList.size()));
                 }
                 refresh();
                 break;
-            case APIConstant.SERVER_ERROR:{
+            case APIConstant.SERVER_ERROR: {
                 Alert.error(getContext(), R.string.server_error);
                 break;
             }
-            case APIConstant.NETWORK_ERROR:{
+            case APIConstant.NETWORK_ERROR: {
                 Alert.error(getContext(), R.string.network_error);
                 break;
             }
@@ -100,7 +97,6 @@ public class NotificationsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         initLauncher();
         initView();
         initRecycleView();
@@ -131,39 +127,22 @@ public class NotificationsFragment extends Fragment {
 
     private void initListener() {
         LinearLayout likeLayout = binding.notificationLikeLayout;
-        likeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeLauncher.launch(new Intent(getActivity(), LikeActivity.class));
-            }
-        });
+        likeLayout.setOnClickListener(view -> mLikeLauncher.launch(new Intent(getActivity(), LikeActivity.class)));
 
         LinearLayout followLayout = binding.notificationFollowLayout;
-        followLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mFollowLauncher.launch(new Intent(getActivity(), FollowNotificationActivity.class));
-            }
-        });
+        followLayout.setOnClickListener(view -> mFollowLauncher.launch(new Intent(getActivity(), FollowNotificationActivity.class)));
 
         LinearLayout commentLayout = binding.notificationCommentLayout;
-        commentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCommentLauncher.launch(new Intent(getActivity(), CommentNotificationActivity.class));
-            }
-        });
+        commentLayout.setOnClickListener(view -> mCommentLauncher.launch(new Intent(getActivity(), CommentNotificationActivity.class)));
     }
 
     public void initView() {
         if (State.getState().isLogin) {
             binding.messageSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             binding.messageSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void initRecycleView() {
@@ -171,16 +150,15 @@ public class NotificationsFragment extends Fragment {
         mAdapter = new NotificationListAdapter(getActivity(), messageList);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.messageSwipeRefreshLayout.setOnRefreshListener(()->getMessageList(true));
+        binding.messageSwipeRefreshLayout.setOnRefreshListener(() -> getMessageList(true));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if(!recyclerView.canScrollVertically(-1)) {
-                        getMessageList(true);
-                    }
-                    else if (!recyclerView.canScrollVertically(1)) {
+                    if (!recyclerView.canScrollVertically(-1)) {
+                        Util.doNothing();
+                    } else if (!recyclerView.canScrollVertically(1)) {
                         getMessageList(false);
                     }
                 }
@@ -194,23 +172,26 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void refresh() {
-        if(messageList.size() > 0) {
+        if (messageList.size() > 0) {
             binding.noNotificationLayout.setVisibility(View.GONE);
-        } else{
+        } else {
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
     }
 
     private void getMessageList(boolean isRefresh) {
-        if(!binding.messageSwipeRefreshLayout.isRefreshing()) {
+        if (!State.getState().isLogin) {
+            return;
+        }
+        if (!binding.messageSwipeRefreshLayout.isRefreshing()) {
             binding.messageSwipeRefreshLayout.setRefreshing(true);
         }
-        try{
+        try {
             JSONObject data = new JSONObject();
             Log.d("isRefresh", String.valueOf(isRefresh));
-            if(isRefresh) {
+            if (isRefresh) {
                 mBlock = 0;
-            } else{
+            } else {
                 mBlock++;
             }
             data.put(NotificationAPI.block, mBlock);
