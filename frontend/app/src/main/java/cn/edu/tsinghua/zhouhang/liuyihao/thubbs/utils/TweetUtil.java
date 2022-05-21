@@ -273,6 +273,34 @@ public class TweetUtil {
             }
             binding.likeButtonText.setText(String.valueOf(tweet.getLikeCount()));
         });
+        // 分享按钮
+        binding.shareButton.setOnClickListener(view -> {
+            StringBuilder shareTextBuilder = new StringBuilder();
+            shareTextBuilder.append(tweet.getNickname()).append("\n");
+            shareTextBuilder.append(tweet.getLastModified()).append("\n");
+            shareTextBuilder.append(binding.title.getText().toString()).append("\n");
+            shareTextBuilder.append(binding.contentText.getText().toString()).append("\n");
+            switch (tweet.getType()) {
+                case Tweet.TYPE_TEXT:
+                    break;
+                case Tweet.TYPE_IMAGE:
+                    for (int i = 0; i < tweet.getImageCount(); i++) {
+                        shareTextBuilder.append("图片链接：").append(tweet.getImageAt(i)).append("\n");
+                    }
+                    break;
+                case Tweet.TYPE_AUDIO:
+                    shareTextBuilder.append("音频链接：").append(tweet.getAudioUrl()).append("\n");
+                    break;
+                case Tweet.TYPE_VIDEO:
+                    shareTextBuilder.append("视频链接：").append(tweet.getVideoUrl()).append("\n");
+                    break;
+            }
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, shareTextBuilder.toString());
+            intent.setType("text/plain");
+            context.startActivity(Intent.createChooser(intent, context.getString(R.string.app_name)));
+        });
         // 头像
         binding.authorHeadshot.setOnClickListener(view -> {
             if (onClickHeadshotListener != null) {
