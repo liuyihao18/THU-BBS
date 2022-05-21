@@ -26,6 +26,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.NotificationLikeItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
@@ -53,6 +54,13 @@ public class LikeListAdapter extends
             });
             binding.closeButton.setOnClickListener(view -> {
                 close();
+            });
+            binding.getRoot().setOnClickListener( view -> {
+                if(likeItemContent.getTweetID() > 0) {
+                    Intent intent = new Intent(mContext, DetailActivity.class);
+                    intent.putExtra(Constant.EXTRA_TWEET_ID, likeItemContent.getTweetID());
+                    mContext.startActivity(intent);
+                }
             });
         }
 
