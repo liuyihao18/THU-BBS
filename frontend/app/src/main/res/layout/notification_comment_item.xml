@@ -50,12 +50,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/my_gray_rounded_corner_8dp"
-        android:layout_margin="@dimen/margin_tiny">
+        android:layout_marginTop="@dimen/margin_tiny"
+        android:layout_marginHorizontal="@dimen/margin_tiny"
+        android:layout_marginBottom="@dimen/margin_small">
+
         <TextView
             android:id="@+id/comment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"/>
+            android:padding="8dp" />
         <TextView
             android:id="@+id/comment_tweet_content"
             android:layout_width="match_parent"
