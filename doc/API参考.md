@@ -784,7 +784,9 @@ ret:
     {
       "message_id": int,
       "message_time": string,
-      "content": string
+      "content": string,
+      "title": string,
+      "headshot": string
     }
   ]
 }
@@ -867,7 +869,7 @@ params:
 
 ```json
 {
-  "start": int
+  "block": int
 }
 ```
 
@@ -884,7 +886,10 @@ ret:
       "userid": int,
       "tweet_id": int,
       "comment_time": string,
-      "content": string
+      "content": string,
+      "comment_user_name": string,
+      "headshot": string,
+      "tweet_content": string
     }
   ]
 }
@@ -921,3 +926,65 @@ ret:
 }
 ```
 
+- [x] @bp_user.route('/user-api/v1/notification/get_follow_notification_list', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "block": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+/* 注意返回的tweet_id可能已经被删除 */
+{
+  "errCode": 0,
+  "notification_list": [
+    {
+      "notification_id": int,
+      "userid": int,
+      "tweet_id": int,
+      "followee_user_name": string,
+      "headshot": string,
+      "tweet_content": string
+    }
+  ]
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
+
+- [x] @bp_user.route('/user-api/v1/notification/delete_comment_notification', methods=['POST'])
+
+@login_required
+
+params:
+
+```json
+{
+  "notification_id": int
+}
+```
+
+ret:
+
+```json
+/* 成功情形 */
+{
+  "errCode": 0
+}
+/* 失败情形 */
+{
+  "errCode": 1,
+  "errMsg": errMsg
+}
+```
