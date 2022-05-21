@@ -67,6 +67,7 @@
                         android:hint="@string/comment_hint"
                         android:inputType="textMultiLine"
                         android:minLines="3"
+                        android:maxLines="3"
                         android:paddingStart="@dimen/content_text_horizontal_padding"
                         android:paddingTop="@dimen/content_text_vertical_padding"
                         android:paddingEnd="@dimen/content_text_horizontal_padding"

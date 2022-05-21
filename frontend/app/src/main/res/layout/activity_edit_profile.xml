@@ -80,6 +80,7 @@
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
+            android:maxLines="5"
             android:minLines="5"
             android:paddingStart="@dimen/content_text_horizontal_padding"
             android:paddingTop="@dimen/content_text_vertical_padding"
