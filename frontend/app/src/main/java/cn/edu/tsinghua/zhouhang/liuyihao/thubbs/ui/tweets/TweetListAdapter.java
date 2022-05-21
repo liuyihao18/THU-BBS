@@ -128,7 +128,8 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                                     .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
                                         int index = mTweetList.indexOf(mTweet);
                                         if (index < 0) {
-                                            Alert.error(mContext, R.string.unknown_error);
+                                            // Alert.error(mContext, R.string.unknown_error);
+                                            Util.doNothing();
                                         } else {
                                             NoErrorAPI.deleteTweet(mContext, mTweet.getTweetId(), () -> {
                                                 Alert.info(mContext, R.string.delete_tweet_success);
