@@ -34,12 +34,14 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityFollowNotificationBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.FollowItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -50,8 +52,8 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
     private ActivityFollowNotificationBinding binding;
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private OnUserSpaceReturnListener onUserSpaceReturnListener;
-    private final LinkedList<LikeItemContent> likeItemContents = new LinkedList<LikeItemContent>();
-    private LikeListAdapter mAdapter;
+    private final LinkedList<FollowItemContent> followItemContents = new LinkedList<FollowItemContent>();
+    private FollowListAdapter mAdapter;
 
     private int mBlock = 0;
 
@@ -60,10 +62,10 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
             case APIConstant.REQUEST_OK:
                 // 加载
                 if (msg.arg2 < 0) {
-                    mAdapter.notifyItemRangeInserted(msg.arg1, likeItemContents.size() - msg.arg1);
-                    if (likeItemContents.size() - msg.arg1 > 0) {
+                    mAdapter.notifyItemRangeInserted(msg.arg1, followItemContents.size() - msg.arg1);
+                    if (followItemContents.size() - msg.arg1 > 0) {
                         String loadStr = getString(R.string.new_like_notification);
-                        Alert.info(this, String.format(loadStr, likeItemContents.size() - msg.arg1));
+                        Alert.info(this, String.format(loadStr, followItemContents.size() - msg.arg1));
                     } else {
                         Alert.info(this, R.string.no_more_notification);
                     }
@@ -71,10 +73,7 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
                 // 刷新
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
-                    mAdapter.notifyItemRangeInserted(0, likeItemContents.size());
-//                    String loadStr = getString(R.string.load_some_notification);
-//                    Alert.info(this, String.format(loadStr, likeItemContents.size()));
-//                    binding.activityLikeList.smoothScrollBy(0, 0);
+                    mAdapter.notifyItemRangeInserted(0, followItemContents.size());
                 }
                 refresh();
                 break;
@@ -87,14 +86,14 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
                 break;
             }
         }
-        binding.likeSwipeRefreshLayout.setRefreshing(false);
+        binding.followSwipeRefreshLayout.setRefreshing(false);
         return true;
     });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityLikeBinding.inflate(getLayoutInflater());
+        binding = ActivityFollowNotificationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
@@ -104,7 +103,7 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
         initLauncher();
         initView();
         initRecyclerView();
-        getLikeNotificationList(true);
+        getFollowNotificationList(true);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
 
     public void initLauncher() {
         mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            getLikeNotificationList(true);
+            getFollowNotificationList(true);
             if(onUserSpaceReturnListener != null) {
                 onUserSpaceReturnListener.onUserSpaceReturn(result);
             }
@@ -127,32 +126,32 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
 
     public void initView() {
         if (State.getState().isLogin) {
-            binding.likeSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            binding.followSwipeRefreshLayout.setVisibility(View.VISIBLE);
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
         else {
-            binding.likeSwipeRefreshLayout.setVisibility(View.GONE);
+            binding.followSwipeRefreshLayout.setVisibility(View.GONE);
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = binding.activityLikeList;
-        mAdapter = new LikeListAdapter(this, likeItemContents, this);
+        RecyclerView recyclerView = binding.activityFollowList;
+        mAdapter = new FollowListAdapter(this, followItemContents, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         if(State.getState().isLogin) {
-            binding.likeSwipeRefreshLayout.setOnRefreshListener(() -> getLikeNotificationList(true));
-            binding.activityLikeList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            binding.followSwipeRefreshLayout.setOnRefreshListener(() -> getFollowNotificationList(true));
+            binding.activityFollowList.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if(!recyclerView.canScrollVertically(-1)) {
-                            //getLikeNotificationList(true);
+                            Util.doNothing();
                         }
                         else if (!recyclerView.canScrollVertically(1)) {
-                            getLikeNotificationList(false);
+                            getFollowNotificationList(false);
                         }
                     }
                 }
@@ -166,16 +165,16 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
     }
 
     private void refresh() {
-        if(likeItemContents.size() > 0) {
+        if(followItemContents.size() > 0) {
             binding.noNotificationLayout.setVisibility(View.GONE);
         } else{
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
     }
 
-    private void getLikeNotificationList(boolean isRefresh) {
-        if(!binding.likeSwipeRefreshLayout.isRefreshing()) {
-            binding.likeSwipeRefreshLayout.setRefreshing(true);
+    private void getFollowNotificationList(boolean isRefresh) {
+        if(!binding.followSwipeRefreshLayout.isRefreshing()) {
+            binding.followSwipeRefreshLayout.setRefreshing(true);
         }
         try{
             JSONObject data = new JSONObject();
@@ -186,7 +185,7 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
                 mBlock++;
             }
             data.put(NotificationAPI.block, mBlock);
-            NotificationAPI.get_like_notification_list(data, new Callback() {
+            NotificationAPI.get_follow_notification_list(data, new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     Message msg = new Message();
@@ -210,20 +209,20 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
                             msg.what = APIConstant.REQUEST_OK;
                             if (isRefresh) {
                                 msg.arg1 = 0;
-                                msg.arg2 = likeItemContents.size();
-                                likeItemContents.clear();
+                                msg.arg2 = followItemContents.size();
+                                followItemContents.clear();
                             } else {
-                                msg.arg1 = likeItemContents.size();
+                                msg.arg1 = followItemContents.size();
                                 msg.arg2 = -1;
                             }
                             JSONArray notificationList = data.getJSONArray(NotificationAPI.notification_list);
                             for (int i = 0; i < notificationList.length(); i++) {
-                                LikeItemContent likeItemContent = JSONUtil.createLikeFromJSON(notificationList.getJSONObject(i));
-                                if (likeItemContent == null) {
+                                FollowItemContent followItemContent = JSONUtil.createFollowFromJSON(notificationList.getJSONObject(i));
+                                if (followItemContent == null) {
                                     msg.what = APIConstant.SERVER_ERROR;
                                     break;
                                 }
-                                likeItemContents.add(likeItemContent);
+                                followItemContents.add(followItemContent);
                             }
                         } else {
                             msg.what = APIConstant.REQUEST_ERROR;
