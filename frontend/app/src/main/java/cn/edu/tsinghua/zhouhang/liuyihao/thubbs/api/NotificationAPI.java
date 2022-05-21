@@ -41,4 +41,8 @@ public class NotificationAPI {
     public static void delete_like_notification(JSONObject data, Callback callback) {
         BaseRequest.post(getUrl("/delete_like_notification"), data, callback);
     }
+
+    public static void delete_comment_notification(JSONObject data, Callback callback) {
+        BaseRequest.post(getUrl("/delete_comment_notification"), data, callback);
+    }
 }
