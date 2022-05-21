@@ -18,6 +18,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.UserListItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserListItemViewHolder> {
@@ -100,7 +101,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserLi
                             .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
                                 int index = mUserList.indexOf(mUserListItem);
                                 if (index < 0) {
-                                    Alert.error(mContext, R.string.unknown_error);
+                                    // Alert.error(mContext, R.string.unknown_error);
+                                    Util.doNothing();
                                 } else {
                                     NoErrorAPI.white(mContext, mUserListItem.getUserId(), () -> {
                                         Alert.info(mContext, R.string.white_success);

@@ -25,6 +25,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.MediaResource;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.TweetUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.TweetViewHolder> {
     private final LinkedList<Tweet> mTweetList;
@@ -98,7 +99,8 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     view -> {
                         int index = mTweetList.indexOf(mTweet);
                         if (index < 0) {
-                            Alert.error(mContext, R.string.unknown_error);
+                            // Alert.error(mContext, R.string.unknown_error);
+                            Util.doNothing();
                         } else {
                             mTweetList.remove(index);
                             notifyItemRemoved(index);

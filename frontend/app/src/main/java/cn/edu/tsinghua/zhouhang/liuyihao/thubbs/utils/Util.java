@@ -47,6 +47,9 @@ public class Util {
         return "(" + longitude_str + ", " + latitude_str + ")";
     }
 
+    public static void doNothing() {
+    }
+
     /**
      * 将uri转化为path
      *

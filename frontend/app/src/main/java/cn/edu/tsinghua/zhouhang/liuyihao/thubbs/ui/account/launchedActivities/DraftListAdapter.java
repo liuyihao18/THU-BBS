@@ -19,6 +19,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.DraftItemBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Draft;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.EditActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 
 public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.DraftViewHolder> {
     private final LinkedList<Draft> mDraftList;
@@ -49,7 +50,8 @@ public class DraftListAdapter extends RecyclerView.Adapter<DraftListAdapter.Draf
                     .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
                         int index = mDraftList.indexOf(mDraft);
                         if (index < 0) {
-                            Alert.error(mContext, R.string.unknown_error);
+                            // Alert.error(mContext, R.string.unknown_error);
+                            Util.doNothing();
                         } else {
                             NoErrorAPI.deleteTweet(mContext, mDraft.getTweetId(), () -> {
                                 Alert.info(mContext, R.string.delete_draft_success);
