@@ -1,5 +1,13 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -7,15 +15,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,13 +27,12 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityCommentNotificationBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.CommentItemContent;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -44,7 +42,7 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
 
     private ActivityCommentNotificationBinding binding;
 
-    private final LinkedList<CommentItemContent> commentItemContents = new LinkedList<CommentItemContent>();
+    private final LinkedList<CommentItemContent> commentItemContents = new LinkedList<>();
 
     private CommentListAdapter mAdapter;
 
@@ -53,7 +51,7 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
-        switch (msg.what){
+        switch (msg.what) {
             case APIConstant.REQUEST_OK:
                 // 加载
                 if (msg.arg2 < 0) {
@@ -69,17 +67,16 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
                 else {
                     mAdapter.notifyItemRangeRemoved(msg.arg1, msg.arg2);
                     mAdapter.notifyItemRangeInserted(0, commentItemContents.size());
-//                    String loadStr = getString(R.string.load_some_notification);
-//                    Alert.info(this, String.format(loadStr, commentItemContents.size()));
-//                    binding.commentNotificationList.smoothScrollBy(0, 0);
+                    // String loadStr = getString(R.string.load_some_notification);
+                    // Alert.info(this, String.format(loadStr, commentItemContents.size()));
                 }
                 refresh();
                 break;
-            case APIConstant.SERVER_ERROR:{
+            case APIConstant.SERVER_ERROR: {
                 Alert.error(this, R.string.server_error);
                 break;
             }
-            case APIConstant.NETWORK_ERROR:{
+            case APIConstant.NETWORK_ERROR: {
                 Alert.error(this, R.string.network_error);
                 break;
             }
@@ -114,9 +111,9 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     }
 
     private void refresh() {
-        if(commentItemContents.size() > 0) {
+        if (commentItemContents.size() > 0) {
             binding.noNotificationLayout.setVisibility(View.GONE);
-        } else{
+        } else {
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -125,8 +122,7 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
         if (State.getState().isLogin) {
             binding.commentSwipeRefreshLayout.setVisibility(View.VISIBLE);
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             binding.commentSwipeRefreshLayout.setVisibility(View.GONE);
             binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
@@ -135,7 +131,7 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     public void initLauncher() {
         mUserSpaceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             getCommentNotificationList(true);
-            if(onUserSpaceReturnListener != null) {
+            if (onUserSpaceReturnListener != null) {
                 onUserSpaceReturnListener.onUserSpaceReturn(result);
             }
         });
@@ -146,15 +142,16 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
         mAdapter = new CommentListAdapter(this, commentItemContents, this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if(State.getState().isLogin) {
+        if (State.getState().isLogin) {
             binding.commentSwipeRefreshLayout.setOnRefreshListener(() -> getCommentNotificationList(true));
             binding.commentNotificationList.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        if (recyclerView.canScrollVertically(-1) &&
-                                !recyclerView.canScrollVertically(1)) {
+                        if (!recyclerView.canScrollVertically(-1)) {
+                            Util.doNothing();
+                        } else if (!recyclerView.canScrollVertically(1)) {
                             getCommentNotificationList(false);
                         }
                     }
@@ -170,12 +167,12 @@ public class CommentNotificationActivity extends AppCompatActivity implements Go
     }
 
     private void getCommentNotificationList(boolean isRefresh) {
-        if(!binding.commentSwipeRefreshLayout.isRefreshing()) {
+        if (!binding.commentSwipeRefreshLayout.isRefreshing()) {
             binding.commentSwipeRefreshLayout.setRefreshing(true);
         }
-        try{
+        try {
             JSONObject data = new JSONObject();
-            if(isRefresh) {
+            if (isRefresh) {
                 mBlock = 0;
             } else {
                 mBlock++;

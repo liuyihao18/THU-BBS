@@ -31,6 +31,7 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityUserListBind
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.UserListItem;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
+import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Util;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -138,7 +139,7 @@ public class UserListActivity extends AppCompatActivity implements GoUserSpaceIn
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (!recyclerView.canScrollVertically(-1)) {
-                        getUserList(true);
+                        Util.doNothing();
                     } else if (!recyclerView.canScrollVertically(1)) { // 已致底部
                         getUserList(false);
                     }
