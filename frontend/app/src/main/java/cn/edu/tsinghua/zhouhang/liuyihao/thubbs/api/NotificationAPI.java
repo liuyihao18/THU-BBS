@@ -2,7 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api;
 
 import org.json.JSONObject;
 
-import okhttp3.Call;
 import okhttp3.Callback;
 
 public class NotificationAPI {

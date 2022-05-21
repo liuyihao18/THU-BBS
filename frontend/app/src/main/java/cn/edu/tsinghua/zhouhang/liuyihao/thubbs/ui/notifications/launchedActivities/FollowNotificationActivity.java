@@ -1,13 +1,10 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,17 +24,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityFollowNotificationBinding;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityLikeBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.FollowItemContent;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.Tweet;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.JSONUtil;
@@ -52,7 +44,7 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
     private ActivityFollowNotificationBinding binding;
     private ActivityResultLauncher<Intent> mUserSpaceLauncher;
     private OnUserSpaceReturnListener onUserSpaceReturnListener;
-    private final LinkedList<FollowItemContent> followItemContents = new LinkedList<FollowItemContent>();
+    private final LinkedList<FollowItemContent> followItemContents = new LinkedList<>();
     private FollowListAdapter mAdapter;
 
     private int mBlock = 0;
@@ -127,12 +119,11 @@ public class FollowNotificationActivity extends AppCompatActivity implements GoU
     public void initView() {
         if (State.getState().isLogin) {
             binding.followSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
         else {
             binding.followSwipeRefreshLayout.setVisibility(View.GONE);
-            binding.noNotificationLayout.setVisibility(View.VISIBLE);
         }
+        binding.noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private void initRecyclerView() {

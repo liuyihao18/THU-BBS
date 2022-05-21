@@ -1,9 +1,6 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils;
 
 
-import android.util.Log;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.State;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.RelationAPI;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.Static;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.TweetAPI;

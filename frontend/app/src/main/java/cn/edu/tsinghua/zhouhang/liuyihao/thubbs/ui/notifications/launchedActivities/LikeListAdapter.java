@@ -1,17 +1,15 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +26,6 @@ import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model.LikeItemContent;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.account.launchedActivities.GoUserSpaceInterface;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.DetailActivity;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.activity.UserSpaceActivity;
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.components.MyCircleImageView;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -52,9 +49,7 @@ public class LikeListAdapter extends
                 intent.putExtra(Constant.EXTRA_USER_ID, likeItemContent.getLikeUserID());
                 mParent.goUserSpace(intent);
             });
-            binding.closeButton.setOnClickListener(view -> {
-                close();
-            });
+            binding.closeButton.setOnClickListener(view -> close());
             binding.getRoot().setOnClickListener( view -> {
                 if(likeItemContent.getTweetID() > 0) {
                     Intent intent = new Intent(mContext, DetailActivity.class);
@@ -118,7 +113,7 @@ public class LikeListAdapter extends
                 jsonException.printStackTrace();
             }
         }
-    };
+    }
 
     public LikeListAdapter(Context context, LinkedList<LikeItemContent> likeItemContents, GoUserSpaceInterface parent) {
         mLikeItemList = likeItemContents;

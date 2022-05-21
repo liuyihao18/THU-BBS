@@ -1,24 +1,21 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivities;
 
 import android.content.Context;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.LinkedList;
 
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.Constant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.R;
@@ -52,9 +49,7 @@ public class CommentListAdapter extends
                 intent.putExtra(Constant.EXTRA_USER_ID, commentItemContent.getCommentUserID());
                 mParent.goUserSpace(intent);
             });
-            binding.closeButton.setOnClickListener(view -> {
-                close();
-            });
+            binding.closeButton.setOnClickListener(view -> close());
             binding.getRoot().setOnClickListener(view -> {
                 if(commentItemContent.getTweetID() > 0) {
                     Intent intent = new Intent(mContext, DetailActivity.class);
@@ -122,7 +117,7 @@ public class CommentListAdapter extends
                 jsonException.printStackTrace();
             }
         }
-    };
+    }
 
     public CommentListAdapter(Context context,
                               LinkedList<CommentItemContent> commentItemContents,
@@ -157,8 +152,8 @@ public class CommentListAdapter extends
 
     @NonNull
     @Override
-    public CommentListAdapter.CommentViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+    public CommentListAdapter.CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                   int viewType) {
         NotificationCommentItemBinding binding = NotificationCommentItemBinding.inflate(
                 LayoutInflater.from(mContext),
                 parent,

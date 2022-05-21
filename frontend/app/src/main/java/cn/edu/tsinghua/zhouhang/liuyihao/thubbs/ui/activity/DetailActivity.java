@@ -194,13 +194,11 @@ public class DetailActivity extends AppCompatActivity {
                                 .setTitle(R.string.question_black)
                                 .setNegativeButton(R.string.button_cancel, ((dialogInterface, i) -> {
                                 }))
-                                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> {
-                                    NoErrorAPI.black(this, mTweet.getUserId(), () -> {
-                                        Alert.info(this, R.string.black_success);
-                                        setResult(RESULT_OK);
-                                        finish();
-                                    });
-                                }).create().show(),
+                                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> NoErrorAPI.black(this, mTweet.getUserId(), () -> {
+                                    Alert.info(this, R.string.black_success);
+                                    setResult(RESULT_OK);
+                                    finish();
+                                })).create().show(),
                 // 级联返回（从个人主页返回详情）
                 view -> {
                     Intent intent = new Intent(this, UserSpaceActivity.class);

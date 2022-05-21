@@ -1,7 +1,5 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
-import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.NotificationAPI;
-
 public class CommentItemContent {
     private final String HeadshotURL;
     private final String CommentUserName;

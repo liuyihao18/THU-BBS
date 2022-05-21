@@ -2,8 +2,6 @@ package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.ui.notifications.launchedActivi
 
 import android.content.Context;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,9 +50,7 @@ public class FollowListAdapter extends
                 intent.putExtra(Constant.EXTRA_USER_ID, followItemContent.getFolloweeUserID());
                 mParent.goUserSpace(intent);
             });
-            binding.closeButton.setOnClickListener(view -> {
-                close();
-            });
+            binding.closeButton.setOnClickListener(view -> close());
             binding.getRoot().setOnClickListener(view -> {
                 if(followItemContent.getTweetID() > 0) {
                     Intent intent = new Intent(mContext, DetailActivity.class);
@@ -121,7 +117,7 @@ public class FollowListAdapter extends
                 jsonException.printStackTrace();
             }
         }
-    };
+    }
 
     public FollowListAdapter(Context context,
                               LinkedList<FollowItemContent> followItemContents,
@@ -156,8 +152,8 @@ public class FollowListAdapter extends
 
     @NonNull
     @Override
-    public FollowListAdapter.FollowViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                   int viewType) {
+    public FollowListAdapter.FollowViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                 int viewType) {
         NotificationFollowItemBinding binding = NotificationFollowItemBinding.inflate(
                 LayoutInflater.from(mContext),
                 parent,
