@@ -310,7 +310,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         try {
             JSONObject data = new JSONObject();
-            data.put(TweetAPI.tweetId, mTweet.getTweetId());
+            data.put(TweetAPI.tweetId, mTweetId);
             TweetAPI.getTweetCommentList(data, new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -363,7 +363,7 @@ public class DetailActivity extends AppCompatActivity {
     private void commentTweet() {
         try {
             JSONObject data = new JSONObject();
-            data.put(TweetAPI.tweetId, mTweet.getTweetId());
+            data.put(TweetAPI.tweetId, mTweetId);
             data.put(TweetAPI.comment, binding.comment.getText().toString());
             TweetAPI.commentTweet(data, new Callback() {
                 @Override
