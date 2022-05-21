@@ -47,6 +47,7 @@ public class AccountFragment extends Fragment {
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(getContext(), (String) msg.obj);
+                refresh();
                 break;
             case APIConstant.NETWORK_ERROR:
                 Alert.error(getContext(), R.string.network_error);
