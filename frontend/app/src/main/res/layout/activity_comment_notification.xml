@@ -5,23 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.notifications.launchedActivities.CommentNotificationActivity">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/comment_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/comment_swipe_refresh_layout"
         app:layout_constraintTop_toTopOf="parent">
+
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comment_notification_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/comment_notification_list"/>
+            android:layout_height="wrap_content" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/no_notification_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/comment_swipe_refresh_layout">
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/no_notification_text"
             android:layout_width="wrap_content"
