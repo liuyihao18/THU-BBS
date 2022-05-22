@@ -4,6 +4,7 @@
     package="cn.edu.tsinghua.zhouhang.liuyihao.thubbs">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -23,6 +24,9 @@
         android:roundIcon="@drawable/ic_bbs"
         android:supportsRtl="true"
         android:theme="@style/Theme.THUBBS">
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="Cj3fZ8VGqxIoh8P3l1bU0N5BKZpA7zLS" />
         <activity
             android:name=".ui.account.launchedActivities.DraftBoxActivity"
             android:exported="false"

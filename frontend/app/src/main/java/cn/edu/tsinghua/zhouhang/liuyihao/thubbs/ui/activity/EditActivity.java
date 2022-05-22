@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bumptech.glide.Glide;
 import com.luck.lib.camerax.SimpleCameraX;
 import com.luck.picture.lib.basic.PictureSelector;
@@ -64,6 +72,8 @@ import okhttp3.ResponseBody;
 public class EditActivity extends AppCompatActivity {
     private static final int POST_OK = 1;
     private static final int DRAFT_OK = 2;
+    private static final int LOCATION_OK = 3;
+    private static final int LOCATION_FAILURE = 4;
 
     private ActivityEditBinding binding;
     private final ArrayList<String> mImageUriList = new ArrayList<>();
@@ -73,6 +83,7 @@ public class EditActivity extends AppCompatActivity {
     private String mLocation = null;
     private MediaController mMediaController = null;
     private MediaPlayer mMediaPlayer = null;
+    private GeoCoder mCoder = null;
     private int mTweetId = -1;
 
     private final Handler handler = new Handler(Looper.myLooper(), msg -> {
@@ -84,6 +95,14 @@ public class EditActivity extends AppCompatActivity {
                 break;
             case DRAFT_OK:
                 Alert.info(this, R.string.draft_success);
+                break;
+            case LOCATION_OK:
+                String address = (String)msg.obj;
+                binding.addLocationText.setText(address);
+                mCoder.destroy();
+                break;
+            case LOCATION_FAILURE:
+                mCoder.destroy();
                 break;
             case APIConstant.REQUEST_ERROR:
                 Alert.error(this, (String) msg.obj);
@@ -451,6 +470,36 @@ public class EditActivity extends AppCompatActivity {
             return;
         }
         mLocation = Util.FormatLocation(bestLocation);
+        mCoder = GeoCoder.newInstance();
+        mCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+                Util.doNothing();
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                if(reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    Message msg = new Message();
+                    msg.what = LOCATION_FAILURE;
+                    handler.sendMessage(msg);
+                } else {
+                    Message msg = new Message();
+                    msg.what = LOCATION_OK;
+                    msg.obj = reverseGeoCodeResult.getAddress();
+                    handler.sendMessage(msg);
+                }
+            }
+        });
+        mCoder.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(
+                        new LatLng(
+                                bestLocation.getLatitude(),
+                                bestLocation.getLongitude()
+                        )
+                )
+                .newVersion(0)
+                .radius(500));
         binding.addLocationText.setText(mLocation);
         Alert.info(this, "获取位置信息成功");
     }

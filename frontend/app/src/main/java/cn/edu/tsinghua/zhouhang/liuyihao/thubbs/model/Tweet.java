@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.zhouhang.liuyihao.thubbs.model;
 
+import android.location.Geocoder;
+
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;

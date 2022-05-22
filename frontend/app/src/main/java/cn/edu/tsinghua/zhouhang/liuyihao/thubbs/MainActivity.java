@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.baidu.mapapi.SDKInitializer;
+
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.api.APIConstant;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.databinding.ActivityMainBinding;
 import cn.edu.tsinghua.zhouhang.liuyihao.thubbs.utils.Alert;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SDKInitializer.initialize(getApplicationContext());
         SharedPreferences preferences = getSharedPreferences(Constant.SHARED_PREFERENCES, MODE_PRIVATE);
         // 加载登录基础信息
         if (preferences.contains(Constant.JWT) && preferences.contains(Constant.USER_ID)) {

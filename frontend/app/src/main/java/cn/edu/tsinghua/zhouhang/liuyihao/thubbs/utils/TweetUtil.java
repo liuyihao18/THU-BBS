@@ -7,7 +7,6 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.bumptech.glide.Glide;
 
 import java.util.Objects;
