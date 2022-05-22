@@ -97,9 +97,9 @@ public class EditActivity extends AppCompatActivity {
                 Alert.info(this, R.string.draft_success);
                 break;
             case LOCATION_OK:
-                String address = (String)msg.obj;
-                binding.addLocationText.setText(address);
-                mLocation = address;
+                mLocation = (String)msg.obj;
+                binding.addLocationText.setText(mLocation);
+                Alert.info(this, "获取位置信息成功");
                 mCoder.destroy();
                 break;
             case LOCATION_FAILURE:
@@ -470,7 +470,6 @@ public class EditActivity extends AppCompatActivity {
             Alert.info(this, "获取位置信息失败");
             return;
         }
-        mLocation = Util.FormatLocation(bestLocation);
         mCoder = GeoCoder.newInstance();
         mCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
             @Override
@@ -480,16 +479,14 @@ public class EditActivity extends AppCompatActivity {
 
             @Override
             public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                Message msg = new Message();
                 if(reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                    Message msg = new Message();
                     msg.what = LOCATION_FAILURE;
-                    handler.sendMessage(msg);
                 } else {
-                    Message msg = new Message();
                     msg.what = LOCATION_OK;
                     msg.obj = reverseGeoCodeResult.getAddress();
-                    handler.sendMessage(msg);
                 }
+                handler.sendMessage(msg);
             }
         });
         mCoder.reverseGeoCode(new ReverseGeoCodeOption()
@@ -501,8 +498,6 @@ public class EditActivity extends AppCompatActivity {
                 )
                 .newVersion(0)
                 .radius(500));
-        binding.addLocationText.setText(mLocation);
-        Alert.info(this, "获取位置信息成功");
     }
 
     private void selectImage() {
