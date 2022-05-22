@@ -15,7 +15,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             // 设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","x86_64"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
         }
     }
 
@@ -54,7 +54,6 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v3.0.9'
     implementation 'io.github.lucksiege:camerax:v3.0.9'
     implementation 'com.github.bumptech.glide:glide:4.13.0'
-    //implementation files('libs/BaiduLBS_Android.jar')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

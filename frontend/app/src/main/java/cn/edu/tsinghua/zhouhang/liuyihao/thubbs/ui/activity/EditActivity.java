@@ -99,6 +99,7 @@ public class EditActivity extends AppCompatActivity {
             case LOCATION_OK:
                 String address = (String)msg.obj;
                 binding.addLocationText.setText(address);
+                mLocation = address;
                 mCoder.destroy();
                 break;
             case LOCATION_FAILURE:
